@@ -384,9 +384,9 @@ create table ce.Category
   ,CategoryListId int not null default(0)
 
   -- data
-  ,Name varchar(50) not null default('')
+  ,[Name] varchar(50) not null default('')
   ,DisplayName varchar(50) not null default('')
-  ,Description varchar(500) not null default('')
+  ,[Description] varchar(500) not null default('')
   ,StartYear int not null default(0)
   ,EndYear int not null default(0)
   ,IsProgressShown bit not null default(0)
