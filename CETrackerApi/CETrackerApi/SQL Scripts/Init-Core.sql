@@ -71,7 +71,7 @@ GO
 * Credential
 *******/
 if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Credential]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Credential
+create table core.[Credential]
 (
   -- primary key
   CredentialId int not null identity(1,1)
@@ -85,7 +85,7 @@ create table core.Credential
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Credential Primary Key Clustered (CredentialId)
-  ,Constraint FK_Credential_OrganizationId Foreign Key (OrganizationId) References core.Organization.OrganizationId
+  ,Constraint FK_Credential_OrganizationId Foreign Key (OrganizationId) References core.[Organization](OrganizationId)
 )
 GO
 
@@ -115,7 +115,7 @@ GO
 * Role
 ********/
 if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Role]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Role
+create table core.[Role]
 (
   -- primary key
   RoleId int not null identity(1,1)
@@ -129,7 +129,7 @@ create table core.Role
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Role Primary Key Clustered (RoleId)
-  ,Constraint FK_Role_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
+  ,Constraint FK_Role_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
 )
 GO
 
@@ -160,10 +160,10 @@ create table [core].[User]
   ,[DateRegistered] datetime not null
 
   ,Constraint PK_User Primary Key Clustered (UserId)
-  ,Constraint FK_User_GenderId Foreign Key (GenderId) References core.Gender.GenderId
-  ,Constraint FK_User_CredentialId Foreign Key (CredentialId) References core.Credential.CredentialId
-  ,Constraint FK_User_RoleId Foreign Key (RoleId) References core.Role.RoleId
-  ,Constraint FK_User_AccountStatusId Foreign Key (AccountStatusId) References core.AccountStatus.AccountStatusId
+  ,Constraint FK_User_GenderId Foreign Key (GenderId) References core.Gender(GenderId)
+  ,Constraint FK_User_CredentialId Foreign Key (CredentialId) References core.Credential(CredentialId)
+  ,Constraint FK_User_RoleId Foreign Key (RoleId) References core.[Role](RoleId)
+  ,Constraint FK_User_AccountStatusId Foreign Key (AccountStatusId) References core.AccountStatus(AccountStatusId)
 )
 go
 
@@ -260,7 +260,7 @@ create table core.Work
   ,EndDate datetime null
 
   ,Constraint PK_Work Primary Key Clustered (WorkId)
-  ,Constraint FK_Work_UserId Foreign Key (UserId) References core.[User].UserId
+  ,Constraint FK_Work_UserId Foreign Key (UserId) References core.[User](UserId)
 )
 GO
 
@@ -311,8 +311,8 @@ create table [ce].Experience
   ,Notes varchar(max) not null default('')
 
   ,Constraint PK_Experience Primary Key Clustered (ExperienceId)
-  ,Constraint FK_Experience_UserId Foreign Key (UserId) References core.[User].UserId
-  ,Constraint FK_Experience_LocationId Foreign Key (LocationId) References core.[Location].LocationId
+  ,Constraint FK_Experience_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_Experience_LocationId Foreign Key (LocationId) References ce.[Location](LocationId)
 )
 GO
 
@@ -390,12 +390,12 @@ create table ce.Category
   ,StartYear int not null default(0)
   ,EndYear int not null default(0)
   ,IsProgressShown bit not null default(0)
-  ,IsOverallTotal but not null default(0)
+  ,IsOverallTotal bit not null default(0)
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Category Primary Key Clustered (CategoryId)
-  ,Constraint FK_Category_NationalStandardId Foreign Key (NationalStandardId) References ce.Category.NationalStandardId
-  ,Constraint FK_Category_CategoryListId Foreign Key (CategoryListId) References ce.Category.CategoryListId
+  ,Constraint FK_Category_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_Category_CategoryListId Foreign Key (CategoryListId) References ce.CategoryList(CategoryListId)
 )
 GO
 
@@ -413,8 +413,8 @@ create table ce.ExperienceCategory
   ,CategoryId int not null default(0)
 
   ,Constraint PK_ExperienceCategory Primary Key Clustered (ExperienceCategoryId)
-  ,Constraint FK_ExperienceCategory_ExperienceId Foreign Key (ExperienceId) References ce.Experience.ExperienceId
-  ,Constraint FK_ExperienceCategory_CategoryId Foreign Key (CategoryId) References ce.Category.CategoryId
+  ,Constraint FK_ExperienceCategory_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
+  ,Constraint FK_ExperienceCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )
 GO
 
@@ -435,7 +435,7 @@ create table ce.ExperienceCategoryHist
   ,ExperienceId int not null default(0)
   ,CategoryId int not null default(0)
 
-  ,Constraint PK_ExperienceCategoryHist Primary Key Clustered (Uniqueifier, ExperienceCategoryId)
+  ,Constraint PK_ExperienceCategoryHist Primary Key Clustered (UniqueifierId, ExperienceCategoryId)
 )
 GO
 
@@ -456,8 +456,8 @@ create table ce.ExperienceAmount
   ,Amount decimal(4,1) not null default(000.0)
 
   ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceAmountId)
-  ,Constraint FK_ExperienceAmount_ExperienceId Foreign Key (ExperienceId) References ce.Experience.ExperienceId
-  ,Constraint FK_ExperienceCategory_UnitId Foreign Key (UnitId) References ce.Unit.UnitId
+  ,Constraint FK_ExperienceAmount_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
+  ,Constraint FK_ExperienceCategory_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
 )
 GO
 
@@ -505,14 +505,14 @@ create table ce.DataGraphicField
   ,IsActive bit not null default(0)
 
   ,Constraint PK_DataGraphicField Primary Key Clustered (DataGraphicFieldId)
-  ,Constraint FK_DataGraphicField_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
+  ,Constraint FK_DataGraphicField_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
 )
 GO
 
 /*******
 * DataGraphicFieldCategory
 *******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.CEDataGraphicFieldCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.DataGraphicFieldCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.DataGraphicFieldCategory
 (
   -- primary key
@@ -526,8 +526,8 @@ create table ce.DataGraphicFieldCategory
   ,IsActive bit not null default(0)
 
   ,Constraint PK_DataGraphicFieldCategory Primary Key Clustered (DataGraphicFieldCategoryId)
-  ,Constraint FK_DataGraphicFieldCategory_DataGraphicFieldId Foreign Key (DataGraphicFieldId) References ce.DataGraphicField.DataGraphicFieldId
-  ,Constraint FK_DataGraphicFieldCategory_CategoryId Foreign Key (CategoryId) References ce.Category.CategoryId
+  ,Constraint FK_DataGraphicFieldCategory_DataGraphicFieldId Foreign Key (DataGraphicFieldId) References ce.DataGraphicField(DataGraphicFieldId)
+  ,Constraint FK_DataGraphicFieldCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )
 GO
 
@@ -565,8 +565,8 @@ create table ce.UserCompliance
   ,[Year] int not null default(0)
 
   ,Constraint PK_UserCompliance Primary Key Clustered (UserComplianceId)
-  ,Constraint FK_UserCompliance_UserId Foreign Key (UserId) References core.[User].UserId
-  ,Constraint FK_UserCompliance_ComplianceId Foreign Key (ComplianceId) References ce.Compliance.ComplianceId
+  ,Constraint FK_UserCompliance_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_UserCompliance_ComplianceId Foreign Key (ComplianceId) References ce.Compliance(ComplianceId)
 )
 GO
 
@@ -587,8 +587,8 @@ create table ce.UserNationalStandard
   ,IsActive bit not null default(0)
 
   ,Constraint PK_UserNationalStandard Primary Key Clustered (UserNationalStandardId)
-  ,Constraint FK_UserNationalStandard_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
-  ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User].UserId
+  ,Constraint FK_UserNationalStandard_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User](UserId)
 )
 GO
 
@@ -609,8 +609,8 @@ create table core.UserOrganization
   ,IsActive bit not null default(0)
 
   ,Constraint PK_UserOrganization Primary Key Clustered (UserOrganizationId)
-  ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User].UserId
-  ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References core.Organization.OrganizationId
+  ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
 )
 GO
 
@@ -672,8 +672,8 @@ create table ce.[Rule]
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Rule Primary Key Clustered (RuleId)
-  ,Constraint FK_Rule_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
-  ,Constraint FK_Rule_UnitId Foreign Key (UnitId) References ce.[Unit].UnitId
+  ,Constraint FK_Rule_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_Rule_UnitId Foreign Key (UnitId) References ce.[Unit](UnitId)
 )
 GO
 
@@ -700,7 +700,7 @@ create table ce.RuleCondition
   ,IsActive bit not null default(0)
 
   ,Constraint PK_RuleCondition Primary Key Clustered (RuleConditionId)
-  ,Constraint FK_Rule_RuleId Foreign Key (RuleId) References ce.[Rule].RuleId
+  ,Constraint FK_Rule_RuleId Foreign Key (RuleId) References ce.[Rule](RuleId)
 )
 GO
 
@@ -721,8 +721,8 @@ create table ce.RuleConditionCategory
   ,IsActive bit not null default(0)
 
   ,Constraint PK_RuleConditionCategory Primary Key Clustered (RuleConditionCategoryId)
-  ,Constraint FK_RuleConditionCategory_RuleConditionId Foreign Key (RuleConditionId) References ce.[RuleCondition].RuleConditionId
-  ,Constraint FK_RuleConditionCategory_CategoryId Foreign Key (CategoryId) References ce.Category.CategoryId
+  ,Constraint FK_RuleConditionCategory_RuleConditionId Foreign Key (RuleConditionId) References ce.[RuleCondition](RuleConditionId)
+  ,Constraint FK_RuleConditionCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )
 GO
 
@@ -747,9 +747,9 @@ create table ce.NatlStandardUnit
   ,IsActive bit not null default(0)
 
   ,Constraint PK_NatlStandardUnit Primary Key Clustered (NatlStandardUnitId)
-  ,Constraint FK_NatlStandardUnit_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
-  ,Constraint FK_NatlStandardUnit_UnitId Foreign Key (UnitId) References ce.Unit.UnitId
-  ,Constraint FK_NatlStandardUnit_ParentUnitId Foreign Key (ParentUnitId) References ce.Unit.UnitId
+  ,Constraint FK_NatlStandardUnit_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_NatlStandardUnit_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
+  ,Constraint FK_NatlStandardUnit_ParentUnitId Foreign Key (ParentUnitId) References ce.Unit(UnitId)
 )
 GO
 
@@ -771,8 +771,8 @@ create table ce.NatlStandardOrg
   ,EndYear int not null default(0)
 
   ,Constraint PK_NatlStandardOrg Primary Key Clustered (NatlStandardOrgId)
-  ,Constraint FK_NatlStandardOrg_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard.NationalStandardId
-  ,Constraint FK_NatlStandardOrg_OrganizationId Foreign Key (OrganizationId) References core.Organization.OrganizationId
+  ,Constraint FK_NatlStandardOrg_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_NatlStandardOrg_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
 )
 GO
 
@@ -803,7 +803,7 @@ create table [core].[Log]
   [LogId] int not null identity(1,1)
 
   -- foreign keys
-  ,[MessageTypeId] tinyint not null default(0)
+  ,[MessageTypeId] int not null default(0)
 
   -- data
   ,[Timestamp] datetime null
@@ -812,6 +812,6 @@ create table [core].[Log]
   ,[Message] varchar(600) not null default('')
 
   ,Constraint PK_Log Primary Key Clustered (LogId)
-  ,Constraint FK_Log_MessageTypeId Foreign Key (MessageTypeId) References core.MessageType.MessageTypeId
+  ,Constraint FK_Log_MessageTypeId Foreign Key (MessageTypeId) References core.MessageType(MessageTypeId)
 )
 GO
