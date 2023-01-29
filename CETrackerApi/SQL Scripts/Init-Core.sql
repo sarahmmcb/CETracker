@@ -338,7 +338,6 @@ create table [ce].ExperienceHist
   ,[UpdateUserId] int not null default(0)
   ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
-  ,IsDeleted bit not null
   ,CarryForward bit not null default(0)
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
@@ -346,6 +345,7 @@ create table [ce].ExperienceHist
   ,EndDate datetime null
   ,Description varchar(500) not null default('')
   ,Notes varchar(max) not null default('')
+  ,IsDeleted bit not null default(0)
 
   ,Constraint PK_ExperienceHist Primary Key Clustered (UniqueifierId, ExperienceId)
 )

@@ -1,0 +1,38 @@
+﻿using Dapper;
+using System.Data;
+using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
+using CETrackerDAL.Models;
+
+namespace CETrackerDAL.DAL;
+
+public interface IDataAccess
+{
+	Task<IEnumerable<T>> LoadData<T, U>(
+		string storedProcedure,
+		U parameters,
+		string connectionId = "Default"
+	);
+}
+
+public class DataAccess : IDataAccess
+{
+	private readonly IConfiguration _config;
+
+	public DataAccess(IConfiguration config)
+	{
+		this._config = config;
+	}
+
+    public async Task<IEnumerable<T>> LoadData<T, U>(
+		string storedProcedure,
+		U parameters,
+		string connectionId = "Default"
+	)
+    {
+        using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
+
+        return await connection.QueryAsync<T>(storedProcedure, parameters,
+            commandType: CommandType.StoredProcedure);
+    }
+}

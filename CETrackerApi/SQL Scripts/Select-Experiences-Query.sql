@@ -1,19 +1,18 @@
 
 select 
-	ex.ceexperienceId
-	,ex.userId
-	,cat.CECategoryId
-	--,typ.DisplayName
-	--,ex.programtitle
-	--,ex.eventname
-	,ex.startdate
-	,ex.enddate
+	ex.ExperienceId
+	,ex.UserId
+	,cat.CategoryId
+	,ex.ProgramTitle
+	,ex.EventName
+	,ex.StartDate
+	,ex.EndDate
 	,ca.DisplayName
 	,am.Amount
-from core.ceExperience ex
-inner join core.ceexperienceAmount am on am.ceexperienceid = ex.ceexperienceid
-inner join core.ceexperiencecategory cat on cat.ceexperienceid = ex.ceexperienceid
-inner join core.CECategory ca on ca.CECategoryId = cat.CECategoryId
+from ce.Experience ex
+inner join ce.ExperienceAmount am on am.Experienceid = ex.Experienceid
+inner join ce.ExperienceCategory cat on cat.Experienceid = ex.Experienceid
+inner join ce.Category ca on ca.CategoryId = cat.CategoryId
 where 
 (
 	(
@@ -29,7 +28,7 @@ where
 	)
 )
 and
-(ex.userId = 1)
+(ex.UserId = 1)
 and
 (
  am.ceunitid = (
