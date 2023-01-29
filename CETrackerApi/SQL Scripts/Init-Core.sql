@@ -1,4 +1,27 @@
 /***********************************************************************************************************************
+* Database
+***********************************************************************************************************************/
+-- Drop DB
+USE tempdb;
+go
+DECLARE @SQL nvarchar(1000);
+IF EXISTS (SELECT 1 FROM sys.databases WHERE [name] = N'CASCETracker')
+BEGIN
+    SET @SQL = N'USE [CASCETracker];
+
+                 ALTER DATABASE CASCETracker SET SINGLE_USER WITH ROLLBACK IMMEDIATE; -- disconnect all other users
+                 use [tempdb];
+
+                 DROP DATABASE CASCETracker;';
+    EXEC (@SQL);
+END;
+
+-- Create DB
+create database CASCETracker;
+use CASCETracker;
+go
+
+/***********************************************************************************************************************
  * Schemas
  **********************************************************************************************************************/
 
@@ -161,8 +184,6 @@ create table [core].[User]
 
   ,Constraint PK_User Primary Key Clustered (UserId)
   ,Constraint FK_User_GenderId Foreign Key (GenderId) References core.Gender(GenderId)
-  ,Constraint FK_User_CredentialId Foreign Key (CredentialId) References core.Credential(CredentialId)
-  ,Constraint FK_User_RoleId Foreign Key (RoleId) References core.[Role](RoleId)
   ,Constraint FK_User_AccountStatusId Foreign Key (AccountStatusId) References core.AccountStatus(AccountStatusId)
 )
 go
@@ -288,6 +309,23 @@ create table ce.Unit
 )
 GO
 
+/********
+* Location
+********/
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Location') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.Location
+(
+  -- primary key
+  LocationId int not null identity(1,1)
+
+  -- data
+  ,Name varchar(20) not null default('')
+  ,IsActive bit not null default(0)
+
+  ,Constraint PK_Location Primary Key Clustered (LocationId)
+)
+GO
+
 /*******
 * CE Experience
 ********/
@@ -395,7 +433,6 @@ create table ce.Category
 
   ,Constraint PK_Category Primary Key Clustered (CategoryId)
   ,Constraint FK_Category_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_Category_CategoryListId Foreign Key (CategoryListId) References ce.CategoryList(CategoryListId)
 )
 GO
 
@@ -487,49 +524,49 @@ create table ce.ExperienceAmountHist
 )
 GO
 
-/*******
-* CEDataGraphicField
-*******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.DataGraphicField') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.DataGraphicField
-(
-  -- primary key
-  DataGraphicFieldId int not null identity(1,1)
+-- /*******
+-- * CEDataGraphicField
+-- *******/
+-- if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.DataGraphicField') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+-- create table ce.DataGraphicField
+-- (
+--   -- primary key
+--   DataGraphicFieldId int not null identity(1,1)
 
-  -- foreign keys
-  ,NationalStandardId int not null default(0)
+--   -- foreign keys
+--   ,NationalStandardId int not null default(0)
 
-  -- data
-  ,DisplayName varchar(50) not null default('')
-  ,DisplayOrder int not null default(0)
-  ,IsActive bit not null default(0)
+--   -- data
+--   ,DisplayName varchar(50) not null default('')
+--   ,DisplayOrder int not null default(0)
+--   ,IsActive bit not null default(0)
 
-  ,Constraint PK_DataGraphicField Primary Key Clustered (DataGraphicFieldId)
-  ,Constraint FK_DataGraphicField_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-)
-GO
+--   ,Constraint PK_DataGraphicField Primary Key Clustered (DataGraphicFieldId)
+--   ,Constraint FK_DataGraphicField_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+-- )
+-- GO
 
-/*******
-* DataGraphicFieldCategory
-*******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.DataGraphicFieldCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.DataGraphicFieldCategory
-(
-  -- primary key
-  DataGraphicFieldCategoryId int not null identity(1,1)
+-- /*******
+-- * DataGraphicFieldCategory
+-- *******/
+-- if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.DataGraphicFieldCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+-- create table ce.DataGraphicFieldCategory
+-- (
+--   -- primary key
+--   DataGraphicFieldCategoryId int not null identity(1,1)
 
-  -- foreign keys
-  ,DataGraphicFieldId int not null default(0)
-  ,CategoryId int not null default(0)
+--   -- foreign keys
+--   ,DataGraphicFieldId int not null default(0)
+--   ,CategoryId int not null default(0)
 
-  -- data
-  ,IsActive bit not null default(0)
+--   -- data
+--   ,IsActive bit not null default(0)
 
-  ,Constraint PK_DataGraphicFieldCategory Primary Key Clustered (DataGraphicFieldCategoryId)
-  ,Constraint FK_DataGraphicFieldCategory_DataGraphicFieldId Foreign Key (DataGraphicFieldId) References ce.DataGraphicField(DataGraphicFieldId)
-  ,Constraint FK_DataGraphicFieldCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
-)
-GO
+--   ,Constraint PK_DataGraphicFieldCategory Primary Key Clustered (DataGraphicFieldCategoryId)
+--   ,Constraint FK_DataGraphicFieldCategory_DataGraphicFieldId Foreign Key (DataGraphicFieldId) References ce.DataGraphicField(DataGraphicFieldId)
+--   ,Constraint FK_DataGraphicFieldCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
+-- )
+-- GO
 
 /*******
 * Compliance Status
@@ -629,23 +666,6 @@ create table core.Country
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Country Primary Key Clustered (CountryId)
-)
-GO
-
-/********
-* Location
-********/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Location') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.Location
-(
-  -- primary key
-  LocationId int not null identity(1,1)
-
-  -- data
-  ,Name varchar(20) not null default('')
-  ,IsActive bit not null default(0)
-
-  ,Constraint PK_Location Primary Key Clustered (LocationId)
 )
 GO
 
@@ -749,7 +769,6 @@ create table ce.NatlStandardUnit
   ,Constraint PK_NatlStandardUnit Primary Key Clustered (NatlStandardUnitId)
   ,Constraint FK_NatlStandardUnit_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
   ,Constraint FK_NatlStandardUnit_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
-  ,Constraint FK_NatlStandardUnit_ParentUnitId Foreign Key (ParentUnitId) References ce.Unit(UnitId)
 )
 GO
 

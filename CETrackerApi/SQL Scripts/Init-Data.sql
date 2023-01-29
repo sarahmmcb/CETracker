@@ -1,7 +1,6 @@
-delete from ce.RuleConditionCategory
-delete from ce.RuleCondition
-delete from ce.[Rule]
-delete from ce.Category
+use CASCETracker;
+go
+
 -- Gender
 if not exists (select 1 from core.Gender where Name=N'Female') insert into core.Gender values (N'Female',1)
 if not exists (select 1 from core.Gender where Name=N'Male') insert into core.Gender values (N'Male',1)
@@ -84,20 +83,20 @@ if not exists (select 1 from ce.Category where Name=N'Specific' and NationalStan
 GO
 
 -- CE Data Graphic Field
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Total CE', N'1', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Professionalism', N'2', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Bias', N'3', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'General Business', N'4', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Organized', N'5', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Total CE', N'1', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Professionalism', N'2', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Bias', N'3', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'General Business', N'4', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Organized', N'5', 1)
 
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Total CE', N'1', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Professionalism', N'2', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Bias', N'3', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'General Business', N'4', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Organized', N'5', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific CE', N'6', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific Organized CE', N'7', 1)
-GO
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Total CE', N'1', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Professionalism', N'2', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Bias', N'3', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'General Business', N'4', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Organized', N'5', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific CE', N'6', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific Organized CE', N'7', 1)
+-- GO
 
 --CE Data Graphic Category
 --insert into ce.DataGraphicFieldCategory values 
