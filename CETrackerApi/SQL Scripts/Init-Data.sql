@@ -32,7 +32,7 @@ GO
 
 -- Compliance
 if not exists (select 1 from ce.Compliance where Name=N'Compliant') insert into ce.Compliance values (N'Compliant',1)
-if not exists (select 1 from ce.Compliance where Name=N'Compliant – NAIC Statement of Actuarial Opinion') insert into ce.Compliance values (N'Compliant – NAIC Statement of Actuarial Opinion',1)
+if not exists (select 1 from ce.Compliance where Name=N'Compliant NAIC Statement of Actuarial Opinion') insert into ce.Compliance values (N'Compliant NAIC Statement of Actuarial Opinion',1)
 if not exists (select 1 from ce.Compliance where Name=N'Not Currently Providing Actuarial Services') insert into ce.Compliance values (N'Not Currently Providing Actuarial Services',1)
 if not exists (select 1 from ce.Compliance where Name=N'Non-Compliant') insert into ce.Compliance values (N'Non-Compliant',1)
 GO

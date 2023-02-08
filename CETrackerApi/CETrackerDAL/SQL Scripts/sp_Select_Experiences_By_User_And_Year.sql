@@ -5,7 +5,7 @@ IF OBJECT_ID('ce.sp_Select_Experiences_By_User_And_Year', 'P') IS NOT NULL
    DROP PROCEDURE ce.sp_Select_Experiences_By_User_And_Year;  
 GO 
 
-create procedure core.sp_Select_Experiences_By_User_And_Year
+create procedure ce.sp_Select_Experiences_By_User_And_Year
 	@UserId int
 	,@NationalStandardId int
 	,@Year int

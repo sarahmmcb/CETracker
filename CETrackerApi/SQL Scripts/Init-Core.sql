@@ -462,7 +462,7 @@ if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceCa
 create table ce.ExperienceCategoryHist
 (
   -- primary key
-  UniqueifierId int not null identity(1,1)
+  Uniqueifier int not null identity(1,1)
 
   ,[UpdateUserId] int not null default(0)
   ,[UpdateUserName] int not null default(0)
@@ -472,7 +472,7 @@ create table ce.ExperienceCategoryHist
   ,ExperienceId int not null default(0)
   ,CategoryId int not null default(0)
 
-  ,Constraint PK_ExperienceCategoryHist Primary Key Clustered (UniqueifierId, ExperienceCategoryId)
+  ,Constraint PK_ExperienceCategoryHist Primary Key Clustered (ExperienceCategoryId, Uniqueifier)
 )
 GO
 
@@ -482,17 +482,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceAmount') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.ExperienceAmount
 (
-  -- primary key
-  ExperienceAmountId int not null identity(1,1)
-
-  -- foreign keys
-  ,ExperienceId int not null default(0)
+  -- Composite key
+  ExperienceId int not null default(0)
   ,UnitId int not null default(0)
 
   -- data
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceAmountId)
+  ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceId, UnitId)
   ,Constraint FK_ExperienceAmount_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
   ,Constraint FK_ExperienceCategory_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
 )
@@ -509,18 +506,17 @@ if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceAm
 create table ce.ExperienceAmountHist
 (
   -- primary key
-  UniqueifierId int not null identity(1,1)
+  Uniqueifier int not null identity(1,1)
 
   ,[UpdateUserId] int not null default(0)
   ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
-  ,ExperienceAmountId int not null default(0)
   ,ExperienceId int not null default(0)
   ,UnitId int not null default(0)
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (UniqueifierId, ExperienceAmountId)
+  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (ExperienceId, UnitId, Uniqueifier)
 )
 GO
 
@@ -591,17 +587,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.UserCompliance') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.UserCompliance
 (
-  -- primary key
-  UserComplianceId int not null identity(1,1)
-
-  -- foreign keys
-  ,UserId int not null default(0)
+  -- Composite PK
+  UserId int not null default(0)
   ,ComplianceId int not null default(0)
 
   -- data
   ,[Year] int not null default(0)
 
-  ,Constraint PK_UserCompliance Primary Key Clustered (UserComplianceId)
+  ,Constraint PK_UserCompliance Primary Key Clustered (UserId, ComplianceId)
   ,Constraint FK_UserCompliance_UserId Foreign Key (UserId) References core.[User](UserId)
   ,Constraint FK_UserCompliance_ComplianceId Foreign Key (ComplianceId) References ce.Compliance(ComplianceId)
 )
@@ -613,17 +606,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.UserNationalStandard') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.UserNationalStandard
 (
-  -- primary key
-  UserNationalStandardId int not null identity(1,1)
-
-  -- foreign keys
+  -- Composite PK
+  UserId int not null default(0)
   ,NationalStandardId int not null default(0)
-  ,UserId int not null default(0)
 
   -- data
   ,IsActive bit not null default(0)
 
-  ,Constraint PK_UserNationalStandard Primary Key Clustered (UserNationalStandardId)
+  ,Constraint PK_UserNationalStandard Primary Key Clustered (UserId, NationalStandardId)
   ,Constraint FK_UserNationalStandard_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
   ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User](UserId)
 )
@@ -635,17 +625,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'core.UserOrganization') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table core.UserOrganization
 (
-  -- primary key
-  UserOrganizationId int not null identity(1,1)
-
-  -- foreign keys
-  ,UserId int not null default(0)
+  -- Composite PK
+  UserId int not null default(0)
   ,OrganizationId int not null default(0)
 
   -- data
   ,IsActive bit not null default(0)
 
-  ,Constraint PK_UserOrganization Primary Key Clustered (UserOrganizationId)
+  ,Constraint PK_UserOrganization Primary Key Clustered (UserId, OrganizationId)
   ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User](UserId)
   ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
 )
@@ -730,17 +717,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.RuleConditionCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.RuleConditionCategory
 (
-  -- primary key
-  RuleConditionCategoryId int not null identity(1,1)
-
-  -- foreign keys
-  ,RuleConditionId int not null default(0)
+  -- Composite PK
+  RuleConditionId int not null default(0)
   ,CategoryId int not null default(0)
 
   -- data
   ,IsActive bit not null default(0)
 
-  ,Constraint PK_RuleConditionCategory Primary Key Clustered (RuleConditionCategoryId)
+  ,Constraint PK_RuleConditionCategory Primary Key Clustered (RuleConditionId, CategoryId)
   ,Constraint FK_RuleConditionCategory_RuleConditionId Foreign Key (RuleConditionId) References ce.[RuleCondition](RuleConditionId)
   ,Constraint FK_RuleConditionCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )
@@ -752,12 +736,11 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.NatlStandardUnit') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.NatlStandardUnit
 (
-  -- primary key
-  NatlStandardUnitId int not null identity(1,1)
-
-  -- foreign keys
-  ,NationalStandardId int not null default(0)
+  -- Composite PK
+  NationalStandardId int not null default(0)
   ,UnitId int not null default(0)
+ 
+  -- foreign keys
   ,ParentUnitId int not null default(0)
 
   -- data
@@ -766,7 +749,7 @@ create table ce.NatlStandardUnit
   ,IsEditable bit not null default(0)
   ,IsActive bit not null default(0)
 
-  ,Constraint PK_NatlStandardUnit Primary Key Clustered (NatlStandardUnitId)
+  ,Constraint PK_NatlStandardUnit Primary Key Clustered (NationalStandardId, UnitId)
   ,Constraint FK_NatlStandardUnit_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
   ,Constraint FK_NatlStandardUnit_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
 )
@@ -778,18 +761,15 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.NatlStandardOrg') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.NatlStandardOrg
 (
-  -- primary key
-  NatlStandardOrgId int not null identity(1,1)
-
-  -- foreign keys
-  ,NationalStandardId int not null default(0)
+  -- Composite PK
+  NationalStandardId int not null default(0)
   ,OrganizationId int not null default(0)
 
   -- data
   ,StartYear int not null default(0)
   ,EndYear int not null default(0)
 
-  ,Constraint PK_NatlStandardOrg Primary Key Clustered (NatlStandardOrgId)
+  ,Constraint PK_NatlStandardOrg Primary Key Clustered (NationalStandardId, OrganizationId)
   ,Constraint FK_NatlStandardOrg_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
   ,Constraint FK_NatlStandardOrg_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
 )
