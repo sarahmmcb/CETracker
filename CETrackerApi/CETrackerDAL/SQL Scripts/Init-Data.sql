@@ -1,3 +1,5 @@
+use CASCETracker;
+go
 
 -- Gender
 if not exists (select 1 from core.Gender where Name=N'Female') insert into core.Gender values (N'Female',1)
@@ -30,7 +32,7 @@ GO
 
 -- Compliance
 if not exists (select 1 from ce.Compliance where Name=N'Compliant') insert into ce.Compliance values (N'Compliant',1)
-if not exists (select 1 from ce.Compliance where Name=N'Compliant – NAIC Statement of Actuarial Opinion') insert into ce.Compliance values (N'Compliant – NAIC Statement of Actuarial Opinion',1)
+if not exists (select 1 from ce.Compliance where Name=N'Compliant NAIC Statement of Actuarial Opinion') insert into ce.Compliance values (N'Compliant NAIC Statement of Actuarial Opinion',1)
 if not exists (select 1 from ce.Compliance where Name=N'Not Currently Providing Actuarial Services') insert into ce.Compliance values (N'Not Currently Providing Actuarial Services',1)
 if not exists (select 1 from ce.Compliance where Name=N'Non-Compliant') insert into ce.Compliance values (N'Non-Compliant',1)
 GO
@@ -57,19 +59,19 @@ if not exists (select 1 from ce.NationalStandard where LongName=N'United States 
 GO
 
 -- Category List
-if not exists (select 1 from coe.CategoryList where Name=N'generalCategories') insert into ce.CategoryList values (N'generalCategories', N'Please indicate the CE Category',1 , 1)
-if not exists (select 1 from coe.CategoryList where Name=N'bias') insert into ce.CategoryList values (N'bias', N'Does this CE include a Bias topic?', 2 , 1)
-if not exists (select 1 from coe.CategoryList where Name=N'organized') insert into ce.CategoryList values (N'organized', N'Is this CE Organized?',3 , 1)
-if not exists (select 1 from coe.CategoryList where Name=N'specificCategories') insert into ce.CategoryList values (N'specificCategories', N'Does this meet USQS Specific Education Requirements under Section 3.3?',4 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'General Categories') insert into ce.CategoryList values (N'General Categories', N'Please indicate the CE Category',1 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Bias') insert into ce.CategoryList values (N'Bias', N'Does this CE include a Bias topic?', 2 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Organized') insert into ce.CategoryList values (N'Organized', N'Is this CE Organized?',3 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Specific Categories') insert into ce.CategoryList values (N'Specific Categories', N'Does this meet USQS Specific Education Requirements under Section 3.3?',4 , 1)
 GO
 
 -- Category
-if not exists (select 1 from coe.Category where Name=N'Total CE') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), 0, N'Total CE', N'Total CE',N'' ,1900, 9999, 1, 1, 1)
-if not exists (select 1 from coe.Category where Name=N'Professionalism') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Professionalism', N'Professionalism',N'' ,1900, 9999, 1, 0, 1)
-if not exists (select 1 from coe.Category where Name=N'Bias') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2022, 9999, 1, 0, 1)
-if not exists (select 1 from coe.Category where Name=N'General Business') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'General Business', N'General Business',N'' ,1900, 9999, 1, 0, 1)
-if not exists (select 1 from coe.Category where Name=N'Other Relevant') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Other Relevant', N'Other Relevant',N'' ,1900, 9999, 0, 0, 1)
-if not exists (select 1 from coe.Category where Name=N'Organized') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Organized'), N'Organized', N'Organized',N'' ,1900, 9999, 0, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Total CE') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), 0, N'Total CE', N'Total CE',N'' ,1900, 9999, 1, 1, 1)
+if not exists (select 1 from ce.Category where Name=N'Professionalism') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Professionalism', N'Professionalism',N'' ,1900, 9999, 1, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Bias') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2022, 9999, 1, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'General Business') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'General Business', N'General Business',N'' ,1900, 9999, 1, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Other Relevant') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Other Relevant', N'Other Relevant',N'' ,1900, 9999, 0, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Organized') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Organized'), N'Organized', N'Organized',N'' ,1900, 9999, 0, 0, 1)
 
 if not exists (select 1 from ce.Category where Name=N'Total CE' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), 0, N'Total CE', N'Total CE',N'' ,1900, 9999, 1, 1, 1)
 if not exists (select 1 from ce.Category where Name=N'Professionalism' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Professionalism', N'Professionalism',N'' ,1900, 9999, 1, 0, 1)
@@ -81,86 +83,86 @@ if not exists (select 1 from ce.Category where Name=N'Specific' and NationalStan
 GO
 
 -- CE Data Graphic Field
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Total CE', N'1', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Professionalism', N'2', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Bias', N'3', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'General Business', N'4', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Organized', N'5', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Total CE', N'1', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Professionalism', N'2', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Bias', N'3', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'General Business', N'4', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'))) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), N'Organized', N'5', 1)
 
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Total CE', N'1', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Professionalism', N'2', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Bias', N'3', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'General Business', N'4', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Organized', N'5', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific CE', N'6', 1)
-if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific Organized CE', N'7', 1)
-GO
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Total CE', N'1', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Professionalism', N'2', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Bias', N'3', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'General Business', N'4', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Organized', N'5', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific CE', N'6', 1)
+-- if not exists (select 1 from ce.DataGraphicField where DisplayName=N'Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific')) insert into ce.DataGraphicField values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), N'Specific Organized CE', N'7', 1)
+-- GO
 
 --CE Data Graphic Category
-insert into ce.CEDataGraphicFieldCategory values 
-(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,(select CategoryId from ce.Category where Name='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-),(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
-,(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-),(
-	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
-	,1
-)
+--insert into ce.DataGraphicFieldCategory values 
+--(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,(select CategoryId from ce.Category where Name='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Total CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--),(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
+--,(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--),(
+--	(select DataGraphicFieldId from ce.DataGraphicField where DisplayName='Specific Organized CE' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+--	,1
+--)
 
 -- Message Type
 if not exists (select 1 from core.MessageType where Name=N'Info') insert into core.MessageType values (N'Info', 1)
@@ -211,7 +213,7 @@ insert into ce.NatlStandardUnit values
 insert into ce.[Rule] values
 (
 	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,(select UnitId from core.Unit where LongNamePlural='Hours')
+	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,'Total CE'
 	,'Total CE hours for the USQS General Requirement'
 	,30
@@ -226,7 +228,7 @@ go
 insert into ce.[Rule] values
 (
 	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
-	,(select UnitId from core.Unit where LongNamePlural='Hours')
+	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,'Total CE'
 	,'Total CE hours for the USQS Specific Requirement'
 	,30
@@ -366,7 +368,7 @@ insert into ce.RuleCondition values
 -- Rule Condition category linker
 insert into ce.RuleConditionCategory values
 (
-	1
+	1 -- need to make this equal the ruleConditionId which isn't always 1
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
 	,1
 )
@@ -437,12 +439,6 @@ insert into core.[User] values
 	,''
 	,0
 	,SYSDATETIME()
-	,1
-	,0
-	,0
-	,SYSDATETIME()
-	,null
-	,null
 ),
 (
 	1  --female
@@ -458,12 +454,6 @@ insert into core.[User] values
 	,''
 	,0
 	,SYSDATETIME()
-	,2
-	,0
-	,0
-	,SYSDATETIME()
-	,null
-	,null
 )
 
 -- Link sample users to national standard
@@ -472,34 +462,16 @@ insert into ce.UserNationalStandard values
 	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
 	,1 -- sideshow bob
 	,1
-	,0
-	,0
-	,0
-	,null
-	,null
-	,null
 ),
 (
 	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
 	,2 -- helen lovejoy
 	,1
-	,0
-	,0
-	,0
-	,null
-	,null
-	,null
 ),
 (
 	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
 	,2 -- helen lovejoy
 	,1
-	,0
-	,0
-	,0
-	,null
-	,null
-	,null
 )
 
 -- Experience
@@ -509,7 +481,6 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select Locationid from ce.Location where name='Other')
-	,2022 -- needed?
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
@@ -517,12 +488,6 @@ insert into ce.Experience values
 	,'2022-02-14'
 	,'A bunch of classes'
 	,''
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -530,12 +495,6 @@ insert into ce.ExperienceAmount values
 	1 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Minutes')
 	,150 -- amount
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -543,24 +502,12 @@ insert into ce.ExperienceAmount values
 	1 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,3
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	1
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 -- second experience
@@ -568,7 +515,6 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select LocationId from ce.Location where name='Other')
-	,2022 -- needed?
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
@@ -576,12 +522,6 @@ insert into ce.Experience values
 	,'2022-02-14'
 	,'A bunch of classes'
 	,''
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -589,12 +529,6 @@ insert into ce.ExperienceAmount values
 	2 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Minutes')
 	,60 -- amount
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -602,35 +536,17 @@ insert into ce.ExperienceAmount values
 	2 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,1.2
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	2
 	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 ,
 (
 	2
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 -- third experience
@@ -638,7 +554,6 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select LocationId from ce.Location where name='Work')
-	,2022 -- needed?
 	,0
 	,'Work convo'
 	,'Convo'
@@ -646,12 +561,6 @@ insert into ce.Experience values
 	,'2022-01-16'
 	,'Boooring'
 	,''
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -659,12 +568,6 @@ insert into ce.ExperienceAmount values
 	3 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Minutes')
 	,30 -- amount
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -672,48 +575,24 @@ insert into ce.ExperienceAmount values
 	3 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,0.6
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	3
 	,(select CategoryId from ce.Category where Name='Other Relevant' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	3
 	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	3
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 -- fourth experience
@@ -721,7 +600,6 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select LocationId from ce.Location where name='Online')
-	,2021 -- needed?
 	,1 -- Carry forward to 2022 to count for 2023 CE
 	,'Actuaries Unite'
 	,'Online Class'
@@ -729,12 +607,6 @@ insert into ce.Experience values
 	,'2021-06-14'
 	,'Mathy stuff'
 	,''
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -742,12 +614,6 @@ insert into ce.ExperienceAmount values
 	4 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Minutes')
 	,50 -- amount
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceAmount values
@@ -755,32 +621,14 @@ insert into ce.ExperienceAmount values
 	4 -- experience id
 	,(select UnitId from ce.Unit where LongNamePlural='Hours')
 	,1
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 
 insert into ce.ExperienceCategory values
 (
 	4 --experience id
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
 ,(
 	2
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
-	,1
-	,0
-	,0
-	,'2022-03-01'
-	,null
-	,null
 )
