@@ -27,6 +27,4 @@ app.UseAuthorization();
 
 app.ConfigureApi();
 
-// app.MapControllers();
-
 app.Run();

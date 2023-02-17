@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CETracker.Contracts\CETracker.Contracts.csproj" />
     <ProjectReference Include="..\CETrackerDAL\CETrackerDAL.csproj" />
   </ItemGroup>
 

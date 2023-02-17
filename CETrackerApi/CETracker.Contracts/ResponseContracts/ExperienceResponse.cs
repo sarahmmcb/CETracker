@@ -1,6 +1,6 @@
-﻿namespace CETrackerDAL.Models;
-
-public class Experience
+﻿
+namespace CETracker.Contracts.ResponseContracts;
+public class ExperienceResponse
 {
     public int ExperienceId { get; set; }
     public int UserId { get; set; }

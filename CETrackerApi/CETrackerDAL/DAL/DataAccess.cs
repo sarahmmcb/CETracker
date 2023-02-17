@@ -2,7 +2,6 @@
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
-using CETrackerDAL.Models;
 
 namespace CETrackerDAL.DAL;
 

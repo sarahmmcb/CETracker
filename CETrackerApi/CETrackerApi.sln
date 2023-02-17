@@ -5,12 +5,14 @@ VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CETrackerApi", "CETrackerApi\CETrackerApi.csproj", "{A8C8D163-98AA-4172-A023-20EBF51C487B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CETrackerDAL", "CETrackerDAL\CETrackerDAL.csproj", "{9E65C180-8CAD-4DC2-9EFD-707BF7621C2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CETrackerDAL", "CETrackerDAL\CETrackerDAL.csproj", "{9E65C180-8CAD-4DC2-9EFD-707BF7621C2F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{738B460A-9F95-422A-85AF-632A4F6914D5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CETracker.Contracts", "CETracker.Contracts\CETracker.Contracts.csproj", "{C8FBC9EB-6E7B-492A-B69E-B3494FA1BAF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{9E65C180-8CAD-4DC2-9EFD-707BF7621C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E65C180-8CAD-4DC2-9EFD-707BF7621C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E65C180-8CAD-4DC2-9EFD-707BF7621C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8FBC9EB-6E7B-492A-B69E-B3494FA1BAF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8FBC9EB-6E7B-492A-B69E-B3494FA1BAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8FBC9EB-6E7B-492A-B69E-B3494FA1BAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8FBC9EB-6E7B-492A-B69E-B3494FA1BAF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,7 @@
-﻿using CETrackerDAL.Data;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace CETrackerApi;
 
-public static class Api
+public static class ExperienceApi
 {
     public static void ConfigureApi(this WebApplication app)
     {

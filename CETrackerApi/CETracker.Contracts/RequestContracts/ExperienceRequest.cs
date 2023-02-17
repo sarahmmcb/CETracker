@@ -1,8 +1,8 @@
-﻿namespace CETrackerDAL.Models;
+﻿
+namespace CETracker.Contracts.RequestContracts;
 
-public class Experience
+public class ExperienceRequest
 {
-    public int ExperienceId { get; set; }
     public int UserId { get; set; }
     public int LocationId { get; set; }
     public bool CarryForward { get; set; }
