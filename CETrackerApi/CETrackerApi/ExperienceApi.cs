@@ -1,4 +1,5 @@
-﻿
+﻿using CETrackerApi.Logic;
+
 namespace CETrackerApi;
 
 public static class ExperienceApi
@@ -12,11 +13,11 @@ public static class ExperienceApi
         int year,
         int userId,
         int nationalStandardId,
-        IExperienceData data)
+        IExperienceService experienceService)
     {
         try
         {
-            var result = await data.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
+            var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             return Results.Ok(result);
         }

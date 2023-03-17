@@ -629,6 +629,6 @@ insert into ce.ExperienceCategory values
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
 )
 ,(
-	2
+	4
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
 )

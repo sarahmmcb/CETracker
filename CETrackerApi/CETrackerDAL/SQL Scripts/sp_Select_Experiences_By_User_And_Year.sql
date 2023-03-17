@@ -14,15 +14,27 @@ as
 begin
 	select 
 		ex.ExperienceId
-		,cat.CategoryId
 		,ex.StartDate
 		,ex.EndDate
-		,ca.DisplayName
+		,ex.ProgramTitle
+		,ex.EventName
+		,ex.[Description]
+		,ex.Notes
+		,ca.CategoryId
+		,ca.NationalStandardId
+		,ca.CategoryListId
+		,ca.[Name] as CategoryName
+		,ca.DisplayName as CategoryDisplayName
+		,am.UnitId
 		,am.Amount
+		,ex.UserId
+		,loc.LocationId
+		,loc.[Name] as LocationName
 	from ce.Experience ex
 	inner join ce.ExperienceAmount am on am.ExperienceId = ex.ExperienceId
 	inner join ce.ExperienceCategory cat on cat.ExperienceId = ex.ExperienceId
 	inner join ce.Category ca on ca.CategoryId = cat.CategoryId
+	inner join ce.[Location] loc on loc.LocationId = ex.LocationId
 	where 
 		(
 			(
@@ -39,15 +51,5 @@ begin
 		)
 	and
 		(ex.UserId = @UserId)
-	and
-		(
-		 am.UnitId = (
-			select u.UnitId from ce.Unit u
-			inner join ce.NatlStandardUnit n on u.UnitId = n.UnitId
-			where n.NationalStandardId = @NationalStandardId and n.IsComplianceUnit = 1
-		 )
-		)
 	order by ex.ExperienceId;
 end
-
-RETURN;

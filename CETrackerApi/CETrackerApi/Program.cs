@@ -1,5 +1,6 @@
 using CETrackerDAL.DAL;
 using CETrackerApi;
+using CETrackerApi.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataAccess, DataAccess>();
+builder.Services.AddSingleton<IExperienceService, ExperienceService>();
 builder.Services.AddSingleton<IExperienceData, ExperienceData>();
 
 var app = builder.Build();
