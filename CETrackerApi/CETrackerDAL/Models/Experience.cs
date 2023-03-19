@@ -16,7 +16,6 @@ public class Experience
     public int CategoryListId { get; set; }
     public string CategoryName { get; set; }
     public string CategoryDisplayName { get; set; }
-
     public int UnitId { get; set; }
     public decimal Amount { get; set; }
     public int LocationId { get; set; }

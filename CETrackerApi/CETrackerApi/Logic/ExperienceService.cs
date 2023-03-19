@@ -16,7 +16,7 @@ public class ExperienceService : IExperienceService
         _dataAccess = experienceData;
     }
 
-    public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId)
+    public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId)
     {
        var experienceData = await _dataAccess.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
 
@@ -25,7 +25,7 @@ public class ExperienceService : IExperienceService
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)
     {
-        IEnumerable<ExperienceResponse> experiences = new List<ExperienceResponse>();
+        List<ExperienceResponse> experiences = new List<ExperienceResponse>();
         ExperienceResponse experienceResponse = new ExperienceResponse();
         var prevId = -1;
 
@@ -72,24 +72,32 @@ public class ExperienceService : IExperienceService
                     }
                 };
 
-                experiences.Append(experienceResponse);
+                experiences.Add(experienceResponse);
             }
 
-            experienceResponse.Categories.Append(new Category
+            // Do not add the category if it already exists
+            if (!experienceResponse.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
             {
-                CategoryId = experienceRow.CategoryId,
-                NationalStandardId = experienceRow.NationalStandardId,
-                CategoryListId = experienceRow.CategoryListId,
-                Name = experienceRow.CategoryName,
-                DisplayName = experienceRow.CategoryName,
-            });
+                experienceResponse.Categories = experienceResponse.Categories.Append(new Category
+                {
+                    CategoryId = experienceRow.CategoryId,
+                    NationalStandardId = experienceRow.NationalStandardId,
+                    CategoryListId = experienceRow.CategoryListId,
+                    Name = experienceRow.CategoryName,
+                    DisplayName = experienceRow.CategoryName,
+                });
+            }
 
-            experienceResponse.Amounts.Append(new ExperienceAmount
+            // Do not add the amount if it already exists
+            if (!experienceResponse.Amounts.Any(am => am.UnitId == experienceRow.UnitId))
             {
-                UnitId = experienceRow.UnitId,
-                ExperienceId = experienceRow.ExperienceId,
-                Amount = experienceRow.Amount
-            }); 
+                experienceResponse.Amounts = experienceResponse.Amounts.Append(new ExperienceAmount
+                {
+                    UnitId = experienceRow.UnitId,
+                    ExperienceId = experienceRow.ExperienceId,
+                    Amount = experienceRow.Amount
+                });
+            }
         }
 
         return experiences;
