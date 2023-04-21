@@ -1,8 +1,10 @@
-﻿namespace CETrackerApi.Logic;
+﻿using CETracker.Contracts.DataContracts;
+
+namespace CETrackerApi.Logic;
 
 public interface IUnitService
 {
-    Task<UnitResponse> GetUnits();
+    Task<UnitResponse> GetUnits(int nationalStandardId);
 }
 
 public class UnitService : IUnitService
@@ -14,9 +16,9 @@ public class UnitService : IUnitService
         _unitData = unitData;
     }
 
-    public async Task<UnitResponse> GetUnits()
+    public async Task<UnitResponse> GetUnits(int nationalStandardId)
     {
-        var result = await _unitData.GetUnits();
+        var result = await _unitData.GetUnits(nationalStandardId);
 
         return new UnitResponse
         {

@@ -7,7 +7,7 @@ public static class ExperienceApi
     public static void ConfigureApi(this WebApplication app)
     {
         app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear);
-        app.MapGet("/api/units", GetUnits);
+        app.MapGet("/api/units/{nationalStandardId}", GetUnits);
     }
 
     private static async Task<IResult> GetExperiencesByYear(
@@ -28,11 +28,11 @@ public static class ExperienceApi
         }
     }
 
-    private static async Task<IResult> GetUnits(IUnitService unitService)
+    private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService)
     {
         try
         {
-            var result = await unitService.GetUnits().ConfigureAwait(false);
+            var result = await unitService.GetUnits(nationalStandardId).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             return Results.Ok(result);
         }

@@ -5,7 +5,7 @@ namespace CETrackerDAL.Data;
 
 public interface IUnitData
 {
-    Task<IEnumerable<Unit>> GetUnits();
+    Task<IEnumerable<Unit>> GetUnits(int nationalStandardId);
 }
 public class UnitData : IUnitData
 {
@@ -16,7 +16,15 @@ public class UnitData : IUnitData
         _dataAccess = dataAccess;
     }
 
-    public Task<IEnumerable<Unit>> GetUnits() =>
-        _dataAccess.LoadData<Unit, dynamic>(
-            "ce.Units_S", null);
+    public Task<IEnumerable<Unit>> GetUnits(int nationalStandardId)
+    {
+     var result =   _dataAccess.LoadData<Unit, dynamic>(
+            "ce.Units_S", 
+            new
+            {
+                nationalStandardId
+            });
+
+        return result;
+    }
 }
