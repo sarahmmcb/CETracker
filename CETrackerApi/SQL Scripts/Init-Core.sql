@@ -746,7 +746,7 @@ create table ce.NatlStandardUnit
   -- data
   ,ConversionFormula varchar(100) not null default('')
   ,IsComplianceUnit bit not null default(0)
-  ,IsEditable bit not null default(0)
+  ,IsDisabled bit not null default(1)
   ,IsActive bit not null default(0)
 
   ,Constraint PK_NatlStandardUnit Primary Key Clustered (NationalStandardId, UnitId)

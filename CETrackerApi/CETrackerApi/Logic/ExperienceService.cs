@@ -5,7 +5,7 @@ namespace CETrackerApi.Logic;
 
 public interface IExperienceService
 {
-    public Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
+    Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
 }
 public class ExperienceService : IExperienceService
 {

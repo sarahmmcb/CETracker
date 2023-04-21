@@ -1,11 +1,11 @@
 USE CasCETracker;
 GO
 
-IF OBJECT_ID('ce.sp_Select_Experiences_By_User_And_Year', 'P') IS NOT NULL  
-   DROP PROCEDURE ce.sp_Select_Experiences_By_User_And_Year;  
+IF OBJECT_ID('ce.Experiences_S', 'P') IS NOT NULL  
+   DROP PROCEDURE ce.Experiences_S;  
 GO 
 
-create procedure ce.sp_Select_Experiences_By_User_And_Year
+create procedure ce.Experiences_S
 	@UserId int
 	,@NationalStandardId int
 	,@Year int

@@ -13,6 +13,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataAccess, DataAccess>();
 builder.Services.AddSingleton<IExperienceService, ExperienceService>();
 builder.Services.AddSingleton<IExperienceData, ExperienceData>();
+builder.Services.AddSingleton<IUnitService, UnitService>();
+builder.Services.AddSingleton<IUnitData, UnitData>();
+
 
 var app = builder.Build();
 
