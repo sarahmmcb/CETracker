@@ -399,6 +399,7 @@ create table ce.CategoryList
   CategoryListId int not null identity(1,1)
 
   -- data
+  ,NationalStandardId int not null default (0)
   ,[Name] varchar(50) not null default('')
   ,DisplayQuestion varchar(200) not null default('')
   ,DisplayOrder int not null default(0)

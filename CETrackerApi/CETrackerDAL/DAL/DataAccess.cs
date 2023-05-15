@@ -20,7 +20,7 @@ public class DataAccess : IDataAccess
 
 	public DataAccess(IConfiguration config)
 	{
-		this._config = config;
+		_config = config;
 	}
 
     public async Task<IEnumerable<T>> LoadData<T, U>(

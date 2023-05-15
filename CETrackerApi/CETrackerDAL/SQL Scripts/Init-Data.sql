@@ -59,10 +59,10 @@ if not exists (select 1 from ce.NationalStandard where LongName=N'United States 
 GO
 
 -- Category List
-if not exists (select 1 from ce.CategoryList where Name=N'General Categories') insert into ce.CategoryList values (N'General Categories', N'Please indicate the CE Category',1 , 1)
-if not exists (select 1 from ce.CategoryList where Name=N'Bias') insert into ce.CategoryList values (N'Bias', N'Does this CE include a Bias topic?', 2 , 1)
-if not exists (select 1 from ce.CategoryList where Name=N'Organized') insert into ce.CategoryList values (N'Organized', N'Is this CE Organized?',3 , 1)
-if not exists (select 1 from ce.CategoryList where Name=N'Specific Categories') insert into ce.CategoryList values (N'Specific Categories', N'Does this meet USQS Specific Education Requirements under Section 3.3?',4 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'General Categories') insert into ce.CategoryList values (1, N'General Categories', N'Please indicate the CE Category',1 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Bias') insert into ce.CategoryList values (1, N'Bias', N'Does this CE include a Bias topic?', 2 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Organized') insert into ce.CategoryList values (1, N'Organized', N'Is this CE Organized?',3 , 1)
+if not exists (select 1 from ce.CategoryList where Name=N'Specific Categories') insert into ce.CategoryList values (1, N'Specific Categories', N'Does this meet USQS Specific Education Requirements under Section 3.3?',4 , 1)
 GO
 
 -- Category
