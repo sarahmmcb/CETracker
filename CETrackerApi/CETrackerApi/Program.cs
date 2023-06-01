@@ -1,6 +1,6 @@
 using CETrackerDAL.DAL;
-using CETrackerApi;
 using CETrackerApi.Logic;
+using CETrackerApi.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,8 @@ builder.Services.AddSingleton<IExperienceService, ExperienceService>();
 builder.Services.AddSingleton<IExperienceData, ExperienceData>();
 builder.Services.AddSingleton<IUnitService, UnitService>();
 builder.Services.AddSingleton<IUnitData, UnitData>();
+builder.Services.AddSingleton<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<ICategoryData, CategoryData>();
 
 
 var app = builder.Build();
@@ -30,6 +32,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.ConfigureApi();
+app.ConfigureExperienceApi();
+app.ConfigureUnitApi();
+app.ConfigureCategoryApi();
 
 app.Run();

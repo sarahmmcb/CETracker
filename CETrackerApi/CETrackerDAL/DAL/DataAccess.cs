@@ -31,7 +31,9 @@ public class DataAccess : IDataAccess
     {
         using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
 
-        return await connection.QueryAsync<T>(storedProcedure, parameters,
+        var result = await connection.QueryAsync<T>(storedProcedure, parameters,
             commandType: CommandType.StoredProcedure);
+
+		return result;
     }
 }

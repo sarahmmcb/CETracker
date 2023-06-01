@@ -18,7 +18,7 @@ public class CategoryData : ICategoryData
 
     public Task<IEnumerable<CategoryList>> GetCategoryLists(int nationalStandardId, int year) =>
         _dataAccess.LoadData<CategoryList, dynamic>(
-            "ce.CategoryList_S"
+            "ce.CategoryLists_S"
             ,
             new
             {
