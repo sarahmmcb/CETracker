@@ -9,9 +9,9 @@ public interface ILocationData
 }
 public class LocationData : ILocationData
 {
-    private readonly DataAccess _dataAccess;
+    private readonly IDataAccess _dataAccess;
 
-    public LocationData(DataAccess dataAccess)
+    public LocationData(IDataAccess dataAccess)
     {
         _dataAccess = dataAccess;
     }

@@ -39,7 +39,7 @@ public class ExperienceService : IExperienceService
                 {
                     ExperienceId = experienceRow.ExperienceId,
                     UserId = experienceRow.UserId,
-                    Location = new LocationResponse
+                    Location = new Location
                     {
                         LocationId = experienceRow.LocationId,
                         Name = experienceRow.LocationName
