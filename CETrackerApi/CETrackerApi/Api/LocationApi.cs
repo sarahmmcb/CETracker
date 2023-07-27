@@ -9,7 +9,9 @@ public static class LocationApi
         app.MapGet("/api/locations/nationalStandardId/{nationalStandardId}", GetLocations);
     }
 
-    private static async Task<IResult> GetLocations(int nationalStandardId, ILocationService locationService)
+    private static async Task<IResult> GetLocations(
+        int nationalStandardId,
+        ILocationService locationService)
     {
         try
         {

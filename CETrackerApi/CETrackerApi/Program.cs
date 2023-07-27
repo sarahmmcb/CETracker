@@ -27,7 +27,8 @@ builder.Services.AddSingleton<IUnitService, UnitService>();
 builder.Services.AddSingleton<IUnitData, UnitData>();
 builder.Services.AddSingleton<ICategoryService, CategoryService>();
 builder.Services.AddSingleton<ICategoryData, CategoryData>();
-
+builder.Services.AddSingleton<ILocationService, LocationService>();
+builder.Services.AddSingleton<ILocationData, LocationData>();
 
 var app = builder.Build();
 
@@ -47,5 +48,6 @@ app.UseAuthorization();
 app.ConfigureExperienceApi();
 app.ConfigureUnitApi();
 app.ConfigureCategoryApi();
+app.ConfigureLocationApi();
 
 app.Run();
