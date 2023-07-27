@@ -2,14 +2,14 @@
 
 namespace CETrackerApi.Api;
 
-public class LocationApi
+public static class LocationApi
 {
     public static void ConfigureLocationApi(this WebApplication app)
     {
         app.MapGet("/api/locations/nationalStandardId/{nationalStandardId}", GetLocations);
     }
 
-    private static async GetLocations(int nationalStandardId)
+    private static async Task<IResult> GetLocations(int nationalStandardId, ILocationService locationService)
     {
         try
         {

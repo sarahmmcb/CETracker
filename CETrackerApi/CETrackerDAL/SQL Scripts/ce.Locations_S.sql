@@ -20,5 +20,3 @@ begin
 	and
 	l.IsActive = 1	
 end
-
--- TODO: add ce.NatlStandardLocation table

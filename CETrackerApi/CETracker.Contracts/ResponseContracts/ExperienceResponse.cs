@@ -5,7 +5,7 @@ public class ExperienceResponse
 {
     public int ExperienceId { get; set; }
     public int UserId { get; set; }
-    public LocationResponse Location { get; set; }
+    public Location Location { get; set; }
     public bool CarryForward { get; set; }
     public string ProgramTitle { get; set; }
     public string EventName { get; set; }
