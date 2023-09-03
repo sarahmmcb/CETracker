@@ -68,14 +68,14 @@ GO
 -- Category
 if not exists (select 1 from ce.Category where Name=N'Total CE') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'), 0, N'Total CE', N'Total CE',N'' ,1900, 9999, 1, 1, 1)
 if not exists (select 1 from ce.Category where Name=N'Professionalism') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Professionalism', N'Professionalism',N'' ,1900, 9999, 1, 0, 1)
-if not exists (select 1 from ce.Category where Name=N'Bias') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2022, 9999, 1, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Bias') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2023, 9999, 1, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'General Business') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'General Business', N'General Business',N'' ,1900, 9999, 1, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'Other Relevant') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Other Relevant', N'Other Relevant',N'' ,1900, 9999, 0, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'Organized') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS General'),(select CategoryListId from ce.CategoryList where Name='Organized'), N'Organized', N'Organized',N'' ,1900, 9999, 0, 0, 1)
 
 if not exists (select 1 from ce.Category where Name=N'Total CE' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'), 0, N'Total CE', N'Total CE',N'' ,1900, 9999, 1, 1, 1)
 if not exists (select 1 from ce.Category where Name=N'Professionalism' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Professionalism', N'Professionalism',N'' ,1900, 9999, 1, 0, 1)
-if not exists (select 1 from ce.Category where Name=N'Bias' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2022, 9999, 1, 0, 1)
+if not exists (select 1 from ce.Category where Name=N'Bias' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='Bias'), N'Bias', N'Bias Topics',N'' ,2023, 9999, 1, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'General Business' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'General Business', N'General Business',N'' ,1900, 9999, 1, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'Other Relevant' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='General Categories'), N'Other Relevant', N'Other Relevant',N'' ,1900, 9999, 0, 0, 1)
 if not exists (select 1 from ce.Category where Name=N'Organized' and NationalStandardId='3') insert into ce.Category values ((select NationalStandardId from ce.NationalStandard where ShortName=N'USQS Specific'),(select CategoryListId from ce.CategoryList where Name='Organized'), N'Organized', N'Organized',N'' ,1900, 9999, 0, 0, 1)
@@ -262,7 +262,7 @@ insert into ce.RuleCondition values
 	,1
 	,0
 	,1
-	,2022
+	,2023
 	,9999
 	,1
 )
@@ -312,7 +312,7 @@ insert into ce.RuleCondition values
 	,1
 	,0
 	,1
-	,2022
+	,2023
 	,9999
 	,1
 )
@@ -459,18 +459,18 @@ insert into core.[User] values
 -- Link sample users to national standard
 insert into ce.UserNationalStandard values 
 (
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,1 -- sideshow bob
+	1 -- sideshow bob
+	,(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
 	,1
 ),
 (
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,2 -- helen lovejoy
+	2 -- helen lovejoy
+	,(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
 	,1
 ),
 (
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
-	,2 -- helen lovejoy
+	2 -- helen lovejoy
+	,(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
 	,1
 )
 
@@ -484,8 +484,8 @@ insert into ce.Experience values
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
-	,'2022-02-14'
-	,'2022-02-14'
+	,'2023-02-14'
+	,'2023-02-14'
 	,'A bunch of classes'
 	,''
 )
@@ -518,8 +518,8 @@ insert into ce.Experience values
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
-	,'2022-02-14'
-	,'2022-02-14'
+	,'2023-02-14'
+	,'2023-02-14'
 	,'A bunch of classes'
 	,''
 )
@@ -557,8 +557,8 @@ insert into ce.Experience values
 	,0
 	,'Work convo'
 	,'Convo'
-	,'2022-01-16'
-	,'2022-01-16'
+	,'2023-01-16'
+	,'2023-01-16'
 	,'Boooring'
 	,''
 )
@@ -600,7 +600,7 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select LocationId from ce.Location where name='Online')
-	,1 -- Carry forward to 2022 to count for 2023 CE
+	,1 -- Carry forward to 2023 to count for 2023 CE
 	,'Actuaries Unite'
 	,'Online Class'
 	,'2021-06-14'
