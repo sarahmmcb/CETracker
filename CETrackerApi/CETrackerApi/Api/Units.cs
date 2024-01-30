@@ -2,9 +2,9 @@
 
 namespace CETrackerApi.Api;
 
-public static class UnitApi
+public static class Units
 {
-    public static void ConfigureUnitApi(this WebApplication app)
+    public static void ConfigureUnits(this WebApplication app)
     {
         app.MapGet("/api/units/{nationalStandardId}", GetUnits);
     }

@@ -2,9 +2,9 @@
 
 namespace CETrackerApi.Api;
 
-public static class ExperienceApi
+public static class Experiences
 {
-    public static void ConfigureExperienceApi(this WebApplication app)
+    public static void ConfigureExperiences(this WebApplication app)
     {
         app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear);
     }

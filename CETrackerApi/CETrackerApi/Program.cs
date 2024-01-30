@@ -45,9 +45,9 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
-app.ConfigureExperienceApi();
-app.ConfigureUnitApi();
-app.ConfigureCategoryApi();
-app.ConfigureLocationApi();
+app.ConfigureExperiences();
+app.ConfigureUnits();
+app.ConfigureCategories();
+app.ConfigureLocations();
 
 app.Run();

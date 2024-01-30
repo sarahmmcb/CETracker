@@ -2,9 +2,9 @@
 
 namespace CETrackerApi.Api;
 
-public static class CategoryApi
+public static class Categories
 {
-    public static void ConfigureCategoryApi(this WebApplication app)
+    public static void ConfigureCategories(this WebApplication app)
     {
         app.MapGet("/api/categoryLists/nationalStandardId/{nationalStandardId}/year/{year}", GetCategoryLists);
     }

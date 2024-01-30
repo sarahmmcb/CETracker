@@ -25,8 +25,8 @@ public class ExperienceService : IExperienceService
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)
     {
-        List<ExperienceResponse> experiences = new List<ExperienceResponse>();
-        ExperienceResponse experienceResponse = new ExperienceResponse();
+        List<ExperienceResponse> experiences = new();
+        ExperienceResponse experienceResponse = new();
         var prevId = -1;
 
         foreach (var experienceRow in experienceData)
@@ -61,6 +61,9 @@ public class ExperienceService : IExperienceService
                             DisplayName = experienceRow.CategoryName,
                         }
                     },
+                    // This should probably be a property of the category bc
+                    // if there is more than one category for an experience, 
+                    // the amounts for each category might be different
                     Amounts = new List<ExperienceAmount>()
                     {
                         new ExperienceAmount
