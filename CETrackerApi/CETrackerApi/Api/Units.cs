@@ -6,7 +6,7 @@ public static class Units
 {
     public static void ConfigureUnits(this WebApplication app)
     {
-        app.MapGet("/api/units/{nationalStandardId}", GetUnits);
+        app.MapGet("/api/units/nationalStandardId/{nationalStandardId}", GetUnits);
     }
 
     private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService)

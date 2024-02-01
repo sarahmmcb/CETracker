@@ -4,7 +4,7 @@ namespace CETrackerApi.Logic;
 
 public interface ILocationService
 {
-    Task<LocationResponse> GetLocations(int nationalStandardId);
+    Task<LocationResponse> GetLocations();
 }
 public class LocationService : ILocationService
 {
@@ -15,9 +15,9 @@ public class LocationService : ILocationService
         _locationData = locationData;
     }
 
-    public async Task<LocationResponse> GetLocations(int nationalStandardId)
+    public async Task<LocationResponse> GetLocations()
     {
-        var locations = await _locationData.GetLocations(nationalStandardId);
+        var locations = await _locationData.GetLocations();
 
         return new LocationResponse
         {

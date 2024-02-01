@@ -5,7 +5,7 @@ namespace CETrackerDAL.Data;
 
 public interface ILocationData
 {
-    Task<IEnumerable<Location>> GetLocations(int nationalStandardId);
+    Task<IEnumerable<Location>> GetLocations();
 }
 public class LocationData : ILocationData
 {
@@ -16,12 +16,11 @@ public class LocationData : ILocationData
         _dataAccess = dataAccess;
     }
 
-    public Task<IEnumerable<Location>> GetLocations(int nationalStandardId) =>
+    public Task<IEnumerable<Location>> GetLocations() =>
         _dataAccess.LoadData<Location, dynamic>(
             "ce.Locations_S",
             new
             {
-                nationalStandardId
             }
         );
 }

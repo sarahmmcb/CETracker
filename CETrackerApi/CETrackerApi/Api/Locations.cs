@@ -6,16 +6,15 @@ public static class Locations
 {
     public static void ConfigureLocations(this WebApplication app)
     {
-        app.MapGet("/api/locations/nationalStandardId/{nationalStandardId}", GetLocations);
+        app.MapGet("/api/locations", GetLocations);
     }
 
     private static async Task<IResult> GetLocations(
-        int nationalStandardId,
         ILocationService locationService)
     {
         try
         {
-            var result = await locationService.GetLocations(nationalStandardId);
+            var result = await locationService.GetLocations();
             if (result == null)
                 return Results.NotFound();
             return Results.Ok(result);

@@ -6,7 +6,6 @@ IF OBJECT_ID('ce.Locations_S', 'P') IS NOT NULL
 GO 
 
 create procedure ce.Locations_S
-	@NationalStandardId int
 as
 
 begin
@@ -14,9 +13,6 @@ begin
       l.LocationId
       ,[Name]
   from ce.[Location] l
-  inner join ce.NatlStandardLocation nl on l.LocationId = nl.LocationId
   where
-	nl.NationalStandardId = @NationalStandardId
-	and
 	l.IsActive = 1	
 end
