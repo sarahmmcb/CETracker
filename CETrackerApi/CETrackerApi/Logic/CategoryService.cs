@@ -5,7 +5,7 @@ namespace CETrackerApi.Logic;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<CategoryList>> GetCategoryLists(int nationalStandardId, int year);
+    Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year);
 }
 public class CategoryService: ICategoryService
 {
@@ -16,11 +16,15 @@ public class CategoryService: ICategoryService
         _categoryData = categoryData;
     }
 
-    public async Task<IEnumerable<CategoryList>> GetCategoryLists(int nationalStandardId, int year)
+    public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year)
     {
         var listData = await _categoryData.GetCategoryLists(nationalStandardId, year);
+        var structuredCategoryLists = GetStructuredCategoryLists(listData);
 
-        return GetStructuredCategoryLists(listData);
+        return new CategoryListResponse
+        {
+            CategoryLists = structuredCategoryLists
+        };
     }
 
     private IEnumerable<CategoryList> GetStructuredCategoryLists(IEnumerable<DALCategoryList.CategoryList> lists)
@@ -31,21 +35,25 @@ public class CategoryService: ICategoryService
             var structuredList = categoryLists.FirstOrDefault(m => m.CategoryListId == item.CategoryListId);
             if (structuredList == null)
             {
-                structuredList = new CategoryList();
-                structuredList.CategoryListId = item.CategoryListId;
-                structuredList.Name = item.Name;
-                structuredList.DisplayQuestion = item.DisplayQuestion;
-                structuredList.DisplayOrder = item.DisplayOrder;
-                structuredList.Categories = new List<Category>();
+                structuredList = new CategoryList
+                {
+                    CategoryListId = item.CategoryListId,
+                    Name = item.Name,
+                    DisplayQuestion = item.DisplayQuestion,
+                    DisplayOrder = item.DisplayOrder,
+                    Categories = new List<Category>()
+                };
                 categoryLists.Add(structuredList);
             }
 
-            var category = new Category();
-            category.CategoryId = item.CategoryId;
-            category.CategoryListId = item.CategoryListId;
-            category.Name = item.CategoryName;
-            category.DisplayName = item.DisplayName;
-            category.NationalStandardId = item.NationalStandardId;
+            var category = new Category
+            {
+                CategoryId = item.CategoryId,
+                CategoryListId = item.CategoryListId,
+                Name = item.CategoryName,
+                DisplayName = item.DisplayName,
+                NationalStandardId = item.NationalStandardId
+            };
 
             structuredList.Categories = structuredList.Categories.Concat(new[] { category });
         }
