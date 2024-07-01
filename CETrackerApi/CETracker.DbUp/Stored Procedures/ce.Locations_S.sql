@@ -16,3 +16,6 @@ begin
   where
 	l.IsActive = 1	
 end
+
+GRANT EXECUTE ON ce.Locations_S TO [CETRACKER_SVCACCT];
+GO

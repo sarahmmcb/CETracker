@@ -815,3 +815,19 @@ create table [core].[Log]
   ,Constraint FK_Log_MessageTypeId Foreign Key (MessageTypeId) References core.MessageType(MessageTypeId)
 )
 GO
+
+/******************
+* Login for IISAppPool
+******************/
+CREATE LOGIN [IIS APPPOOL\CETracker] FROM WINDOWS;
+GO
+
+Use CASCETracker
+GO
+
+CREATE USER [CETRACKER_SVCACCT] FOR LOGIN [IIS APPPOOL\CETracker];
+GO
+
+ALTER ROLE [db_datareader] ADD MEMBER [CETRACKER_SVCACCT];
+ALTER ROLE [db_datawriter] ADD MEMBER [CETRACKER_SVCACCT];
+GO

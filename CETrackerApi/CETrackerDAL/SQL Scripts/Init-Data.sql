@@ -1,6 +1,8 @@
 use CASCETracker;
 go
 
+DECLARE @experienceYear INT = YEAR(GETDATE());
+
 -- Gender
 if not exists (select 1 from core.Gender where Name=N'Female') insert into core.Gender values (N'Female',1)
 if not exists (select 1 from core.Gender where Name=N'Male') insert into core.Gender values (N'Male',1)
@@ -484,8 +486,8 @@ insert into ce.Experience values
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
-	,'2022-02-14'
-	,'2022-02-14'
+	,CONCAT(@experienceYear,'-02-14')
+	,CONCAT(@experienceYear,'-02-14')
 	,'A bunch of classes'
 	,''
 )
@@ -518,8 +520,8 @@ insert into ce.Experience values
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
-	,'2022-02-14'
-	,'2022-02-14'
+	,CONCAT(@experienceYear,'-02-14')
+	,CONCAT(@experienceYear,'-02-14')
 	,'A bunch of classes'
 	,''
 )
@@ -557,8 +559,8 @@ insert into ce.Experience values
 	,0
 	,'Work convo'
 	,'Convo'
-	,'2022-01-16'
-	,'2022-01-16'
+	,CONCAT(@experienceYear,'-01-16')
+	,CONCAT(@experienceYear,'-01-16')
 	,'Boooring'
 	,''
 )
@@ -600,11 +602,11 @@ insert into ce.Experience values
 (
 	1 -- sideshow bob
 	,(select LocationId from ce.Location where name='Online')
-	,1 -- Carry forward to 2022 to count for 2023 CE
+	,1 -- Carry forward
 	,'Actuaries Unite'
 	,'Online Class'
-	,'2021-06-14'
-	,'2021-06-14'
+	,CONCAT(@experienceYear-1,'-06-14')
+	,CONCAT(@experienceYear-1,'-06-14')
 	,'Mathy stuff'
 	,''
 )

@@ -24,6 +24,7 @@ _UpgradeReport_Files/
 ###############
 bin/
 obj/
+publish/
 TestResults/
 CETrackerApi/.vs
 ###################
