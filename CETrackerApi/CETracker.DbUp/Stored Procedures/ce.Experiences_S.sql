@@ -53,6 +53,7 @@ begin
 		(ex.UserId = @UserId)
 	order by ex.ExperienceId;
 end
+GO
 
-GRANT EXECUTE ON ce.Experiences_S TO [CETRACKER_SVCACCT];
+GRANT EXECUTE ON ce.Experiences_S TO [CETRACKER_EXECROLE];
 GO

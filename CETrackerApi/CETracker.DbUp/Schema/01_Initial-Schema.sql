@@ -2,24 +2,24 @@
 * Database
 ***********************************************************************************************************************/
 -- Drop DB
-USE tempdb;
-go
-DECLARE @SQL nvarchar(1000);
-IF EXISTS (SELECT 1 FROM sys.databases WHERE [name] = N'CASCETracker')
-BEGIN
-    SET @SQL = N'USE [CASCETracker];
+--USE tempdb;
+--go
+--DECLARE @SQL nvarchar(1000);
+--IF EXISTS (SELECT 1 FROM sys.databases WHERE [name] = N'CASCETracker')
+--BEGIN
+--    SET @SQL = N'USE [CASCETracker];
 
-                 ALTER DATABASE CASCETracker SET SINGLE_USER WITH ROLLBACK IMMEDIATE; -- disconnect all other users
-                 use [tempdb];
+--                 ALTER DATABASE CASCETracker SET SINGLE_USER WITH ROLLBACK IMMEDIATE; -- disconnect all other users
+--                 use [tempdb];
 
-                 DROP DATABASE CASCETracker;';
-    EXEC (@SQL);
-END;
+--                 DROP DATABASE CASCETracker;';
+--    EXEC (@SQL);
+--END;
 
--- Create DB
-create database CASCETracker;
-use CASCETracker;
-go
+---- Create DB
+--create database CASCETracker;
+--use CASCETracker;
+--go
 
 /***********************************************************************************************************************
  * Schemas
@@ -819,15 +819,34 @@ GO
 /******************
 * Login for IISAppPool
 ******************/
-CREATE LOGIN [IIS APPPOOL\CETracker] FROM WINDOWS;
+IF NOT EXISTS 
+    (SELECT 1  
+     FROM master.sys.server_principals
+     WHERE name = 'IIS APPPOOL\CETracker')
+BEGIN
+    CREATE LOGIN [IIS APPPOOL\CETracker] FROM WINDOWS;
+END
 GO
 
 Use CASCETracker
 GO
 
-CREATE USER [CETRACKER_SVCACCT] FOR LOGIN [IIS APPPOOL\CETracker];
+IF NOT EXISTS
+    (SELECT 1
+     FROM sys.database_principals
+     WHERE name='CETRACKER_SVCACCT')
+BEGIN
+    CREATE USER [CETRACKER_SVCACCT] FOR LOGIN [IIS APPPOOL\CETracker];
+END
 GO
 
-ALTER ROLE [db_datareader] ADD MEMBER [CETRACKER_SVCACCT];
-ALTER ROLE [db_datawriter] ADD MEMBER [CETRACKER_SVCACCT];
+IF NOT EXISTS
+    (SELECT 1
+     FROM sys.database_principals
+     WHERE name='CETRACKER_EXECROLE'
+     and type_desc='DATABASE_ROLE')
+BEGIN
+    CREATE ROLE [CETRACKER_EXECROLE];
+    ALTER ROLE [CETRACKER_EXECROLE] ADD MEMBER [CETRACKER_SVCACCT];
+END
 GO

@@ -16,6 +16,7 @@ begin
   where
 	l.IsActive = 1	
 end
+GO
 
-GRANT EXECUTE ON ce.Locations_S TO [CETRACKER_SVCACCT];
+GRANT EXECUTE ON ce.Locations_S TO [CETRACKER_EXECROLE];
 GO

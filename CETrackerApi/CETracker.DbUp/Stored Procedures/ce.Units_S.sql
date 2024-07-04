@@ -24,6 +24,7 @@ begin
 	and
 	u.IsActive = 1	
 end
+GO
 
-GRANT EXECUTE ON ce.Units_S TO [CETRACKER_SVCACCT];
+GRANT EXECUTE ON ce.Units_S TO [CETRACKER_EXECROLE];
 GO

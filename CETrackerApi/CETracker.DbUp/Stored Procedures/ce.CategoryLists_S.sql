@@ -27,6 +27,7 @@ begin
 	 and cl.IsActive = 1
 	 and ca.StartYear <= @Year
 end
+GO
 
-GRANT EXECUTE ON ce.CategoryLists_S TO [CETRACKER_SVCACCT];
+GRANT EXECUTE ON ce.CategoryLists_S TO [CETRACKER_EXECROLE];
 GO
