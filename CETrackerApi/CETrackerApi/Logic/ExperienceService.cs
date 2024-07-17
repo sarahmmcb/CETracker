@@ -1,5 +1,4 @@
 ﻿using CETracker.Contracts.DataContracts;
-using CETrackerDAL.DataAccess;
 using CETrackerDAL.Models;
 
 namespace CETrackerApi.Logic;
@@ -10,16 +9,16 @@ public interface IExperienceService
 }
 public class ExperienceService : IExperienceService
 {
-    private readonly ICeDataProvider _dataAccess;
+    private readonly ICeDataProvider _ceDataProvider;
 
-    public ExperienceService(ICeDataProvider experienceData)
+    public ExperienceService(ICeDataProvider ceDataprovider)
     {
-        _dataAccess = experienceData;
+        _ceDataProvider = ceDataprovider;
     }
 
     public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId)
     {
-       var experienceData = await _dataAccess.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
+       var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
 
        return ConstructExperiences(experienceData);
     }

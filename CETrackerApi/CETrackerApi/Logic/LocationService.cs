@@ -1,6 +1,4 @@
-﻿using CETrackerDAL.Data;
-
-namespace CETrackerApi.Logic;
+﻿namespace CETrackerApi.Logic;
 
 public interface ILocationService
 {
@@ -8,16 +6,16 @@ public interface ILocationService
 }
 public class LocationService : ILocationService
 {
-    private readonly ILocationData _locationData;
+    private readonly ICeDataProvider _ceDataProvider;
 
-    public LocationService(ILocationData locationData)
+    public LocationService(ICeDataProvider ceDataProvider)
     {
-        _locationData = locationData;
+        _ceDataProvider = ceDataProvider;
     }
 
     public async Task<LocationResponse> GetLocations()
     {
-        var locations = await _locationData.GetLocations();
+        var locations = await _ceDataProvider.GetLocations();
 
         return new LocationResponse
         {

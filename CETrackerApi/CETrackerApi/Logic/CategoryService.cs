@@ -9,16 +9,16 @@ public interface ICategoryService
 }
 public class CategoryService: ICategoryService
 {
-    private readonly ICategoryData _categoryData;
+    private readonly ICeDataProvider _ceDataProvider;
 
-    public CategoryService(ICategoryData categoryData)
+    public CategoryService(ICeDataProvider ceDataprovider)
     {
-        _categoryData = categoryData;
+        _ceDataProvider = ceDataprovider;
     }
 
     public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year)
     {
-        var listData = await _categoryData.GetCategoryLists(nationalStandardId, year);
+        var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year);
         var structuredCategoryLists = GetStructuredCategoryLists(listData);
 
         return new CategoryListResponse

@@ -25,15 +25,12 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
-builder.Services.AddTransient<IDataAccess, DataAccess>();
+builder.Services.AddTransient<ICeDataProvider, CeDataProvider>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<ICeDataProvider, CeDataProvider>();
 builder.Services.AddTransient<IUnitService, UnitService>();
-builder.Services.AddTransient<IUnitData, UnitData>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-builder.Services.AddTransient<ICategoryData, CategoryData>();
 builder.Services.AddTransient<ILocationService, LocationService>();
-builder.Services.AddTransient<ILocationData, LocationData>();
 
 var app = builder.Build();
 
