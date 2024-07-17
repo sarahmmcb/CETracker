@@ -1,7 +1,7 @@
-using CETrackerDAL.DAL;
 using CETrackerApi.Logic;
 using CETrackerApi.Api;
 using Microsoft.OpenApi.Models;
+using CETrackerDAL.DataAccess;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
 builder.Services.AddTransient<IDataAccess, DataAccess>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
-builder.Services.AddTransient<IExperienceDataProvider, ExperienceDataProvider>();
+builder.Services.AddTransient<ICeDataProvider, CeDataProvider>();
 builder.Services.AddTransient<IUnitService, UnitService>();
 builder.Services.AddTransient<IUnitData, UnitData>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();

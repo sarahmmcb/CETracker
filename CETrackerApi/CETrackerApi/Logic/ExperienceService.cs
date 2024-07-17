@@ -1,4 +1,5 @@
 ﻿using CETracker.Contracts.DataContracts;
+using CETrackerDAL.DataAccess;
 using CETrackerDAL.Models;
 
 namespace CETrackerApi.Logic;
@@ -9,9 +10,9 @@ public interface IExperienceService
 }
 public class ExperienceService : IExperienceService
 {
-    private readonly IExperienceDataProvider _dataAccess;
+    private readonly ICeDataProvider _dataAccess;
 
-    public ExperienceService(IExperienceDataProvider experienceData)
+    public ExperienceService(ICeDataProvider experienceData)
     {
         _dataAccess = experienceData;
     }
@@ -25,7 +26,8 @@ public class ExperienceService : IExperienceService
 
     public async Task<int> UpdateExperience(UpdateExperienceRequest request)
     {
-
+        await Task.Delay(1000);
+        return 0;
     }
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)

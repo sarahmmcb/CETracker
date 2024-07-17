@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CETrackerDAL.DAL;
+namespace CETrackerDAL.DataAccess;
 
 public interface IDataConnectionFactory
 {
@@ -15,12 +15,12 @@ public interface IDataConnectionFactory
 }
 public class DataConnectionFactory : IDataConnectionFactory
 {
-	private readonly IConfiguration _config;
+    private readonly IConfiguration _config;
 
     public DataConnectionFactory(IConfiguration config)
     {
         _config = config;
     }
 
-    public DbConnection CeTrackerSqlConnection => new SqlConnection(_config.GetSection("CeTrackerSqlConnection").Value);
+    public DbConnection CeTrackerSqlConnection() => new SqlConnection(_config.GetSection("CeTrackerSqlConnection").Value);
 }
