@@ -24,15 +24,16 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
-builder.Services.AddSingleton<IDataAccess, DataAccess>();
-builder.Services.AddSingleton<IExperienceService, ExperienceService>();
-builder.Services.AddSingleton<IExperienceData, ExperienceData>();
-builder.Services.AddSingleton<IUnitService, UnitService>();
-builder.Services.AddSingleton<IUnitData, UnitData>();
-builder.Services.AddSingleton<ICategoryService, CategoryService>();
-builder.Services.AddSingleton<ICategoryData, CategoryData>();
-builder.Services.AddSingleton<ILocationService, LocationService>();
-builder.Services.AddSingleton<ILocationData, LocationData>();
+builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
+builder.Services.AddTransient<IDataAccess, DataAccess>();
+builder.Services.AddTransient<IExperienceService, ExperienceService>();
+builder.Services.AddTransient<IExperienceDataProvider, ExperienceDataProvider>();
+builder.Services.AddTransient<IUnitService, UnitService>();
+builder.Services.AddTransient<IUnitData, UnitData>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ICategoryData, CategoryData>();
+builder.Services.AddTransient<ILocationService, LocationService>();
+builder.Services.AddTransient<ILocationData, LocationData>();
 
 var app = builder.Build();
 

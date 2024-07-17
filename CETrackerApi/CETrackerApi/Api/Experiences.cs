@@ -1,4 +1,6 @@
 ﻿using CETrackerApi.Logic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CETrackerApi.Api;
 
@@ -7,6 +9,7 @@ public static class Experiences
     public static void ConfigureExperiences(this WebApplication app)
     {
         app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear);
+        app.MapPost("/api/experiences", CreateNewExperience);
     }
 
     private static async Task<IResult> GetExperiencesByYear(
@@ -25,5 +28,13 @@ public static class Experiences
         {
             return Results.Problem(ex.Message);
         }
+    }
+
+    private static async Task<int> CreateNewExperience(
+        UpdateExperienceRequest request,
+        IExperienceService experienceService)
+    {
+        await Task.Delay(1000);
+        return request.UserId;
     }
 }

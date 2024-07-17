@@ -9,9 +9,9 @@ public interface IExperienceService
 }
 public class ExperienceService : IExperienceService
 {
-    private readonly IExperienceData _dataAccess;
+    private readonly IExperienceDataProvider _dataAccess;
 
-    public ExperienceService(IExperienceData experienceData)
+    public ExperienceService(IExperienceDataProvider experienceData)
     {
         _dataAccess = experienceData;
     }
@@ -21,6 +21,11 @@ public class ExperienceService : IExperienceService
        var experienceData = await _dataAccess.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
 
        return ConstructExperiences(experienceData);
+    }
+
+    public async Task<int> UpdateExperience(UpdateExperienceRequest request)
+    {
+
     }
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)

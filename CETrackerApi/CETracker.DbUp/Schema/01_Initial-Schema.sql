@@ -313,7 +313,7 @@ GO
 * Location
 ********/
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Location') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.Location
+create table ce.[Location]
 (
   -- primary key
   LocationId int not null identity(1,1)
@@ -330,7 +330,7 @@ GO
 * CE Experience
 ********/
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Experience') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table [ce].Experience
+create table ce.Experience
 (
   -- primary key
   ExperienceId int not null identity(1,1)
@@ -343,10 +343,10 @@ create table [ce].Experience
   ,CarryForward bit not null default(0)
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
-  ,StartDate datetime null
-  ,EndDate datetime null
-  ,Description varchar(500) not null default('')
-  ,Notes varchar(max) not null default('')
+  ,StartDate datetime not null
+  ,EndDate datetime not null
+  ,Description varchar(500) null
+  ,Notes varchar(max) null
 
   ,Constraint PK_Experience Primary Key Clustered (ExperienceId)
   ,Constraint FK_Experience_UserId Foreign Key (UserId) References core.[User](UserId)
@@ -374,16 +374,15 @@ create table [ce].ExperienceHist
 
   -- data
   ,[UpdateUserId] int not null default(0)
-  ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,CarryForward bit not null default(0)
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
-  ,StartDate datetime null
-  ,EndDate datetime null
-  ,Description varchar(500) not null default('')
-  ,Notes varchar(max) not null default('')
-  ,IsDeleted bit not null default(0)
+  ,StartDate datetime not null
+  ,EndDate datetime not null
+  ,Description varchar(500) null 
+  ,Notes varchar(max) null
+  ,IsDeleted bit not null
 
   ,Constraint PK_ExperienceHist Primary Key Clustered (UniqueifierId, ExperienceId)
 )

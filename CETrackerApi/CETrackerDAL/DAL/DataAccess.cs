@@ -16,11 +16,11 @@ public interface IDataAccess
 
 public class DataAccess : IDataAccess
 {
-	private readonly IConfiguration _config;
+	private readonly IDataConnectionFactory _dataConnectionFactory;
 
-	public DataAccess(IConfiguration config)
+	public DataAccess(IDataConnectionFactory dataConnectionFactory)
 	{
-		_config = config;
+		_dataConnectionFactory = dataConnectionFactory;
 	}
 
     public async Task<IEnumerable<T>> LoadData<T, U>(
@@ -29,7 +29,7 @@ public class DataAccess : IDataAccess
 		string connectionId = "Default"
 	)
     {
-        using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
+        using IDbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
 
         var result = await connection.QueryAsync<T>(storedProcedure, parameters,
             commandType: CommandType.StoredProcedure);

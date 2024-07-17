@@ -3,16 +3,16 @@ using CETrackerDAL.Models;
 
 namespace CETrackerDAL.Data;
 
-public interface IExperienceData
+public interface IExperienceDataProvider
 {
 	Task<IEnumerable<Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId);
 }
 
-public class ExperienceData : IExperienceData
+public class ExperienceDataProvider : IExperienceDataProvider
 {
 	private readonly IDataAccess _db;
 
-	public ExperienceData(IDataAccess db)
+	public ExperienceDataProvider(IDataAccess db)
 	{
 		_db = db;
 	}
