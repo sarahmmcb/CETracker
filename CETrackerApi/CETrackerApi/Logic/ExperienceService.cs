@@ -57,11 +57,12 @@ public class ExperienceService : IExperienceService
                     EndDate = experienceRow.EndDate,
                     Description = experienceRow.Description,
                     Notes = experienceRow.Notes,
-                    Categories = new List<Category>
+                    Categories = new List<ExperienceCategory>
                     {
-                        new Category {
+                        new() {
+                            ExperienceCategoryId = experienceRow.ExperienceCategoryId,
+                            ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
-                            NationalStandardId = experienceRow.NationalStandardId,
                             CategoryListId = experienceRow.CategoryListId,
                             Name = experienceRow.CategoryName,
                             DisplayName = experienceRow.CategoryName,
@@ -87,10 +88,11 @@ public class ExperienceService : IExperienceService
             // Do not add the category if it already exists
             if (!experienceResponse.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
             {
-                experienceResponse.Categories = experienceResponse.Categories.Append(new Category
+                experienceResponse.Categories = experienceResponse.Categories.Append(new()
                 {
+                    ExperienceCategoryId = experienceRow.ExperienceCategoryId,
+                    ExperienceId = experienceRow.ExperienceId,
                     CategoryId = experienceRow.CategoryId,
-                    NationalStandardId = experienceRow.NationalStandardId,
                     CategoryListId = experienceRow.CategoryListId,
                     Name = experienceRow.CategoryName,
                     DisplayName = experienceRow.CategoryName,

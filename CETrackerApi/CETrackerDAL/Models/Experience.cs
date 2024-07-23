@@ -11,6 +11,7 @@ public class Experience
     public DateTime EndDate { get; set; }
     public string Description { get; set; }
     public string Notes { get; set; }
+    public int ExperienceCategoryId { get; set; }
     public int CategoryId { get; set; }
     public int NationalStandardId { get; set; }
     public int CategoryListId { get; set; }

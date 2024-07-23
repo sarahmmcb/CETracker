@@ -13,6 +13,6 @@ public class ExperienceResponse
     public DateTime EndDate { get; set; }
     public string Description { get; set; }
     public string Notes { get; set; }
-    public IEnumerable<Category> Categories { get; set; }
+    public IEnumerable<ExperienceCategory> Categories { get; set; }
     public IEnumerable<ExperienceAmount> Amounts { get; set; }
 }

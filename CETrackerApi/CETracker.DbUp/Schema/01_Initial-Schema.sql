@@ -465,7 +465,6 @@ create table ce.ExperienceCategoryHist
   Uniqueifier int not null identity(1,1)
 
   ,[UpdateUserId] int not null default(0)
-  ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
   ,ExperienceCategoryId int not null default(0)

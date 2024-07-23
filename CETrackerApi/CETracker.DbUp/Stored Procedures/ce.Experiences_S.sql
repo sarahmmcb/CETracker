@@ -20,7 +20,8 @@ begin
 		,ex.EventName
 		,ex.[Description]
 		,ex.Notes
-		,ca.CategoryId
+		,cat.ExperienceCategoryId
+		,cat.CategoryId
 		,ca.NationalStandardId
 		,ca.CategoryListId
 		,ca.[Name] as CategoryName
