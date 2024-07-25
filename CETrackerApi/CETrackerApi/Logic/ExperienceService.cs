@@ -68,13 +68,11 @@ public class ExperienceService : IExperienceService
                             DisplayName = experienceRow.CategoryName,
                         }
                     },
-                    // This should probably be a property of the category bc
-                    // if there is more than one category for an experience, 
-                    // the amounts for each category might be different
                     Amounts = new List<ExperienceAmount>()
                     {
-                        new ExperienceAmount
+                        new()
                         {
+                            ExperienceAmountId = experienceRow.ExperienceAmountId,
                             UnitId = experienceRow.UnitId,
                             ExperienceId = experienceRow.ExperienceId,
                             Amount = experienceRow.Amount
@@ -84,30 +82,31 @@ public class ExperienceService : IExperienceService
 
                 experiences.Add(experienceResponse);
             }
-
-            // Do not add the category if it already exists
-            if (!experienceResponse.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
+            else
             {
-                experienceResponse.Categories = experienceResponse.Categories.Append(new()
+                if (!experienceResponse.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
                 {
-                    ExperienceCategoryId = experienceRow.ExperienceCategoryId,
-                    ExperienceId = experienceRow.ExperienceId,
-                    CategoryId = experienceRow.CategoryId,
-                    CategoryListId = experienceRow.CategoryListId,
-                    Name = experienceRow.CategoryName,
-                    DisplayName = experienceRow.CategoryName,
-                });
-            }
+                    experienceResponse.Categories = experienceResponse.Categories.Append(new()
+                    {
+                        ExperienceCategoryId = experienceRow.ExperienceCategoryId,
+                        ExperienceId = experienceRow.ExperienceId,
+                        CategoryId = experienceRow.CategoryId,
+                        CategoryListId = experienceRow.CategoryListId,
+                        Name = experienceRow.CategoryName,
+                        DisplayName = experienceRow.CategoryName,
+                    });
+                }
 
-            // Do not add the amount if it already exists
-            if (!experienceResponse.Amounts.Any(am => am.UnitId == experienceRow.UnitId))
-            {
-                experienceResponse.Amounts = experienceResponse.Amounts.Append(new ExperienceAmount
+                if (!experienceResponse.Amounts.Any(am => am.UnitId == experienceRow.UnitId))
                 {
-                    UnitId = experienceRow.UnitId,
-                    ExperienceId = experienceRow.ExperienceId,
-                    Amount = experienceRow.Amount
-                });
+                    experienceResponse.Amounts = experienceResponse.Amounts.Append(new()
+                    {
+                        ExperienceAmountId = experienceRow.ExperienceAmountId,
+                        UnitId = experienceRow.UnitId,
+                        ExperienceId = experienceRow.ExperienceId,
+                        Amount = experienceRow.Amount
+                    });
+                }
             }
         }
 

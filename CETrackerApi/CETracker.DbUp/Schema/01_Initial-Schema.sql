@@ -455,6 +455,10 @@ create table ce.ExperienceCategory
 )
 GO
 
+if not exists (select * from sys.indexes where name = N'ExperienceCategory_ExperienceId' and object_id = OBJECT_ID(N'[ce].[ExperienceCategory]'))
+create nonclustered index ExperienceCategory_ExperienceId on [ce].[ExperienceCategory](ExperienceId)
+GO
+
 /*******
 * Experience Cat Hist
 *******/
@@ -481,14 +485,14 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceAmount') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.ExperienceAmount
 (
-  -- Composite key
-  ExperienceId int not null default(0)
+  ExperienceAmountId int not null identity(1,1)
+  ,ExperienceId int not null default(0)
   ,UnitId int not null default(0)
 
   -- data
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceId, UnitId)
+  ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceAmountId)
   ,Constraint FK_ExperienceAmount_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
   ,Constraint FK_ExperienceCategory_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
 )
@@ -508,14 +512,14 @@ create table ce.ExperienceAmountHist
   Uniqueifier int not null identity(1,1)
 
   ,[UpdateUserId] int not null default(0)
-  ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
-  ,ExperienceId int not null default(0)
-  ,UnitId int not null default(0)
+  ,ExperienceAmountId int not null
+  ,ExperienceId int not null
+  ,UnitId int not null
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (ExperienceId, UnitId, Uniqueifier)
+  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (ExperienceAmountId, Uniqueifier)
 )
 GO
 

@@ -17,5 +17,5 @@ public class UpdateExperienceRequest
     public string Description { get; set; }
     public string Notes { get; set; }
     public ExperienceCategory[] ExperienceCategories { get; set; }
-    public ExperienceAmount ExperienceAmount { get; set; }
+    public ExperienceAmount[] ExperienceAmounts { get; set; }
 }

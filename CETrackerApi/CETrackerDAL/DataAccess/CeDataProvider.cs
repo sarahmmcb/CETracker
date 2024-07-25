@@ -84,14 +84,14 @@ public class CeDataProvider : ICeDataProvider
 
             await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection).ConfigureAwait(false);
 
-            await UpdateExperienceAmount(experienceId, updateExperienceRequest, connection).ConfigureAwait(false);
+            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection).ConfigureAwait(false);
 
             txScope.Complete();
-
         }
         catch (SqlException e)
         {
             // TODO: logging
+            throw;
         }
         finally
         {
@@ -107,16 +107,27 @@ public class CeDataProvider : ICeDataProvider
                 new
                 {
                     experienceCategory.ExperienceCategoryId,
-                    experienceCategory.ExperienceId,
+                    experienceId,
                     experienceCategory.CategoryId,
                     request.UserId //TODO: get the user id from the auth context
-                });
+                }, (IDbTransaction)Transaction.Current);
         }
     }
 
-    internal virtual async Task UpdateExperienceAmount(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
     {
-
+        foreach (var experienceAmount in request.ExperienceAmounts)
+        {
+            await conn.QueryAsync("ce.ExperienceAmount_U_I",
+                new
+                {
+                    experienceAmount.ExperienceAmountId,
+                    experienceId,
+                    experienceAmount.UnitId,
+                    experienceAmount.Amount,
+                    request.UserId //TODO: get the user id from the auth context
+                }, (IDbTransaction)Transaction.Current);
+        }
     }
 
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
