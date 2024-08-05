@@ -33,7 +33,7 @@ public class ExperienceService : IExperienceService
     {
         List<ExperienceResponse> experiences = new();
         ExperienceResponse experienceResponse = new();
-        var prevId = -1;
+        var prevId = experienceData.FirstOrDefault()?.ExperienceId;
 
         foreach (var experienceRow in experienceData)
         {
