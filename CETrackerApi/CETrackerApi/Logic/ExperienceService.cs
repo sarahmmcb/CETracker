@@ -6,6 +6,8 @@ namespace CETrackerApi.Logic;
 public interface IExperienceService
 {
     Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
+
+    int UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService : IExperienceService
 {
@@ -19,21 +21,20 @@ public class ExperienceService : IExperienceService
     public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId)
     {
        var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
-
        return ConstructExperiences(experienceData);
     }
 
-    public async Task<int> UpdateExperience(UpdateExperienceRequest request)
+    public int UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
-        await Task.Delay(1000);
-        return 0;
+        var experienceId = _ceDataProvider.UpdateExperience(request, cancellationToken);
+        return experienceId;
     }
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)
     {
         List<ExperienceResponse> experiences = new();
         ExperienceResponse experienceResponse = new();
-        var prevId = experienceData.FirstOrDefault()?.ExperienceId;
+        var prevId = -1;
 
         foreach (var experienceRow in experienceData)
         {
@@ -63,9 +64,6 @@ public class ExperienceService : IExperienceService
                             ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                             ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
-                            CategoryListId = experienceRow.CategoryListId,
-                            Name = experienceRow.CategoryName,
-                            DisplayName = experienceRow.CategoryName,
                         }
                     },
                     Amounts = new List<ExperienceAmount>()
@@ -91,9 +89,6 @@ public class ExperienceService : IExperienceService
                         ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                         ExperienceId = experienceRow.ExperienceId,
                         CategoryId = experienceRow.CategoryId,
-                        CategoryListId = experienceRow.CategoryListId,
-                        Name = experienceRow.CategoryName,
-                        DisplayName = experienceRow.CategoryName,
                     });
                 }
 

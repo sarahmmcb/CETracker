@@ -30,7 +30,7 @@ BEGIN
 	VALUES
 		(
 			@ExperienceId
-			,@CategoryId
+			,@UnitId
 			,@Amount
 		)
 END
@@ -41,7 +41,7 @@ BEGIN
 	SET
 		ExperienceId = @ExperienceId
 		,UnitId = @UnitId
-		,AmountId = @AmountId
+		,Amount = @Amount
 	OUTPUT
 		@UpdateUserId
 		,GETDATE()

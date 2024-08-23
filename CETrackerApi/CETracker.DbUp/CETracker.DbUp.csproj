@@ -19,10 +19,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Schema\02_Initial-Data.sql" />
     <EmbeddedResource Include="Schema\01_Initial-Schema.sql" />
-    <EmbeddedResource Include="Stored Procedures\ce.CategoryLists_S.sql" />
-    <EmbeddedResource Include="Stored Procedures\ce.Experiences_S.sql" />
-    <EmbeddedResource Include="Stored Procedures\ce.Locations_S.sql" />
-    <EmbeddedResource Include="Stored Procedures\ce.Units_S.sql" />
+	<EmbeddedResource Include="Stored Procedures\*" />
   </ItemGroup>
 
   <ItemGroup>

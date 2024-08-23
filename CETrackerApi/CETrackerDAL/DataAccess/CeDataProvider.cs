@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 using System.Transactions;
 using DALModels = CETrackerDAL.Models;
 using Dapper;
@@ -14,6 +15,7 @@ public interface ICeDataProvider
     Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId);
     Task<IEnumerable<Location>> GetLocations();
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId);
+    int UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 
 public class CeDataProvider : ICeDataProvider
@@ -61,32 +63,24 @@ public class CeDataProvider : ICeDataProvider
                    nationalStandardId
                });
 
-    public async Task UpdateExperience(UpdateExperienceRequest updateExperienceRequest)
+    public int UpdateExperience(UpdateExperienceRequest updateExperienceRequest, CancellationToken cancellationToken)
     {
         using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew);
 
         try
         {
-            using IDbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
+            using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
+            connection.Open();
 
-            var experienceId = await connection.QuerySingleAsync<int>("ce.Experiences_U_I",
-                new {
-                    updateExperienceRequest.UserId, // TODO: get the user id from the auth context
-                    updateExperienceRequest.LocationId,
-                    updateExperienceRequest.CarryForward,
-                    updateExperienceRequest.ProgramTitle,
-                    updateExperienceRequest.EventName,
-                    updateExperienceRequest.StartDate,
-                    updateExperienceRequest.EndDate,
-                    updateExperienceRequest.Description,
-                    updateExperienceRequest.Notes
-                }, (IDbTransaction)Transaction.Current);
+            var experienceId = UpdateExperience(updateExperienceRequest, connection);
 
-            await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection).ConfigureAwait(false);
+            UpdateExperienceCategories(experienceId, updateExperienceRequest, connection);
 
-            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection).ConfigureAwait(false);
-
+            UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection);
+            
             txScope.Complete();
+
+            return experienceId;
         }
         catch (SqlException e)
         {
@@ -99,34 +93,60 @@ public class CeDataProvider : ICeDataProvider
         }
     }
 
-    internal virtual async Task UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    internal virtual int UpdateExperience(UpdateExperienceRequest updateExperienceRequest, DbConnection connection)
     {
+        var updateUserId = 0; // TODO: get the user id from the auth context
+        var experienceId = connection.QuerySingle<int>("ce.Experiences_U_I",
+               new
+               {
+                   updateExperienceRequest.ExperienceId,
+                   updateExperienceRequest.UserId,
+                   updateExperienceRequest.LocationId,
+                   updateExperienceRequest.CarryForward,
+                   updateExperienceRequest.ProgramTitle,
+                   updateExperienceRequest.EventName,
+                   updateExperienceRequest.StartDate,
+                   updateExperienceRequest.EndDate,
+                   updateExperienceRequest.Description,
+                   updateExperienceRequest.Notes,
+                   updateUserId 
+               }, commandType: CommandType.StoredProcedure);
+
+        return experienceId;
+    }
+
+    internal virtual void UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    {
+        var updateUserId = 0; // TODO: get the user id from the auth context
+
         foreach (var experienceCategory in request.ExperienceCategories)
         {
-            await conn.QueryAsync("ce.ExperienceCategory_U_I",
+            conn.Query("ce.ExperienceCategory_U_I",
                 new
                 {
                     experienceCategory.ExperienceCategoryId,
                     experienceId,
                     experienceCategory.CategoryId,
-                    request.UserId //TODO: get the user id from the auth context
-                }, (IDbTransaction)Transaction.Current);
+                    updateUserId
+                }, commandType: CommandType.StoredProcedure);
         }
     }
 
-    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    internal virtual void UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
     {
+        var updateUserId = 0; // TODO: get the user id from the auth context
+
         foreach (var experienceAmount in request.ExperienceAmounts)
         {
-            await conn.QueryAsync("ce.ExperienceAmount_U_I",
+            conn.Query("ce.ExperienceAmount_U_I",
                 new
                 {
                     experienceAmount.ExperienceAmountId,
                     experienceId,
                     experienceAmount.UnitId,
                     experienceAmount.Amount,
-                    request.UserId //TODO: get the user id from the auth context
-                }, (IDbTransaction)Transaction.Current);
+                    updateUserId
+                }, commandType: CommandType.StoredProcedure);
         }
     }
 
