@@ -64,6 +64,7 @@ public class ExperienceService : IExperienceService
                             ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                             ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
+                            DisplayName = experienceRow.CategoryDisplayName
                         }
                     },
                     Amounts = new List<ExperienceAmount>()
