@@ -119,7 +119,7 @@ public class CeDataProvider : ICeDataProvider
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
 
-        foreach (var experienceCategory in request.ExperienceCategories)
+        foreach (var experienceCategory in request.Categories)
         {
             conn.Query("ce.ExperienceCategory_U_I",
                 new
@@ -136,7 +136,7 @@ public class CeDataProvider : ICeDataProvider
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
 
-        foreach (var experienceAmount in request.ExperienceAmounts)
+        foreach (var experienceAmount in request.Amounts)
         {
             conn.Query("ce.ExperienceAmount_U_I",
                 new

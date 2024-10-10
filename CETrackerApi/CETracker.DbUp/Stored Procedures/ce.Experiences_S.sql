@@ -18,6 +18,7 @@ begin
 		,ex.EndDate
 		,ex.ProgramTitle
 		,ex.EventName
+		,ex.CarryForward
 		,ex.[Description]
 		,ex.Notes
 		,cat.ExperienceCategoryId

@@ -64,6 +64,7 @@ public class ExperienceService : IExperienceService
                             ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                             ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
+                            CategoryListId = experienceRow.CategoryListId,
                             DisplayName = experienceRow.CategoryDisplayName
                         }
                     },
@@ -90,6 +91,8 @@ public class ExperienceService : IExperienceService
                         ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                         ExperienceId = experienceRow.ExperienceId,
                         CategoryId = experienceRow.CategoryId,
+                        CategoryListId = experienceRow.CategoryListId,
+                        DisplayName = experienceRow.CategoryDisplayName
                     });
                 }
 
