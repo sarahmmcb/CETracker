@@ -16,6 +16,7 @@ public class UpdateExperienceRequest
     public DateTime EndDate { get; set; }
     public string Description { get; set; }
     public string Notes { get; set; }
-    public ExperienceCategory[] Categories { get; set; }
-    public ExperienceAmount[] Amounts { get; set; }
+    public int[] Categories { get; set; }
+    public int TimeSpentParent { get; set; }
+    public int TimeSpentChild { get; set; }
 }

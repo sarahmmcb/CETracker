@@ -21,7 +21,6 @@ begin
 		,ex.CarryForward
 		,ex.[Description]
 		,ex.Notes
-		,cat.ExperienceCategoryId
 		,cat.CategoryId
 		,ca.NationalStandardId
 		,ca.CategoryListId
