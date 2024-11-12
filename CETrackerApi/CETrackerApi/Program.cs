@@ -13,8 +13,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.SetIsOriginAllowed(origin => true).AllowAnyMethod().AllowAnyHeader();
+                          policy.WithOrigins("http://localhost:4200")  // Replace with your frontend URL
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                          //policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                       });
+
+
 });
 
 builder.Services.AddControllers();
@@ -34,28 +39,30 @@ builder.Services.AddTransient<ILocationService, LocationService>();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty;
-    });
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
 //}
 
-app.UseStaticFiles();
+//app.UseRouting();
 
 app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.ConfigureExperiences();
 app.ConfigureUnits();
 app.ConfigureCategories();
 app.ConfigureLocations();
+
 
 app.Run();

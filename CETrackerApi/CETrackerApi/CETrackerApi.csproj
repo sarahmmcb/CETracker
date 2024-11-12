@@ -6,6 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <OutputPath>C:\Dev\Projects\IIS\CETracker</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="publish\**" />
     <Content Remove="publish\**" />

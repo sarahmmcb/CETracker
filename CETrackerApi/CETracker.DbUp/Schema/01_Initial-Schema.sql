@@ -481,14 +481,13 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceAmount') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.ExperienceAmount
 (
-  ExperienceAmountId int not null identity(1,1)
-  ,ExperienceId int not null default(0)
+   ExperienceId int not null default(0)
   ,UnitId int not null default(0)
 
   -- data
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmount Primary Key Clustered (ExperienceAmountId)
+  ,Constraint PK_ExperienceAmount_ExperienceId Primary Key Clustered (ExperienceId, UnitId)
   ,Constraint FK_ExperienceAmount_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
   ,Constraint FK_ExperienceCategory_UnitId Foreign Key (UnitId) References ce.Unit(UnitId)
 )
@@ -510,12 +509,11 @@ create table ce.ExperienceAmountHist
   ,[UpdateUserId] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
-  ,ExperienceAmountId int not null
   ,ExperienceId int not null
   ,UnitId int not null
   ,Amount decimal(4,1) not null default(000.0)
 
-  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (ExperienceAmountId, Uniqueifier)
+  ,Constraint PK_ExperienceAmountHist Primary Key Clustered (ExperienceId, UnitId, Uniqueifier)
 )
 GO
 

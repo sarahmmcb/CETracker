@@ -30,14 +30,14 @@ public static class Experiences
         }
     }
 
-    private static IResult UpdateExperience(
+    private static async Task<IResult> UpdateExperience(
         UpdateExperienceRequest request,
         IExperienceService experienceService,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var experienceId = experienceService.UpdateExperience(request, cancellationToken);
+            var experienceId = await experienceService.UpdateExperience(request, cancellationToken);
             return Results.Ok(experienceId);
         }
         catch (Exception ex)

@@ -7,7 +7,7 @@ public interface IExperienceService
 {
     Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
 
-    int UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
+    Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService : IExperienceService
 {
@@ -24,9 +24,9 @@ public class ExperienceService : IExperienceService
        return ConstructExperiences(experienceData);
     }
 
-    public int UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
+    public async Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
-        var experienceId = _ceDataProvider.UpdateExperience(request, cancellationToken);
+        var experienceId = await _ceDataProvider.UpdateExperience(request, cancellationToken);
         return experienceId;
     }
 
