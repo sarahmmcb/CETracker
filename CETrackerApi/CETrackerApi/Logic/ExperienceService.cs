@@ -72,7 +72,6 @@ public class ExperienceService : IExperienceService
                     {
                         new()
                         {
-                            ExperienceAmountId = experienceRow.ExperienceAmountId,
                             UnitId = experienceRow.UnitId,
                             ExperienceId = experienceRow.ExperienceId,
                             Amount = experienceRow.Amount
@@ -100,7 +99,6 @@ public class ExperienceService : IExperienceService
                 {
                     experienceResponse.Amounts = experienceResponse.Amounts.Append(new()
                     {
-                        ExperienceAmountId = experienceRow.ExperienceAmountId,
                         UnitId = experienceRow.UnitId,
                         ExperienceId = experienceRow.ExperienceId,
                         Amount = experienceRow.Amount

@@ -17,6 +17,6 @@ public class UpdateExperienceRequest
     public string Description { get; set; }
     public string Notes { get; set; }
     public int[] Categories { get; set; }
-    public int TimeSpentParent { get; set; }
-    public int TimeSpentChild { get; set; }
+    public ExperienceAmount TimeSpentParent { get; set; }
+    public ExperienceAmount TimeSpentChild { get; set; }
 }

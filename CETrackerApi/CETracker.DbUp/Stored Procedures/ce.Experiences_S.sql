@@ -26,7 +26,6 @@ begin
 		,ca.CategoryListId
 		,ca.[Name] as CategoryName
 		,ca.DisplayName as CategoryDisplayName
-		,am.ExperienceAmountId
 		,am.UnitId
 		,am.Amount
 		,ex.UserId

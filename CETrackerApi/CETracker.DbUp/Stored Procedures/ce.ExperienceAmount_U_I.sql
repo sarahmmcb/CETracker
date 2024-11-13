@@ -6,14 +6,31 @@ IF OBJECT_ID('ce.ExperienceAmount_U_I', 'P') IS NOT NULL
 GO
 
 CREATE PROCEDURE ce.ExperienceAmount_U_I
-	@ExperienceAmountId INT = NULL
-	,@ExperienceId INT
+	@ExperienceId INT
 	,@UnitId INT
 	,@Amount INT
 	,@UpdateUserId INT
 AS
 
-IF @ExperienceAmountId IS NULL
+UPDATE
+	ce.ExperienceAmount
+SET
+	Amount = @Amount
+OUTPUT
+	@UpdateUserId
+	,GETDATE()
+	,0 --IsDeleted
+	,@ExperienceId
+	,@UnitId
+	,inserted.Amount
+INTO
+	ce.ExperienceAmountHist
+WHERE
+	ExperienceId = @ExperienceId
+	AND
+	UnitId = @UnitId
+
+IF @@ROWCOUNT = 0
 BEGIN
 	INSERT INTO
 		ce.ExperienceAmount
@@ -21,7 +38,6 @@ BEGIN
 		@UpdateUserId
 		,GETDATE()
 		,0 --IsDeleted
-		,inserted.ExperienceAmountId
 		,inserted.ExperienceId
 		,inserted.UnitId
 		,inserted.Amount
@@ -33,27 +49,6 @@ BEGIN
 			,@UnitId
 			,@Amount
 		)
-END
-ELSE
-BEGIN
-	UPDATE
-		ce.ExperienceAmount
-	SET
-		ExperienceId = @ExperienceId
-		,UnitId = @UnitId
-		,Amount = @Amount
-	OUTPUT
-		@UpdateUserId
-		,GETDATE()
-		,0 --IsDeleted
-		,inserted.ExperienceAmountId
-		,inserted.ExperienceId
-		,inserted.UnitId
-		,inserted.Amount
-	INTO
-		ce.ExperienceAmountHist
-	WHERE
-		ExperienceAmountId = @ExperienceAmountId
 END
 
 GO
