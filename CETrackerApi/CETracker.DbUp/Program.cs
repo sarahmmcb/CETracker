@@ -1,9 +1,10 @@
 ﻿using DbUp;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 
 var connectionString =
     args.FirstOrDefault()
-    ?? "Data Source=localhost;Initial Catalog=CASCETracker;Integrated Security=True;Connect Timeout=30;Encrypt=False";
+    ?? "Data Source=localhost\\SQLEXPRESS;Initial Catalog=CASCETracker;Integrated Security=True;Connect Timeout=30;Encrypt=False";
 
 EnsureDatabase.For.SqlDatabase(connectionString);
 
