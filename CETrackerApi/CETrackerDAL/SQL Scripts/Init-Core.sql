@@ -443,14 +443,11 @@ GO
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.ExperienceCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.ExperienceCategory
 (
-  -- primary key
-  ExperienceCategoryId int not null identity(1,1)
-
-  -- foreign keys
-  ,ExperienceId int not null default(0)
+  -- composite primary key
+  ExperienceId int not null default(0)
   ,CategoryId int not null default(0)
 
-  ,Constraint PK_ExperienceCategory Primary Key Clustered (ExperienceCategoryId)
+  ,Constraint PK_ExperienceCategory Primary Key Clustered (ExperienceId, CategoryId)
   ,Constraint FK_ExperienceCategory_ExperienceId Foreign Key (ExperienceId) References ce.Experience(ExperienceId)
   ,Constraint FK_ExperienceCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )

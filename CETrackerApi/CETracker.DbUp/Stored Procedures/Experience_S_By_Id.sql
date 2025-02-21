@@ -1,14 +1,12 @@
-USE CasCETracker;
+﻿USE CasCETracker;
 GO
 
-IF OBJECT_ID('ce.Experiences_S', 'P') IS NOT NULL  
-   DROP PROCEDURE ce.Experiences_S;  
+IF OBJECT_ID('ce.Experiences_S_By_Id', 'P') IS NOT NULL  
+   DROP PROCEDURE ce.Experiences_S_By_Id;  
 GO 
 
-create procedure ce.Experiences_S
-	@UserId int
-	,@NationalStandardId int
-	,@Year int
+create procedure ce.Experiences_S_By_Id
+	@ExperienceId INT
 as
 
 begin
@@ -36,24 +34,10 @@ begin
 	inner join ce.Category ca on ca.CategoryId = cat.CategoryId
 	inner join ce.[Location] loc on loc.LocationId = ex.LocationId
 	where 
-		(
-			(
-				ex.StartDate <= DATEFROMPARTS(@Year, 12, 31) 
-				and ex.StartDate >= DATEFROMPARTS(@Year, 1, 1) 
-				and ex.CarryForward = 0
-			)
-			OR
-			(
-				ex.StartDate <= DATEFROMPARTS(@Year-1, 12, 31) 
-				and ex.StartDate >= DATEFROMPARTS(@Year-1, 1, 1) 
-				and ex.CarryForward = 1
-			)
-		)
-	and
-		(ex.UserId = @UserId)
-	order by ex.ExperienceId;
+		ex.ExperienceId = @ExperienceId;
 end
 GO
 
-GRANT EXECUTE ON ce.Experiences_S TO [CETRACKER_EXECROLE];
+GRANT EXECUTE ON ce.Experiences_S_By_Id TO [CETRACKER_EXECROLE];
 GO
+

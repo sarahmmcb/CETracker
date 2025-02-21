@@ -12,6 +12,7 @@ as
 begin
 	select
       u.UnitId
+	  ,nu.NationalStandardId
 	  ,nu.ParentUnitId
       ,ShortNameSingular as unitSingular
       ,ShortNamePlural as unitPlural

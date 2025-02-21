@@ -487,7 +487,6 @@ insert into ce.Experience values
 	,'Super Learning Day'
 	,'Actuary Conference'
 	,CONCAT(@experienceYear,'-02-14')
-	,CONCAT(@experienceYear,'-02-14')
 	,'A bunch of classes'
 	,''
 )
@@ -520,7 +519,6 @@ insert into ce.Experience values
 	,0
 	,'Super Learning Day'
 	,'Actuary Conference'
-	,CONCAT(@experienceYear,'-02-14')
 	,CONCAT(@experienceYear,'-02-14')
 	,'A bunch of classes'
 	,''
@@ -559,7 +557,6 @@ insert into ce.Experience values
 	,0
 	,'Work convo'
 	,'Convo'
-	,CONCAT(@experienceYear,'-01-16')
 	,CONCAT(@experienceYear,'-01-16')
 	,'Boooring'
 	,''
@@ -605,7 +602,6 @@ insert into ce.Experience values
 	,1 -- Carry forward
 	,'Actuaries Unite'
 	,'Online Class'
-	,CONCAT(@experienceYear-1,'-06-14')
 	,CONCAT(@experienceYear-1,'-06-14')
 	,'Mathy stuff'
 	,''

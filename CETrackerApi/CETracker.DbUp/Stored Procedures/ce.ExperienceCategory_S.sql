@@ -6,6 +6,7 @@ IF OBJECT_ID('ce.ExperienceCategory_S', 'P') IS NOT NULL
 GO 
 
 create procedure ce.ExperienceCategory_S
+	@ExperienceId int
 as
 
 begin
@@ -13,7 +14,8 @@ begin
 		ExperienceId,
 		CategoryId
 	from
-		ce.ExperienceCategory_S
+		ce.ExperienceCategory
+	where ExperienceId = @ExperienceId
 end
 GO
 
