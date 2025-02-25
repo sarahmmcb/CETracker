@@ -12,11 +12,11 @@ namespace CETrackerDAL.DataAccess;
 
 public interface ICeDataProvider
 {
-    Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId);
-    Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId);
-    Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId);
-    Task<IEnumerable<Location>> GetLocations();
-    Task<IEnumerable<Unit>> GetUnits(int nationalStandardId);
+    Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token);
+    Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId, CancellationToken token);
+    Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId, CancellationToken token);
+    Task<IEnumerable<Location>> GetLocations(CancellationToken token);
+    Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
     Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 
@@ -29,7 +29,7 @@ public class CeDataProvider : ICeDataProvider
         _dataConnectionFactory = dataConnectionFactory;
     }
 
-    public Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId) =>
+    public Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token) =>
         LoadData<DALModels.Experience, dynamic>(
                "ce.Experiences_S",
             new
@@ -37,18 +37,20 @@ public class CeDataProvider : ICeDataProvider
                 Year = year,
                 UserId = userId,
                 NationalStandardId = nationalStandardId
-            }
+            },
+            token
         );
 
-    public Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId) =>
+    public Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId, CancellationToken token) =>
         LoadData<DALModels.Experience, dynamic>(
                "ce.Experiences_S_By_Id",
             new
             {
                 experienceId
-            }
+            },
+            token
         );
-    public Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int nationalStandardId, int year) =>
+    public Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int nationalStandardId, int year, CancellationToken token) =>
         LoadData<DALModels.CategoryList, dynamic>(
             "ce.CategoryLists_S"
             ,
@@ -56,22 +58,25 @@ public class CeDataProvider : ICeDataProvider
             {
                 nationalStandardId,
                 year
-            }
+            },
+            token
         );
 
-    public Task<IEnumerable<Location>> GetLocations() =>
+    public Task<IEnumerable<Location>> GetLocations(CancellationToken token) =>
         LoadData<Location, dynamic>(
             "ce.Locations_S",
-            new {}
+            new {},
+            token
         );
 
-    public Task<IEnumerable<Unit>> GetUnits(int nationalStandardId) => 
+    public Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token) => 
         LoadData<Unit, dynamic>(
                "ce.Units_S",
                new
                {
                    nationalStandardId
-               });
+               },
+               token);
 
     public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, CancellationToken cancellationToken)
     {
@@ -84,11 +89,11 @@ public class CeDataProvider : ICeDataProvider
 
         try
         {
-            var experienceId = await UpdateExperience(updateExperienceRequest, connection);
+            var experienceId = await UpdateExperience(updateExperienceRequest, connection, cancellationToken);
 
-            await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection);
+            await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection, cancellationToken);
 
-            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection);
+            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection, cancellationToken);
 
             txScope.Complete();
 
@@ -109,28 +114,33 @@ public class CeDataProvider : ICeDataProvider
         }
     }
 
-    internal virtual async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, IDbConnection connection)
+    internal virtual async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, IDbConnection connection, CancellationToken cancellationToken)
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
-        var experienceId = await connection.QuerySingleAsync<int>("ce.Experiences_U_I",
-               new
-               {
-                   updateExperienceRequest.ExperienceId,
-                   updateExperienceRequest.UserId,
-                   updateExperienceRequest.LocationId,
-                   updateExperienceRequest.CarryForward,
-                   updateExperienceRequest.ProgramTitle,
-                   updateExperienceRequest.EventName,
-                   StartDate = updateExperienceRequest.StartDate.ToUniversalTime().ToString(),
-                   updateExperienceRequest.Description,
-                   updateExperienceRequest.Notes,
-                   updateUserId 
-               }, commandType: CommandType.StoredProcedure);
+
+        var command = new CommandDefinition("ce.Experiences_U_I",
+            new
+            {
+                updateExperienceRequest.ExperienceId,
+                updateExperienceRequest.UserId,
+                updateExperienceRequest.LocationId,
+                updateExperienceRequest.CarryForward,
+                updateExperienceRequest.ProgramTitle,
+                updateExperienceRequest.EventName,
+                StartDate = updateExperienceRequest.StartDate.ToUniversalTime().ToString(),
+                updateExperienceRequest.Description,
+                updateExperienceRequest.Notes,
+                updateUserId
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: cancellationToken);
+
+        var experienceId = await connection.QuerySingleAsync<int>(command);
 
         return experienceId;
     }
 
-    internal virtual async Task UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    internal virtual async Task UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, IDbConnection conn, CancellationToken token)
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
 
@@ -144,7 +154,7 @@ public class CeDataProvider : ICeDataProvider
             new
             {
                 experienceId
-            }, conn);
+            }, conn, token);
 
         var currentCatIds = currentCategories.Select(c => c.CategoryId);
 
@@ -153,12 +163,16 @@ public class CeDataProvider : ICeDataProvider
 
         foreach(var oldCategory in categoriesToDelete)
         {
-            await conn.ExecuteAsync("ce.ExperienceCategory_D", new
+            var command = new CommandDefinition("ce.ExperienceCategory_D", new
             {
                 experienceId,
                 oldCategory.CategoryId,
                 updateUserId
-            }, commandType: CommandType.StoredProcedure);
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: token);
+
+            await conn.ExecuteAsync(command);
         }
 
         foreach(var newCategoryId in categoriesToCreate)
@@ -166,17 +180,21 @@ public class CeDataProvider : ICeDataProvider
             if (newCategoryId == 0)
                 continue;
 
-            await conn.ExecuteAsync("ce.ExperienceCategory_I", new
+            var command = new CommandDefinition("ce.ExperienceCategory_I", new
             {
                 experienceId,
                 CategoryId = newCategoryId,
                 updateUserId
-            }, commandType: CommandType.StoredProcedure);
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: token);
+
+            await conn.ExecuteAsync(command);
         }
 
     }
 
-    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
+    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn, CancellationToken token)
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
 
@@ -185,12 +203,12 @@ public class CeDataProvider : ICeDataProvider
             new
             {
                 experienceId
-            }, conn);
+            }, conn, token);
 
         if (currentExperienceAmount == null || currentExperienceAmount.Count() == 0)
         {
-            await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
-            await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn);
+            await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn, token);
+            await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn, token);
         }
         else
         {
@@ -198,35 +216,42 @@ public class CeDataProvider : ICeDataProvider
             var currentChildAmount = currentExperienceAmount.Where(am => am.ParentUnitId != 0).ToList().FirstOrDefault();
 
             if (request.TimeSpentParent.Amount != currentParentAmount.Amount)
-                await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
+                await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn, token);
 
             if (request.TimeSpentChild.Amount != currentChildAmount.Amount)
-                await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn);
+                await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn, token);
         }
     }
 
-    private async Task UpdateExperienceAmount(int experienceId, ExperienceAmount amount, int updateUserId, IDbConnection conn)
+    private async Task UpdateExperienceAmount(int experienceId, ExperienceAmount amount, int updateUserId, IDbConnection conn, CancellationToken token)
     {
-        await conn.ExecuteAsync(
-            "ce.ExperienceAmount_U_I",
-            new { 
+        var command = new CommandDefinition("ce.ExperienceAmount_U_I",
+            new
+            {
                 experienceId,
                 amount.UnitId,
                 amount.Amount,
                 updateUserId
-            }, commandType: CommandType.StoredProcedure);
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: token);
+
+        await conn.ExecuteAsync(command);
     }
 
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
         string storedProcedure,
         U parameters,
+        CancellationToken token,
         string connectionId = "Default"
     )
     {
         using IDbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
 
-        var result = await connection.QueryAsync<T>(storedProcedure, parameters,
-            commandType: CommandType.StoredProcedure);
+        var command = new CommandDefinition(storedProcedure, parameters,
+            commandType: CommandType.StoredProcedure, cancellationToken: token);
+
+        var result = await connection.QueryAsync<T>(command);
 
         return result;
     }
@@ -234,11 +259,14 @@ public class CeDataProvider : ICeDataProvider
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
     string storedProcedure,
     U parameters,
-    IDbConnection connection
+    IDbConnection connection,
+    CancellationToken token
 )
     {
-        var result = await connection.QueryAsync<T>(storedProcedure, parameters,
-            commandType: CommandType.StoredProcedure);
+        var command = new CommandDefinition(storedProcedure, parameters,
+            commandType: CommandType.StoredProcedure, cancellationToken: token);
+
+        var result = await connection.QueryAsync<T>(command);
 
         return result;
     }

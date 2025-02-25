@@ -15,11 +15,12 @@ public static class Experiences
         int year,
         int userId,
         int nationalStandardId,
-        IExperienceService experienceService)
+        IExperienceService experienceService,
+        CancellationToken token = default)
     {
         try
         {
-            var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
+            var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             return Results.Ok(result);
         }
