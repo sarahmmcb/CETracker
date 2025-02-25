@@ -5,7 +5,7 @@ namespace CETrackerApi.Logic;
 
 public interface ICategoryService
 {
-    Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year);
+    Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token);
 }
 public class CategoryService: ICategoryService
 {
@@ -16,9 +16,9 @@ public class CategoryService: ICategoryService
         _ceDataProvider = ceDataprovider;
     }
 
-    public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year)
+    public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token)
     {
-        var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year);
+        var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year, token);
         var structuredCategoryLists = GetStructuredCategoryLists(listData);
 
         return new CategoryListResponse

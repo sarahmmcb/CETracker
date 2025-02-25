@@ -9,11 +9,11 @@ public static class Units
         app.MapGet("/api/units/nationalStandardId/{nationalStandardId}", GetUnits);
     }
 
-    private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService)
+    private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService, CancellationToken token = default)
     {
         try
         {
-            var result = await unitService.GetUnits(nationalStandardId).ConfigureAwait(false);
+            var result = await unitService.GetUnits(nationalStandardId, token).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             return Results.Ok(result);
         }

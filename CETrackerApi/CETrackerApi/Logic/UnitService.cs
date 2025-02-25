@@ -2,7 +2,7 @@
 
 public interface IUnitService
 {
-    Task<UnitResponse> GetUnits(int nationalStandardId);
+    Task<UnitResponse> GetUnits(int nationalStandardId, CancellationToken token);
 }
 
 public class UnitService : IUnitService
@@ -14,9 +14,9 @@ public class UnitService : IUnitService
         _ceDataProvider = ceDataProvider;
     }
 
-    public async Task<UnitResponse> GetUnits(int nationalStandardId)
+    public async Task<UnitResponse> GetUnits(int nationalStandardId, CancellationToken token)
     {
-        var result = await _ceDataProvider.GetUnits(nationalStandardId);
+        var result = await _ceDataProvider.GetUnits(nationalStandardId, token);
 
         return new UnitResponse
         {

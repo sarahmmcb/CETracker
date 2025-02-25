@@ -12,11 +12,12 @@ public static class Categories
     private static async Task<IResult> GetCategoryLists(
         int nationalStandardId,
         int year,
-        ICategoryService categoryService)
+        ICategoryService categoryService,
+        CancellationToken token = default)
     {
         try
         {
-            var result = await categoryService.GetCategoryLists(nationalStandardId, year).ConfigureAwait(false);
+            var result = await categoryService.GetCategoryLists(nationalStandardId, year, token).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             return Results.Ok(result);
         }

@@ -10,11 +10,12 @@ public static class Locations
     }
 
     private static async Task<IResult> GetLocations(
-        ILocationService locationService)
+        ILocationService locationService,
+        CancellationToken token = default)
     {
         try
         {
-            var result = await locationService.GetLocations();
+            var result = await locationService.GetLocations(token);
             if (result == null)
                 return Results.NotFound();
             return Results.Ok(result);

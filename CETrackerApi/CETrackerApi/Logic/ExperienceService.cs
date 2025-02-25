@@ -5,7 +5,7 @@ namespace CETrackerApi.Logic;
 
 public interface IExperienceService
 {
-    Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
+    Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId, CancellationToken token);
     Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService : IExperienceService
@@ -17,16 +17,16 @@ public class ExperienceService : IExperienceService
         _ceDataProvider = ceDataprovider;
     }
 
-    public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId)
+    public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
-       var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId).ConfigureAwait(false);
+       var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
        return ConstructExperiences(experienceData);
     }
 
     public async Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
         var experienceId = await _ceDataProvider.UpdateExperience(request, cancellationToken);
-        var experienceData = await _ceDataProvider.GetExperienceById(experienceId);
+        var experienceData = await _ceDataProvider.GetExperienceById(experienceId, cancellationToken);
         return ConstructExperiences(experienceData).ElementAt(0);
     }
 
