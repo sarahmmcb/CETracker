@@ -163,6 +163,9 @@ public class CeDataProvider : ICeDataProvider
 
         foreach(var newCategoryId in categoriesToCreate)
         {
+            if (newCategoryId == 0)
+                continue;
+
             await conn.ExecuteAsync("ce.ExperienceCategory_I", new
             {
                 experienceId,
@@ -184,9 +187,6 @@ public class CeDataProvider : ICeDataProvider
                 experienceId
             }, conn);
 
-        var currentParentAmount = currentExperienceAmount.Where(am => am.ParentUnitId == 0).ToList().ElementAt(0);
-        var currentChildAmount = currentExperienceAmount.Where(am => am.ParentUnitId != 0).ToList().ElementAt(0);
-
         if (currentExperienceAmount == null || currentExperienceAmount.Count() == 0)
         {
             await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
@@ -194,6 +194,9 @@ public class CeDataProvider : ICeDataProvider
         }
         else
         {
+            var currentParentAmount = currentExperienceAmount.Where(am => am.ParentUnitId == 0).ToList().FirstOrDefault();
+            var currentChildAmount = currentExperienceAmount.Where(am => am.ParentUnitId != 0).ToList().FirstOrDefault();
+
             if (request.TimeSpentParent.Amount != currentParentAmount.Amount)
                 await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
 
@@ -211,7 +214,7 @@ public class CeDataProvider : ICeDataProvider
                 amount.UnitId,
                 amount.Amount,
                 updateUserId
-            });
+            }, commandType: CommandType.StoredProcedure);
     }
 
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
