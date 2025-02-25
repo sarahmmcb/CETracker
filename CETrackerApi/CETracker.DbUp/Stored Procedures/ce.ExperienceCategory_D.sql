@@ -7,6 +7,7 @@ GO
 
 CREATE PROCEDURE ce.ExperienceCategory_D
 	@ExperienceId INT
+	,@CategoryID INT
 	,@UpdateUserId INT
 AS
 
@@ -22,6 +23,8 @@ INTO
 	ce.ExperienceCategoryHist
 WHERE
 	ExperienceId = @ExperienceId
+	AND
+	CategoryId = @CategoryId
 GO
 
 GRANT EXECUTE ON ce.ExperienceCategory_D TO [CETRACKER_EXECROLE];

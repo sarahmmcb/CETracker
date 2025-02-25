@@ -344,7 +344,6 @@ create table ce.Experience
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
   ,StartDate datetime not null
-  ,EndDate datetime not null
   ,Description varchar(500) null
   ,Notes varchar(max) null
 
@@ -379,7 +378,6 @@ create table [ce].ExperienceHist
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
   ,StartDate datetime not null
-  ,EndDate datetime not null
   ,Description varchar(500) null 
   ,Notes varchar(max) null
   ,IsDeleted bit not null

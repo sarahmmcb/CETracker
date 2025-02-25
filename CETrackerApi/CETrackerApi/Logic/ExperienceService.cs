@@ -1,13 +1,12 @@
 ﻿using CETracker.Contracts.DataContracts;
-using CETrackerDAL.Models;
+using DALModels = CETrackerDAL.Models;
 
 namespace CETrackerApi.Logic;
 
 public interface IExperienceService
 {
     Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId);
-
-    Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
+    Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService : IExperienceService
 {
@@ -24,13 +23,14 @@ public class ExperienceService : IExperienceService
        return ConstructExperiences(experienceData);
     }
 
-    public async Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
+    public async Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
         var experienceId = await _ceDataProvider.UpdateExperience(request, cancellationToken);
-        return experienceId;
+        var experienceData = await _ceDataProvider.GetExperienceById(experienceId);
+        return ConstructExperiences(experienceData).ElementAt(0);
     }
 
-    internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<Experience> experienceData)
+    internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<DALModels.Experience> experienceData)
     {
         List<ExperienceResponse> experiences = new();
         ExperienceResponse experienceResponse = new();
@@ -55,13 +55,11 @@ public class ExperienceService : IExperienceService
                     ProgramTitle = experienceRow.ProgramTitle,
                     EventName = experienceRow.EventName,
                     StartDate = experienceRow.StartDate,
-                    EndDate = experienceRow.EndDate,
                     Description = experienceRow.Description,
                     Notes = experienceRow.Notes,
                     Categories = new List<ExperienceCategory>
                     {
                         new() {
-                            ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                             ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
                             CategoryListId = experienceRow.CategoryListId,
@@ -87,7 +85,6 @@ public class ExperienceService : IExperienceService
                 {
                     experienceResponse.Categories = experienceResponse.Categories.Append(new()
                     {
-                        ExperienceCategoryId = experienceRow.ExperienceCategoryId,
                         ExperienceId = experienceRow.ExperienceId,
                         CategoryId = experienceRow.CategoryId,
                         CategoryListId = experienceRow.CategoryListId,

@@ -6,12 +6,14 @@ using Dapper;
 using CETracker.Contracts.DataContracts;
 using CETracker.Contracts.RequestContracts;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace CETrackerDAL.DataAccess;
 
 public interface ICeDataProvider
 {
     Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId);
+    Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId);
     Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId);
     Task<IEnumerable<Location>> GetLocations();
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId);
@@ -38,6 +40,14 @@ public class CeDataProvider : ICeDataProvider
             }
         );
 
+    public Task<IEnumerable<DALModels.Experience>> GetExperienceById(int experienceId) =>
+        LoadData<DALModels.Experience, dynamic>(
+               "ce.Experiences_S_By_Id",
+            new
+            {
+                experienceId
+            }
+        );
     public Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int nationalStandardId, int year) =>
         LoadData<DALModels.CategoryList, dynamic>(
             "ce.CategoryLists_S"
@@ -65,19 +75,21 @@ public class CeDataProvider : ICeDataProvider
 
     public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, CancellationToken cancellationToken)
     {
-        using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew);
+        using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew,
+            new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted },
+            TransactionScopeAsyncFlowOption.Enabled);
+
+        using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
+        await connection.OpenAsync();
 
         try
         {
-            using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
-            connection.Open();
-
             var experienceId = await UpdateExperience(updateExperienceRequest, connection);
 
             await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection);
 
             await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection);
-            
+
             txScope.Complete();
 
             return experienceId;
@@ -85,6 +97,10 @@ public class CeDataProvider : ICeDataProvider
         catch (SqlException e)
         {
             // TODO: logging
+            throw;
+        }
+        catch (Exception e)
+        {
             throw;
         }
         finally
@@ -105,8 +121,7 @@ public class CeDataProvider : ICeDataProvider
                    updateExperienceRequest.CarryForward,
                    updateExperienceRequest.ProgramTitle,
                    updateExperienceRequest.EventName,
-                   updateExperienceRequest.StartDate,
-                   updateExperienceRequest.EndDate,
+                   StartDate = updateExperienceRequest.StartDate.ToUniversalTime().ToString(),
                    updateExperienceRequest.Description,
                    updateExperienceRequest.Notes,
                    updateUserId 
@@ -124,39 +139,82 @@ public class CeDataProvider : ICeDataProvider
             return;
         }
 
-        // Don't do this, better to query all existing records and do a compare
-        // then update based on that
-        await conn.QueryAsync("ce.ExperienceCategory_D");
+        var currentCategories = await LoadData<ExperienceCategory, dynamic>(
+            "ce.ExperienceCategory_S",
+            new
+            {
+                experienceId
+            }, conn);
 
-        foreach (var experienceCategoryId in request.Categories)
+        var currentCatIds = currentCategories.Select(c => c.CategoryId);
+
+        var categoriesToDelete = currentCategories.Where(cat => !request.Categories.Contains(cat.CategoryId));
+        var categoriesToCreate = request.Categories.Where(catId => !currentCatIds.Contains(catId));
+
+        foreach(var oldCategory in categoriesToDelete)
         {
-           await conn.QueryAsync("ce.ExperienceCategory_I",
-                new
-                {
-                    experienceId,
-                    experienceCategoryId,
-                    updateUserId
-                }, commandType: CommandType.StoredProcedure);
+            await conn.ExecuteAsync("ce.ExperienceCategory_D", new
+            {
+                experienceId,
+                oldCategory.CategoryId,
+                updateUserId
+            }, commandType: CommandType.StoredProcedure);
         }
+
+        foreach(var newCategoryId in categoriesToCreate)
+        {
+            if (newCategoryId == 0)
+                continue;
+
+            await conn.ExecuteAsync("ce.ExperienceCategory_I", new
+            {
+                experienceId,
+                CategoryId = newCategoryId,
+                updateUserId
+            }, commandType: CommandType.StoredProcedure);
+        }
+
     }
 
     internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn)
     {
         var updateUserId = 0; // TODO: get the user id from the auth context
 
-        await Task.Delay(100);
+        var currentExperienceAmount = await LoadData<DALModels.ExperienceAmount, dynamic>(
+            "ce.ExperienceAmount_S",
+            new
+            {
+                experienceId
+            }, conn);
 
-        //foreach (var experienceAmount in request.Amounts)
-        //{
-        //   await conn.QueryAsync("ce.ExperienceAmount_U_I",
-        //        new
-        //        {
-        //            experienceId,
-        //            experienceAmount.UnitId,
-        //            experienceAmount.Amount,
-        //            updateUserId
-        //        }, commandType: CommandType.StoredProcedure);
-        //}
+        if (currentExperienceAmount == null || currentExperienceAmount.Count() == 0)
+        {
+            await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
+            await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn);
+        }
+        else
+        {
+            var currentParentAmount = currentExperienceAmount.Where(am => am.ParentUnitId == 0).ToList().FirstOrDefault();
+            var currentChildAmount = currentExperienceAmount.Where(am => am.ParentUnitId != 0).ToList().FirstOrDefault();
+
+            if (request.TimeSpentParent.Amount != currentParentAmount.Amount)
+                await UpdateExperienceAmount(experienceId, request.TimeSpentParent, updateUserId, conn);
+
+            if (request.TimeSpentChild.Amount != currentChildAmount.Amount)
+                await UpdateExperienceAmount(experienceId, request.TimeSpentChild, updateUserId, conn);
+        }
+    }
+
+    private async Task UpdateExperienceAmount(int experienceId, ExperienceAmount amount, int updateUserId, IDbConnection conn)
+    {
+        await conn.ExecuteAsync(
+            "ce.ExperienceAmount_U_I",
+            new { 
+                experienceId,
+                amount.UnitId,
+                amount.Amount,
+                updateUserId
+            }, commandType: CommandType.StoredProcedure);
     }
 
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
@@ -167,6 +225,18 @@ public class CeDataProvider : ICeDataProvider
     {
         using IDbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
 
+        var result = await connection.QueryAsync<T>(storedProcedure, parameters,
+            commandType: CommandType.StoredProcedure);
+
+        return result;
+    }
+
+    internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
+    string storedProcedure,
+    U parameters,
+    IDbConnection connection
+)
+    {
         var result = await connection.QueryAsync<T>(storedProcedure, parameters,
             commandType: CommandType.StoredProcedure);
 

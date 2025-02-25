@@ -13,7 +13,6 @@ CREATE PROCEDURE ce.Experiences_U_I
 	,@ProgramTitle VARCHAR(200)
 	,@EventName VARCHAR(200)
 	,@StartDate DATETIME
-	,@EndDate DATETIME
 	,@Description VARCHAR(500)
 	,@Notes VARCHAR(MAX)
 	,@UpdateUserId INT
@@ -21,7 +20,7 @@ AS
 
 
 
-IF @ExperienceId IS NULL
+IF (@ExperienceId IS NULL OR @ExperienceId = 0)
 BEGIN
 	DECLARE @experience_output TABLE 
 	(
@@ -34,7 +33,6 @@ BEGIN
 		,ProgramTitle VARCHAR(200)
 		,EventName VARCHAR(200)
 		,StartDate DATETIME
-		,EndDate DATETIME
 		,[Description] VARCHAR(500)
 		,Notes VARCHAR(MAX)
 		,IsDeleted BIT
@@ -52,7 +50,6 @@ BEGIN
 		,inserted.ProgramTitle
 		,inserted.EventName
 		,inserted.StartDate
-		,inserted.EndDate
 		,inserted.[Description]
 		,inserted.Notes
 		,0 --IsDeleted
@@ -65,7 +62,6 @@ BEGIN
 		,@ProgramTitle
 		,@EventName
 		,@StartDate
-		,@EndDate
 		,@Description
 		,@Notes)
 
@@ -88,7 +84,6 @@ BEGIN
 		,ProgramTitle = @ProgramTitle
 		,EventName = @EventName
 		,StartDate = @StartDate
-		,EndDate = @EndDate
 		,[Description] = @Description
 		,Notes = @Notes
 	OUTPUT
@@ -101,7 +96,6 @@ BEGIN
 		,inserted.ProgramTitle
 		,inserted.EventName
 		,inserted.StartDate
-		,inserted.EndDate
 		,inserted.[Description]
 		,inserted.Notes
 		,0
