@@ -1,5 +1,4 @@
 ﻿using DbUp;
-using System.Diagnostics.Metrics;
 using System.Reflection;
 
 var connectionString =

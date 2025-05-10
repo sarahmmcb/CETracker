@@ -7,7 +7,6 @@ public static class Experiences
     public static void ConfigureExperiences(this WebApplication app)
     {
         app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear);
-        //app.MapPost("/api/experiences", UpdateExperience);
         app.MapPut("/api/experiences", UpdateExperience);
     }
 
@@ -18,16 +17,17 @@ public static class Experiences
         IExperienceService experienceService,
         CancellationToken token = default)
     {
-        try
-        {
+        //try
+        //{
             var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
+            var response = Results.Ok(result);
             return Results.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return Results.Problem(ex.Message);
-        }
+        //}
+        //catch (Exception ex)
+        //{
+        //    return Results.Problem(ex.Message);
+        //}
     }
 
     private static async Task<IResult> UpdateExperience(

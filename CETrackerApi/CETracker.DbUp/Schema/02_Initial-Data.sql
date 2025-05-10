@@ -2,19 +2,19 @@ use CASCETracker;
 go
 
 -- Gender
-if not exists (select 1 from core.Gender where Name=N'Female') insert into core.Gender values (N'Female',1)
-if not exists (select 1 from core.Gender where Name=N'Male') insert into core.Gender values (N'Male',1)
-if not exists (select 1 from core.Gender where Name=N'Other/Do not wish to answer') insert into core.Gender values (N'Other/Do not wish to answer',1)
+--if not exists (select 1 from ce.Gender where Name=N'Female') insert into ce.Gender values (N'Female',1)
+--if not exists (select 1 from ce.Gender where Name=N'Male') insert into ce.Gender values (N'Male',1)
+--if not exists (select 1 from ce.Gender where Name=N'Other/Do not wish to answer') insert into ce.Gender values (N'Other/Do not wish to answer',1)
 
 -- Country
-if not exists (select 1 from core.Country where ShortName=N'USA') insert into core.Country values (N'United States of America', N'USA',1)
-if not exists (select 1 from core.Country where ShortName=N'Canada') insert into core.Country values (N'Canada', N'Canada',0)
-if not exists (select 1 from core.Country where ShortName=N'UK') insert into core.Country values (N'United Kingdom', N'UK',0)
-if not exists (select 1 from core.Country where ShortName=N'Australia') insert into core.Country values (N'Australia', N'Australia',0)
-if not exists (select 1 from core.Country where ShortName=N'Hong Kong') insert into core.Country values (N'Hong Kong', N'Hong Kong',0)
-if not exists (select 1 from core.Country where ShortName=N'Malaysia') insert into core.Country values (N'Malaysia', N'Malaysia',0)
-if not exists (select 1 from core.Country where ShortName=N'Mexico') insert into core.Country values (N'Mexico', N'Mexico',0)
-if not exists (select 1 from core.Country where ShortName=N'Taipei') insert into core.Country values (N'Chinese Taipei', N'Taipei',0)
+if not exists (select 1 from ce.Country where ShortName=N'USA') insert into ce.Country values (N'United States of America', N'USA',1)
+if not exists (select 1 from ce.Country where ShortName=N'Canada') insert into ce.Country values (N'Canada', N'Canada',0)
+if not exists (select 1 from ce.Country where ShortName=N'UK') insert into ce.Country values (N'United Kingdom', N'UK',0)
+if not exists (select 1 from ce.Country where ShortName=N'Australia') insert into ce.Country values (N'Australia', N'Australia',0)
+if not exists (select 1 from ce.Country where ShortName=N'Hong Kong') insert into ce.Country values (N'Hong Kong', N'Hong Kong',0)
+if not exists (select 1 from ce.Country where ShortName=N'Malaysia') insert into ce.Country values (N'Malaysia', N'Malaysia',0)
+if not exists (select 1 from ce.Country where ShortName=N'Mexico') insert into ce.Country values (N'Mexico', N'Mexico',0)
+if not exists (select 1 from ce.Country where ShortName=N'Taipei') insert into ce.Country values (N'Chinese Taipei', N'Taipei',0)
 GO
 
 -- Unit
@@ -24,12 +24,6 @@ if not exists (select 1 from ce.Unit where LongNamePlural=N'Credits') insert int
 if not exists (select 1 from ce.Unit where LongNamePlural=N'Minutes') insert into ce.Unit values (N'Minutes', N'Min.',N'Minute', N'Min.',1)
 go
 
--- Account Status
-if not exists (select 1 from core.AccountStatus where Name=N'Active') insert into core.AccountStatus values (N'Active',1)
-if not exists (select 1 from core.AccountStatus where Name=N'Inactive') insert into core.AccountStatus values (N'Inactive',1)
-if not exists (select 1 from core.AccountStatus where Name=N'Locked') insert into core.AccountStatus values (N'Locked',1)
-GO
-
 -- Compliance
 if not exists (select 1 from ce.Compliance where Name=N'Compliant') insert into ce.Compliance values (N'Compliant',1)
 if not exists (select 1 from ce.Compliance where Name=N'Compliant NAIC Statement of Actuarial Opinion') insert into ce.Compliance values (N'Compliant NAIC Statement of Actuarial Opinion',1)
@@ -38,12 +32,12 @@ if not exists (select 1 from ce.Compliance where Name=N'Non-Compliant') insert i
 GO
 
 -- Organization
-if not exists (select 1 from core.Organization where LongName=N'Casualty Actuarial Society') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'USA') , N'Casualty Actuarial Society', N'CAS',1)
-if not exists (select 1 from core.Organization where LongName=N'American Academy of Actuaries') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'USA') , N'American Academy of Actuaries', N'AAA',1)
-if not exists (select 1 from core.Organization where LongName=N'Canadian Institute of Actuaries') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'Canada') , N'Canadian Institute of Actuaries', N'CIA',0)
-if not exists (select 1 from core.Organization where LongName=N'Institute and Faculty of Actuaries') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'UK') , N'Institute and Faculty of Actuaries', N'IFoA',0)
-if not exists (select 1 from core.Organization where LongName=N'The Institute of Actuaries of Australia') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'Australia') , N'The Institute of Actuaries of Australia', N'IAAustralia',0)
-if not exists (select 1 from core.Organization where LongName=N'Actuarial Society of Hong Kong') insert into core.Organization values ((select CountryId from core.Country where ShortName=N'Hong Kong') , N'Actuarial Society of Hong Kong', N'ASHK',0)
+if not exists (select 1 from ce.Organization where LongName=N'Casualty Actuarial Society') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'USA') , N'Casualty Actuarial Society', N'CAS',1)
+if not exists (select 1 from ce.Organization where LongName=N'American Academy of Actuaries') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'USA') , N'American Academy of Actuaries', N'AAA',1)
+if not exists (select 1 from ce.Organization where LongName=N'Canadian Institute of Actuaries') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'Canada') , N'Canadian Institute of Actuaries', N'CIA',0)
+if not exists (select 1 from ce.Organization where LongName=N'Institute and Faculty of Actuaries') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'UK') , N'Institute and Faculty of Actuaries', N'IFoA',0)
+if not exists (select 1 from ce.Organization where LongName=N'The Institute of Actuaries of Australia') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'Australia') , N'The Institute of Actuaries of Australia', N'IAAustralia',0)
+if not exists (select 1 from ce.Organization where LongName=N'Actuarial Society of Hong Kong') insert into ce.Organization values ((select CountryId from ce.Country where ShortName=N'Hong Kong') , N'Actuarial Society of Hong Kong', N'ASHK',0)
 GO
 
 -- Location
@@ -54,8 +48,8 @@ if not exists (select 1 from ce.Location where Name=N'Other') insert into ce.Loc
 GO
 
 -- National Standard
-if not exists (select 1 from ce.NationalStandard where LongName=N'United States General Qualification Standard') insert into ce.NationalStandard values ((select CountryId from core.Country where ShortName=N'USA'), (select OrganizationId from core.Organization where ShortName=N'AAA'), N'United States General Qualification Standard', N'USQS General' ,1)
-if not exists (select 1 from ce.NationalStandard where LongName=N'United States Specific Qualification Standard') insert into ce.NationalStandard values ((select CountryId from core.Country where ShortName=N'USA'), (select OrganizationId from core.Organization where ShortName=N'AAA'), N'United States Specific Qualification Standard', N'USQS Specific' ,1)
+if not exists (select 1 from ce.NationalStandard where LongName=N'United States General Qualification Standard') insert into ce.NationalStandard values ((select CountryId from ce.Country where ShortName=N'USA'), (select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States General Qualification Standard', N'USQS General' ,1)
+if not exists (select 1 from ce.NationalStandard where LongName=N'United States Specific Qualification Standard') insert into ce.NationalStandard values ((select CountryId from ce.Country where ShortName=N'USA'), (select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States Specific Qualification Standard', N'USQS Specific' ,1)
 GO
 
 -- Category List
@@ -165,9 +159,9 @@ GO
 --)
 
 -- Message Type
-if not exists (select 1 from core.MessageType where Name=N'Info') insert into core.MessageType values (N'Info', 1)
-if not exists (select 1 from core.MessageType where Name=N'Warning') insert into core.MessageType values (N'Warning', 1)
-if not exists (select 1 from core.MessageType where Name=N'Error') insert into core.MessageType values (N'Error', 1)
+if not exists (select 1 from ce.MessageType where Name=N'Info') insert into ce.MessageType values (N'Info', 1)
+if not exists (select 1 from ce.MessageType where Name=N'Warning') insert into ce.MessageType values (N'Warning', 1)
+if not exists (select 1 from ce.MessageType where Name=N'Error') insert into ce.MessageType values (N'Error', 1)
 GO
 
 -- National standard CEunit
@@ -424,37 +418,35 @@ insert into ce.RuleConditionCategory values
 )
 
 -- sample users
-insert into core.[User] values
-(
-	2 -- male
-	,0 -- credential
-	,0 -- no role
-	,1 -- active account
-	,'Bob'
-	,'Terwilliger'
-	,'Sir'
-	,'sideshow.bob@simpsons.org'
-	,''
-	,'test'
-	,''
-	,0
-	,SYSDATETIME()
-),
-(
-	1  --female
-	,0
-	,0
-	,1
-	,'Helen'
-	,'Lovejoy'
-	,'Ms.'
-	,'helen@simpsons.org'
-	,''
-	,'test'
-	,''
-	,0
-	,SYSDATETIME()
-)
+--insert into core.[User] values
+--(
+--	2 -- male
+--	,0 -- no role
+--	,1 -- active account
+--	,'Bob'
+--	,'Terwilliger'
+--	,'Sir'
+--	,'sideshow.bob@simpsons.org'
+--	,''
+--	,'test'
+--	,''
+--	,0
+--	,SYSDATETIME()
+--),
+--(
+--	1  --female
+--	,0
+--	,1
+--	,'Helen'
+--	,'Lovejoy'
+--	,'Ms.'
+--	,'helen@simpsons.org'
+--	,''
+--	,'test'
+--	,''
+--	,0
+--	,SYSDATETIME()
+--)
 
 -- Link sample users to national standard
 insert into ce.UserNationalStandard values 
