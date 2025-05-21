@@ -31,7 +31,7 @@ public class CeDataProvider : ICeDataProvider
 
     public Task<IEnumerable<DALModels.Experience>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token) =>
         LoadData<DALModels.Experience, dynamic>(
-               "ce.Experiences_Select",
+               "ce.Experiences_S",
             new
             {
                 Year = year,

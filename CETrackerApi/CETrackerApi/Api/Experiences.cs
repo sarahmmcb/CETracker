@@ -17,17 +17,10 @@ public static class Experiences
         IExperienceService experienceService,
         CancellationToken token = default)
     {
-        //try
-        //{
             var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
             if (result == null) return Results.NotFound();
             var response = Results.Ok(result);
             return Results.Ok(result);
-        //}
-        //catch (Exception ex)
-        //{
-        //    return Results.Problem(ex.Message);
-        //}
     }
 
     private static async Task<IResult> UpdateExperience(

@@ -11,15 +11,8 @@ public static class Units
 
     private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService, CancellationToken token = default)
     {
-        try
-        {
-            var result = await unitService.GetUnits(nationalStandardId, token).ConfigureAwait(false);
-            if (result == null) return Results.NotFound();
-            return Results.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return Results.Problem(ex.Message);
-        }
+        var result = await unitService.GetUnits(nationalStandardId, token).ConfigureAwait(false);
+        if (result == null) return Results.NotFound();
+        return Results.Ok(result);
     }
 }

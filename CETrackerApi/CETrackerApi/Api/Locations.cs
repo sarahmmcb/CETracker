@@ -13,16 +13,9 @@ public static class Locations
         ILocationService locationService,
         CancellationToken token = default)
     {
-        try
-        {
-            var result = await locationService.GetLocations(token);
-            if (result == null)
-                return Results.NotFound();
-            return Results.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return Results.Problem(ex.Message);
-        }
+        var result = await locationService.GetLocations(token);
+        if (result == null)
+            return Results.NotFound();
+        return Results.Ok(result);
     }
 }
