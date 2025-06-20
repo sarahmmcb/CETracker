@@ -1,4 +1,5 @@
-﻿using CETrackerApi.Logic;
+﻿using System.Security.Claims;
+using CETrackerApi.Logic;
 
 namespace CETrackerApi.Api;
 
@@ -6,8 +7,10 @@ public static class Experiences
 {
     public static void ConfigureExperiences(this WebApplication app)
     {
-        app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear);
-        app.MapPut("/api/experiences", UpdateExperience);
+        app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear)
+            .RequireAuthorization();
+        app.MapPut("/api/experiences", UpdateExperience)
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> GetExperiencesByYear(
@@ -24,13 +27,15 @@ public static class Experiences
     }
 
     private static async Task<IResult> UpdateExperience(
+        HttpContext context,
         UpdateExperienceRequest request,
         IExperienceService experienceService,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var experienceId = await experienceService.UpdateExperience(request, cancellationToken);
+            var user = context.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault() ?? throw new ApplicationException("Update username not defined");
+            var experienceId = await experienceService.UpdateExperience(request, user.Value, cancellationToken);
             return Results.Ok(experienceId);
         }
         catch (Exception ex)

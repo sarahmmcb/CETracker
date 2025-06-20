@@ -6,7 +6,8 @@ public static class Locations
 {
     public static void ConfigureLocations(this WebApplication app)
     {
-        app.MapGet("/api/locations", GetLocations);
+        app.MapGet("/api/locations", GetLocations)
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> GetLocations(

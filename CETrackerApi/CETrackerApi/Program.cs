@@ -24,12 +24,17 @@ builder.Services.AddCors(options =>
 
 });
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var secret = builder.Configuration["JwtConfig:Secret"];
-        var issuer = builder.Configuration["JwtConfig:ValidIssuer"];
-        var audience = builder.Configuration["JwtConfig:ValidAudiences"];
+        var jwtConfig = builder.Configuration.GetSection("JwtConfig");
+        var secret = jwtConfig.GetSection("Secret").Value;
+        var issuer = jwtConfig.GetSection("ValidIssuer").Value;
+        var audience = jwtConfig.GetSection("ValidAudiences").Get<List<string>>();
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
@@ -40,16 +45,45 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = issuer,
+            ValidAudiences = audience,
             IssuerSigningKey = signingKey
         };
     });
 
+builder.Services.AddAuthorization();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter '<your-token>'"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        }
+    });
 });
+
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
 builder.Services.AddScoped<ICeDataProvider, CeDataProvider>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
@@ -60,16 +94,17 @@ builder.Services.AddTransient<ILocationService, LocationService>();
 var app = builder.Build();
 
 app.UseStaticFiles();
+
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+if (app.Environment.IsDevelopment())
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
-//}
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 //app.UseRouting();
 
@@ -77,7 +112,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Exception Handling Middleware
 app.Use(async (context, next) =>

@@ -6,7 +6,8 @@ public static class Categories
 {
     public static void ConfigureCategories(this WebApplication app)
     {
-        app.MapGet("/api/categoryLists/nationalStandardId/{nationalStandardId}/year/{year}", GetCategoryLists);
+        app.MapGet("/api/categoryLists/nationalStandardId/{nationalStandardId}/year/{year}", GetCategoryLists)
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> GetCategoryLists(

@@ -6,7 +6,8 @@ public static class Units
 {
     public static void ConfigureUnits(this WebApplication app)
     {
-        app.MapGet("/api/units/nationalStandardId/{nationalStandardId}", GetUnits);
+        app.MapGet("/api/units/nationalStandardId/{nationalStandardId}", GetUnits)
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService, CancellationToken token = default)
