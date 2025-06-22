@@ -6,7 +6,8 @@ using Dapper;
 using CETracker.Contracts.DataContracts;
 using CETracker.Contracts.RequestContracts;
 using System.Data.SqlClient;
-using System.Diagnostics;
+using Auth.Contracts;
+using System.Threading;
 
 namespace CETrackerDAL.DataAccess;
 
@@ -17,7 +18,7 @@ public interface ICeDataProvider
     Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId, CancellationToken token);
     Task<IEnumerable<Location>> GetLocations(CancellationToken token);
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
-    Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
+    Task<int> UpdateExperience(UpdateExperienceRequest request, string userName, CancellationToken token);
 }
 
 public class CeDataProvider : ICeDataProvider
@@ -78,8 +79,10 @@ public class CeDataProvider : ICeDataProvider
                },
                token);
 
-    public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, CancellationToken cancellationToken)
+    public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, string username, CancellationToken cancellationToken)
     {
+        var userId = await GetUserId(username, cancellationToken);
+
         using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew,
             new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted },
             TransactionScopeAsyncFlowOption.Enabled);
@@ -89,11 +92,11 @@ public class CeDataProvider : ICeDataProvider
 
         try
         {
-            var experienceId = await UpdateExperience(updateExperienceRequest, connection, cancellationToken);
+            var experienceId = await UpdateExperience(updateExperienceRequest, userId, connection, cancellationToken);
 
-            await UpdateExperienceCategories(experienceId, updateExperienceRequest, connection, cancellationToken);
+            await UpdateExperienceCategories(experienceId, updateExperienceRequest, userId, connection, cancellationToken);
 
-            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, connection, cancellationToken);
+            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, userId, connection, cancellationToken);
 
             txScope.Complete();
 
@@ -114,10 +117,26 @@ public class CeDataProvider : ICeDataProvider
         }
     }
 
-    internal virtual async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, IDbConnection connection, CancellationToken cancellationToken)
+    internal virtual async Task<int> GetUserId(string username, CancellationToken token)
     {
-        var updateUserId = 0; // TODO: get the user id from the auth context
+        try
+        {
+            var user = await LoadData<User, dynamic>("core.User_By_UserName_S", new { username }, token);
+            return user.FirstOrDefault()?.Id ?? 0;
+        }
+        catch (Exception e)
+        {
+            // TODO: logging
+            throw;
+        }
+    }
 
+    internal virtual async Task<int> UpdateExperience(
+        UpdateExperienceRequest updateExperienceRequest,
+        int updateUserId,
+        IDbConnection connection,
+        CancellationToken cancellationToken)
+    {
         var command = new CommandDefinition("ce.Experiences_U_I",
             new
             {
@@ -140,10 +159,8 @@ public class CeDataProvider : ICeDataProvider
         return experienceId;
     }
 
-    internal virtual async Task UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, IDbConnection conn, CancellationToken token)
+    internal virtual async Task UpdateExperienceCategories(int experienceId, UpdateExperienceRequest request, int updateUserId, IDbConnection conn, CancellationToken token)
     {
-        var updateUserId = 0; // TODO: get the user id from the auth context
-
         if (request.Categories.Length == 0)
         {
             return;
@@ -194,10 +211,8 @@ public class CeDataProvider : ICeDataProvider
 
     }
 
-    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, IDbConnection conn, CancellationToken token)
+    internal virtual async Task UpdateExperienceAmounts(int experienceId, UpdateExperienceRequest request, int updateUserId, IDbConnection conn, CancellationToken token)
     {
-        var updateUserId = 0; // TODO: get the user id from the auth context
-
         var currentExperienceAmount = await LoadData<DALModels.ExperienceAmount, dynamic>(
             "ce.ExperienceAmount_S",
             new
@@ -256,6 +271,17 @@ public class CeDataProvider : ICeDataProvider
         return result;
     }
 
+    /// <summary>
+    /// This version takes the connection as an argument instead of establishing
+    /// a new connection. This is for use from within a transaction.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="U"></typeparam>
+    /// <param name="storedProcedure"></param>
+    /// <param name="parameters"></param>
+    /// <param name="connection"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     internal virtual async Task<IEnumerable<T>> LoadData<T, U>(
     string storedProcedure,
     U parameters,

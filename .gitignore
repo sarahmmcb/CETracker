@@ -27,6 +27,7 @@ obj/
 publish/
 TestResults/
 CETrackerApi/.vs
+.vs/
 ###################
 # Web publish log #
 ###################

@@ -25,9 +25,6 @@
  * Schemas
  **********************************************************************************************************************/
 
-if not exists (select * from sys.schemas where name = 'core')
-exec('create schema core')
-
 if not exists (select * from sys.schemas where name = 'ce')
 exec('create schema ce')
 
@@ -35,45 +32,29 @@ exec('create schema ce')
  * Tables
  **********************************************************************************************************************/
 
-/******
-* Account Status
-******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[AccountStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.AccountStatus
-(
-  -- primary key
-  AccountStatusId int not null identity(1,1)
-
-  -- data
-  ,Name varchar(20) not null default ('')
-  ,IsActive bit not null default(0)
-
-  ,Constraint PK_AccountStatus Primary Key Clustered (AccountStatusId)
-)
-go
 
 /*******
 * Gender
 *******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Gender]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Gender
-(
-  -- primary key
-  GenderId int not null identity(1,1)
+--if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[Gender]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+--create table ce.Gender
+--(
+--  -- primary key
+--  GenderId int not null identity(1,1)
 
-  -- data
-  ,Name varchar(50) not null default ('')
-  ,IsActive bit not null default(0)
+--  -- data
+--  ,[Name] varchar(50) not null default ('')
+--  ,IsActive bit not null default(0)
 
-  ,Constraint PK_Gender Primary Key Clustered (GenderId)
-)
-go
+--  ,Constraint PK_Gender Primary Key Clustered (GenderId)
+--)
+--go
 
 /*******
 * Organization
 *******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'core.Organization') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Organization
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Organization') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.Organization
 (
   -- primary key
   OrganizationId int not null identity(1,1)
@@ -93,8 +74,8 @@ GO
 /*******
 * Credential
 *******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Credential]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.[Credential]
+if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[Credential]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.[Credential]
 (
   -- primary key
   CredentialId int not null identity(1,1)
@@ -108,7 +89,7 @@ create table core.[Credential]
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Credential Primary Key Clustered (CredentialId)
-  ,Constraint FK_Credential_OrganizationId Foreign Key (OrganizationId) References core.[Organization](OrganizationId)
+  ,Constraint FK_Credential_OrganizationId Foreign Key (OrganizationId) References ce.[Organization](OrganizationId)
 )
 GO
 
@@ -137,8 +118,8 @@ GO
 /********
 * Role
 ********/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Role]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.[Role]
+if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[Role]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.[Role]
 (
   -- primary key
   RoleId int not null identity(1,1)
@@ -157,116 +138,58 @@ create table core.[Role]
 GO
 
 /*****
-* User
+* UserData
 ******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[User]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table [core].[User]
+if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserData]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table [ce].[UserData]
 (
   -- primary key
-  [UserId] int not null identity(1,1)
+  [UserDataId] int not null identity(1,1)
 
   -- foreign keys
-  ,[GenderId] int not null default(0)
-  ,[CredentialId] int not null default(0)
+  ,[NationalStandardId] int not null default(0)
   ,[RoleId] int not null default(0)
-  ,[AccountStatusId] int not null default(0)
   
   -- data
-  ,[FirstName] varchar(100) not null default('')
-  ,[LastName] varchar(100) not null default('')
   ,[Title] varchar(20) not null default('')
-  ,[Email] varchar(100) not null default('')
-  ,[Image] varchar(100) not null default('')
-  ,[Password] varchar(100) not null default('')
-  ,[PasswordSalt] varchar(50) not null default('')
-  ,[ForcePasswordChange] bit not null default(0)
-  ,[DateRegistered] datetime not null
 
-  ,Constraint PK_User Primary Key Clustered (UserId)
-  ,Constraint FK_User_GenderId Foreign Key (GenderId) References core.Gender(GenderId)
-  ,Constraint FK_User_AccountStatusId Foreign Key (AccountStatusId) References core.AccountStatus(AccountStatusId)
+  ,Constraint PK_UserData Primary Key Clustered (UserDataId)
+  ,Constraint FK_UserData_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+  ,Constraint FK_UserData_RoleId Foreign Key (RoleId) References ce.[Role](RoleId)
 )
-go
-
-if not exists (select * from sys.indexes where name = N'User_FirstName' and object_id = OBJECT_ID(N'[core].[User]'))
-create nonclustered index User_FirstName on [core].[User](FirstName)
-go
-
-if not exists (select * from sys.indexes where name = N'User_LastName' and object_id = OBJECT_ID(N'[core].[User]'))
-create nonclustered index User_LastName on [core].[User](LastName)
 go
 
 /******
 * User History
 ******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[UserHist]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table [core].[UserHist]
+if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserDataHistory]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table [ce].[UserDataHistory]
 (
   -- primary key
   [UniqueifierId] int not null identity(1,1)
 
   -- foreign keys
-  ,[UserId] int not null default(0)
+  ,[UserDataId] int not null default(0)
   ,[GenderId] int not null default(0)
-  ,[CredentialId] int not null default(0)
+  ,[NationalStandardId] int not null default(0)
   ,[RoleId] int not null default(0)
-  ,[AccountStatusId] int not null default(0)
   
   -- data
   ,[UpdateUserId] int not null default(0)
   ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
-  ,[FirstName] varchar(100) not null default('')
-  ,[LastName] varchar(100) not null default('')
   ,[Title] varchar(20) not null default('')
-  ,[Email] varchar(100) not null default('')
-  ,[Image] varchar(100) not null default('')
-  ,[Password] varchar(100) not null default('')
-  ,[PasswordSalt] varchar(50) not null default('')
-  ,[ForcePasswordChange] bit not null default(0)
-  ,[DateRegistered] datetime not null
 
-  ,Constraint PK_UserHistory Primary Key Clustered (UniqueifierId, UserId)
+  ,Constraint PK_UserDataHistory Primary Key Clustered (UniqueifierId, UserDataId)
 )
 go
-
-/*******
-* LoginHistory
-*******/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[LoginHistory]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.LoginHistory
-(
-  -- primary key
-  LoginHistoryId int not null identity(1,1)
-
-  -- foreign keys
-  ,UserId int not null default(0)
-
-  -- data
-  ,Token varchar(255) not null default('')
-  ,RefreshToken varchar(255) not null default('')
-  ,ExpiresIn int not null default(0)
-  ,[IPAddress] varchar(50) not null default('')
-  ,[Message] varchar(500) not null default('')
-  ,IsSuccessful bit not null default(0)
-  ,AttemptedOn datetime null
-  ,AttemptedUsername varchar(100) not null default('')
-  ,AttemptedPassword varchar(100) not null default('')
-  ,Details varchar(max) not null default(0)
-
-  ,Constraint PK_LoginHistory Primary Key Clustered (LoginHistoryId)
-)
-GO
-
-if not exists (select * from sys.indexes where name = N'LoginHistory_UserId' and object_id = OBJECT_ID(N'[core].[LoginHistory]'))
-create nonclustered index LoginHistory_UserId on [core].[LoginHistory](UserId)
 
 /*********
 * Work
 *********/
-if not exists (select * from dbo.sysobjects where ID = object_id(N'[core].[Work]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Work
+if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[Work]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.Work
 (
   -- primary key
   WorkId int not null identity(1,1)
@@ -281,12 +204,12 @@ create table core.Work
   ,EndDate datetime null
 
   ,Constraint PK_Work Primary Key Clustered (WorkId)
-  ,Constraint FK_Work_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_Work_UserId Foreign Key (UserId) References core.[User](Id)
 )
 GO
 
-if not exists (select * from sys.indexes where name = N'Work_UserId' and object_id = OBJECT_ID(N'[core].[Work]'))
-create nonclustered index Work_UserId on [core].[Work](UserId)
+if not exists (select * from sys.indexes where name = N'Work_UserId' and object_id = OBJECT_ID(N'[ce].[Work]'))
+create nonclustered index Work_UserId on [ce].[Work](UserId)
 go
 
 /********
@@ -348,7 +271,7 @@ create table ce.Experience
   ,Notes varchar(max) null
 
   ,Constraint PK_Experience Primary Key Clustered (ExperienceId)
-  ,Constraint FK_Experience_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_Experience_UserId Foreign Key (UserId) References core.[User](Id)
   ,Constraint FK_Experience_LocationId Foreign Key (LocationId) References ce.[Location](LocationId)
 )
 GO
@@ -590,7 +513,7 @@ create table ce.UserCompliance
   ,[Year] int not null default(0)
 
   ,Constraint PK_UserCompliance Primary Key Clustered (UserId, ComplianceId)
-  ,Constraint FK_UserCompliance_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_UserCompliance_UserId Foreign Key (UserId) References core.[User](Id)
   ,Constraint FK_UserCompliance_ComplianceId Foreign Key (ComplianceId) References ce.Compliance(ComplianceId)
 )
 GO
@@ -610,15 +533,15 @@ create table ce.UserNationalStandard
 
   ,Constraint PK_UserNationalStandard Primary Key Clustered (UserId, NationalStandardId)
   ,Constraint FK_UserNationalStandard_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User](UserId)
+  ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User](Id)
 )
 GO
 
 /*******
 * User Organization
 *******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'core.UserOrganization') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.UserOrganization
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.UserOrganization') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.UserOrganization
 (
   -- Composite PK
   UserId int not null default(0)
@@ -628,16 +551,16 @@ create table core.UserOrganization
   ,IsActive bit not null default(0)
 
   ,Constraint PK_UserOrganization Primary Key Clustered (UserId, OrganizationId)
-  ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User](UserId)
-  ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
+  ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User](Id)
+  ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References ce.Organization(OrganizationId)
 )
 GO
 
 /*******
 * Country
 *******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'core.Country') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.Country
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Country') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.Country
 (
   -- primary key
   CountryId int not null identity(1,1)
@@ -766,15 +689,15 @@ create table ce.NatlStandardOrg
 
   ,Constraint PK_NatlStandardOrg Primary Key Clustered (NationalStandardId, OrganizationId)
   ,Constraint FK_NatlStandardOrg_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_NatlStandardOrg_OrganizationId Foreign Key (OrganizationId) References core.Organization(OrganizationId)
+  ,Constraint FK_NatlStandardOrg_OrganizationId Foreign Key (OrganizationId) References ce.Organization(OrganizationId)
 )
 GO
 
 /******
 * Message Type
 ******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'core.MessageType') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table core.MessageType
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.MessageType') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.MessageType
 (
   -- primary key
   MessageTypeId int not null identity(1,1)
@@ -790,8 +713,8 @@ GO
 /********
 * Log
 ********/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'[core].[Log]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table [core].[Log]
+if not exists (select * from dbo.sysobjects where ID=object_id(N'[ce].[Log]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table [ce].[Log]
 (
   -- primary key
   [LogId] int not null identity(1,1)
@@ -806,7 +729,7 @@ create table [core].[Log]
   ,[Message] varchar(600) not null default('')
 
   ,Constraint PK_Log Primary Key Clustered (LogId)
-  ,Constraint FK_Log_MessageTypeId Foreign Key (MessageTypeId) References core.MessageType(MessageTypeId)
+  ,Constraint FK_Log_MessageTypeId Foreign Key (MessageTypeId) References ce.MessageType(MessageTypeId)
 )
 GO
 
@@ -842,5 +765,15 @@ IF NOT EXISTS
 BEGIN
     CREATE ROLE [CETRACKER_EXECROLE];
     ALTER ROLE [CETRACKER_EXECROLE] ADD MEMBER [CETRACKER_SVCACCT];
+END
+GO
+
+IF EXISTS
+    (SELECT 1
+     FROM sys.database_principals
+     WHERE name='AUTHAPI_EXECROLE'
+     and type_desc='DATABASE_ROLE')
+BEGIN
+    ALTER ROLE [AUTHAPI_EXECROLE] ADD MEMBER [CETRACKER_SVCACCT]
 END
 GO
