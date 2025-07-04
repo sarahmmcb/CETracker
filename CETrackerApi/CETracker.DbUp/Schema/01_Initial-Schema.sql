@@ -147,20 +147,23 @@ create table [ce].[UserData]
   [UserDataId] int not null identity(1,1)
 
   -- foreign keys
-  ,[NationalStandardId] int not null default(0)
-  ,[RoleId] int not null default(0)
+  ,[UserId] int not null default 0
   
   -- data
   ,[Title] varchar(20) not null default('')
+  ,[CanSignSAO] bit not null default(0)
 
   ,Constraint PK_UserData Primary Key Clustered (UserDataId)
-  ,Constraint FK_UserData_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_UserData_RoleId Foreign Key (RoleId) References ce.[Role](RoleId)
+  ,Constraint FK_UserData_UserId Foreign Key (UserId) References core.[User](Id)
 )
 go
 
+if not exists (select * from sys.indexes where name = N'UserData_UserId' and object_id = OBJECT_ID(N'[ce].[UserData]'))
+create nonclustered index UserData_UserId on [ce].[UserData](UserId)
+go
+
 /******
-* User History
+* User Data History
 ******/
 if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserDataHistory]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table [ce].[UserDataHistory]
@@ -170,8 +173,7 @@ create table [ce].[UserDataHistory]
 
   -- foreign keys
   ,[UserDataId] int not null default(0)
-  ,[GenderId] int not null default(0)
-  ,[NationalStandardId] int not null default(0)
+  ,[UserId] int not null default(0)
   ,[RoleId] int not null default(0)
   
   -- data
