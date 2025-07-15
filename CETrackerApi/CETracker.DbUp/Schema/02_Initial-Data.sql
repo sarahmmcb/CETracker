@@ -417,55 +417,6 @@ insert into ce.RuleConditionCategory values
 	,1
 )
 
--- sample users
---insert into core.[User] values
---(
---	2 -- male
---	,0 -- no role
---	,1 -- active account
---	,'Bob'
---	,'Terwilliger'
---	,'Sir'
---	,'sideshow.bob@simpsons.org'
---	,''
---	,'test'
---	,''
---	,0
---	,SYSDATETIME()
---),
---(
---	1  --female
---	,0
---	,1
---	,'Helen'
---	,'Lovejoy'
---	,'Ms.'
---	,'helen@simpsons.org'
---	,''
---	,'test'
---	,''
---	,0
---	,SYSDATETIME()
---)
-
--- Link sample users to national standard
-insert into ce.UserNationalStandard values 
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,1 -- sideshow bob
-	,1
-),
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,2 -- helen lovejoy
-	,1
-),
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
-	,2 -- helen lovejoy
-	,1
-)
-
 DECLARE @experienceYear INT = YEAR(GETDATE());
 
 -- Experience
@@ -623,3 +574,19 @@ insert into ce.ExperienceCategory values
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId = (select NationalStandardId from ce.NationalStandard where shortname='USQS General'))
 )
 go
+
+insert into ce.UserData values
+(
+	1 -- UserId
+	,1 -- National Standard Id
+	,'Mr.'
+	,0 -- can sign sao
+)
+
+insert into ce.UserData values
+(
+	2 -- UserId
+	,2 -- national standard id
+	,'Ms.'
+	,0 -- can sign sao
+)

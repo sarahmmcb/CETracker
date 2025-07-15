@@ -7,7 +7,6 @@ using CETracker.Contracts.DataContracts;
 using CETracker.Contracts.RequestContracts;
 using System.Data.SqlClient;
 using Auth.Contracts;
-using System.Threading;
 
 namespace CETrackerDAL.DataAccess;
 
@@ -18,6 +17,7 @@ public interface ICeDataProvider
     Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int year, int userId, CancellationToken token);
     Task<IEnumerable<Location>> GetLocations(CancellationToken token);
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
+    Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token);
     Task<int> UpdateExperience(UpdateExperienceRequest request, string userName, CancellationToken token);
 }
 
@@ -51,6 +51,7 @@ public class CeDataProvider : ICeDataProvider
             },
             token
         );
+
     public Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int nationalStandardId, int year, CancellationToken token) =>
         LoadData<DALModels.CategoryList, dynamic>(
             "ce.CategoryLists_S"
@@ -79,8 +80,19 @@ public class CeDataProvider : ICeDataProvider
                },
                token);
 
+    public Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token) =>
+        LoadData<DALModels.UserData, dynamic>(
+            "ce.UserData_S",
+            new
+            {
+                userId
+            },
+            token
+        );
+
     public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, string username, CancellationToken cancellationToken)
     {
+        // TODO: this should be provided by the client
         var userId = await GetUserId(username, cancellationToken);
 
         using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew,

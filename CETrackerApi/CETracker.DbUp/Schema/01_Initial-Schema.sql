@@ -89,7 +89,6 @@ create table ce.[Credential]
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Credential Primary Key Clustered (CredentialId)
-  ,Constraint FK_Credential_OrganizationId Foreign Key (OrganizationId) References ce.[Organization](OrganizationId)
 )
 GO
 
@@ -103,8 +102,7 @@ create table ce.NationalStandard
   NationalStandardId int not null identity(1,1)
 
   -- foreign keys
-  ,CountryId int not null default(0)
-  ,OwningOrganizationId int not null default(0)
+  ,OrganizationId int not null default(0)
 
   -- data
   ,LongName varchar(500) not null default('')
@@ -144,23 +142,25 @@ if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserDat
 create table [ce].[UserData]
 (
   -- primary key
-  [UserDataId] int not null identity(1,1)
+  [UserId] int not null default 0
 
-  -- foreign keys
   ,[NationalStandardId] int not null default(0)
-  ,[RoleId] int not null default(0)
   
   -- data
   ,[Title] varchar(20) not null default('')
+  ,[CanSignSAO] bit not null default(0)
 
-  ,Constraint PK_UserData Primary Key Clustered (UserDataId)
-  ,Constraint FK_UserData_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_UserData_RoleId Foreign Key (RoleId) References ce.[Role](RoleId)
+  ,Constraint PK_UserData Primary Key Clustered (UserId)
+  ,Constraint FK_UserData_UserId Foreign Key (UserId) References core.[User](Id)
 )
 go
 
+if not exists (select * from sys.indexes where name = N'UserData_UserId' and object_id = OBJECT_ID(N'[ce].[UserData]'))
+create nonclustered index UserData_UserId on [ce].[UserData](UserId)
+go
+
 /******
-* User History
+* User Data History
 ******/
 if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserDataHistory]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table [ce].[UserDataHistory]
@@ -169,19 +169,18 @@ create table [ce].[UserDataHistory]
   [UniqueifierId] int not null identity(1,1)
 
   -- foreign keys
-  ,[UserDataId] int not null default(0)
-  ,[GenderId] int not null default(0)
+  ,[UserId] int not null default(0)
   ,[NationalStandardId] int not null default(0)
-  ,[RoleId] int not null default(0)
   
   -- data
+  ,[Title] varchar(20) not null default('')
+  ,[CanSignSAO] bit not null default(0)
   ,[UpdateUserId] int not null default(0)
   ,[UpdateUserName] int not null default(0)
   ,[UpdateDateUTC] datetime not null
   ,IsDeleted bit not null
-  ,[Title] varchar(20) not null default('')
 
-  ,Constraint PK_UserDataHistory Primary Key Clustered (UniqueifierId, UserDataId)
+  ,Constraint PK_UserDataHistory Primary Key Clustered (UniqueifierId, UserId)
 )
 go
 
@@ -518,25 +517,6 @@ create table ce.UserCompliance
 )
 GO
 
-/******
-* User National Standard
-******/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.UserNationalStandard') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.UserNationalStandard
-(
-  -- Composite PK
-  UserId int not null default(0)
-  ,NationalStandardId int not null default(0)
-
-  -- data
-  ,IsActive bit not null default(0)
-
-  ,Constraint PK_UserNationalStandard Primary Key Clustered (UserId, NationalStandardId)
-  ,Constraint FK_UserNationalStandard_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_UserNationalStandard_UserId Foreign Key (UserId) References core.[User](Id)
-)
-GO
-
 /*******
 * User Organization
 *******/
@@ -553,6 +533,25 @@ create table ce.UserOrganization
   ,Constraint PK_UserOrganization Primary Key Clustered (UserId, OrganizationId)
   ,Constraint FK_UserOrganization_UserId Foreign Key (UserId) References core.[User](Id)
   ,Constraint FK_UserOrganization_OrganizationId Foreign Key (OrganizationId) References ce.Organization(OrganizationId)
+)
+GO
+
+/*******
+* User Credential
+*******/
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.UserCredential') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.UserCredential
+(
+  -- Composite PK
+  UserId int not null default(0)
+  ,CredentialId int not null default(0)
+
+  -- data
+  ,IsActive bit not null default(0)
+
+  ,Constraint PK_UserCredential Primary Key Clustered (UserId, CredentialId)
+  ,Constraint FK_UserCredential_UserId Foreign Key (UserId) References core.[User](Id)
+  ,Constraint FK_UserCredential_CredentialId Foreign Key (CredentialId) References ce.[Credential](CredentialId)
 )
 GO
 
