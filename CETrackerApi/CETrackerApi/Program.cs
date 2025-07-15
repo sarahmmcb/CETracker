@@ -90,6 +90,7 @@ builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<IUnitService, UnitService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
+builder.Services.AddTransient<IUserDataService, UserDataService>();
 
 var app = builder.Build();
 
@@ -137,6 +138,7 @@ app.Use(async (context, next) =>
 });
 
 app.ConfigureExperiences();
+app.ConfigureUserData();
 app.ConfigureUnits();
 app.ConfigureCategories();
 app.ConfigureLocations();

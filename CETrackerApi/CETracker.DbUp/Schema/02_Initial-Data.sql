@@ -417,24 +417,6 @@ insert into ce.RuleConditionCategory values
 	,1
 )
 
--- Link sample users to national standard
-insert into ce.UserNationalStandard values 
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,1 -- sideshow bob
-	,1
-),
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,2 -- helen lovejoy
-	,1
-),
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
-	,2 -- helen lovejoy
-	,1
-)
-
 DECLARE @experienceYear INT = YEAR(GETDATE());
 
 -- Experience
@@ -596,13 +578,15 @@ go
 insert into ce.UserData values
 (
 	1 -- UserId
-	,0 -- role id
+	,1 -- National Standard Id
 	,'Mr.'
+	,0 -- can sign sao
 )
 
 insert into ce.UserData values
 (
 	2 -- UserId
-	,0 -- role id
+	,2 -- national standard id
 	,'Ms.'
+	,0 -- can sign sao
 )
