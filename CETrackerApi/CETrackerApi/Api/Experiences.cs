@@ -34,8 +34,7 @@ public static class Experiences
     {
         try
         {
-            var user = context.User.Claims.Where(c => c.Type == ClaimTypes.Name).FirstOrDefault() ?? throw new ApplicationException("Update username not defined");
-            var experienceId = await experienceService.UpdateExperience(request, user.Value, cancellationToken);
+            var experienceId = await experienceService.UpdateExperience(request, cancellationToken);
             return Results.Ok(experienceId);
         }
         catch (Exception ex)
