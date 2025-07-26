@@ -18,7 +18,7 @@ public interface ICeDataProvider
     Task<IEnumerable<Location>> GetLocations(CancellationToken token);
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
     Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token);
-    Task<int> UpdateExperience(UpdateExperienceRequest request, string userName, CancellationToken token);
+    Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 
 public class CeDataProvider : ICeDataProvider
@@ -90,11 +90,8 @@ public class CeDataProvider : ICeDataProvider
             token
         );
 
-    public async Task<int> UpdateExperience(UpdateExperienceRequest updateExperienceRequest, string username, CancellationToken cancellationToken)
+    public async Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
-        // TODO: this should be provided by the client
-        var userId = await GetUserId(username, cancellationToken);
-
         using var txScope = new TransactionScope(TransactionScopeOption.RequiresNew,
             new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted },
             TransactionScopeAsyncFlowOption.Enabled);
@@ -104,11 +101,11 @@ public class CeDataProvider : ICeDataProvider
 
         try
         {
-            var experienceId = await UpdateExperience(updateExperienceRequest, userId, connection, cancellationToken);
+            var experienceId = await UpdateExperience(request, request.UserId, connection, cancellationToken);
 
-            await UpdateExperienceCategories(experienceId, updateExperienceRequest, userId, connection, cancellationToken);
+            await UpdateExperienceCategories(experienceId, request, request.UserId, connection, cancellationToken);
 
-            await UpdateExperienceAmounts(experienceId, updateExperienceRequest, userId, connection, cancellationToken);
+            await UpdateExperienceAmounts(experienceId, request, request.UserId, connection, cancellationToken);
 
             txScope.Complete();
 
