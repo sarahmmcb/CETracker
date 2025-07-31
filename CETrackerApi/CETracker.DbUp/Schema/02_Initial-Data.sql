@@ -172,7 +172,7 @@ insert into ce.NatlStandardUnit values
 	,(select UnitId from ce.Unit where LongNamePlural=N'Minutes')
 	,'/50' -- divide minutes by 50 to get the hours
 	,1
-	,0
+	,1
 	,1
 )
 ,(
@@ -181,7 +181,7 @@ insert into ce.NatlStandardUnit values
 	,0 
 	,''
 	,0
-	,1
+	,0
 	,1
 )
 ,(
@@ -190,7 +190,7 @@ insert into ce.NatlStandardUnit values
 	,(select UnitId from ce.Unit where LongNamePlural=N'Minutes')
 	,'/50' -- divide minutes by 50 to get the hours
 	,1
-	,0
+	,1
 	,1
 )
 ,(
@@ -199,7 +199,7 @@ insert into ce.NatlStandardUnit values
 	,0 
 	,''
 	,0
-	,1
+	,0
 	,1
 )
 
