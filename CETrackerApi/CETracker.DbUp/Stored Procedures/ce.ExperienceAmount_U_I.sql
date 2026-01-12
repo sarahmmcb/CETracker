@@ -8,7 +8,7 @@ GO
 CREATE PROCEDURE ce.ExperienceAmount_U_I
 	@ExperienceId INT
 	,@UnitId INT
-	,@Amount INT
+	,@Amount DECIMAL(4,1)
 	,@UpdateUserId INT
 AS
 
