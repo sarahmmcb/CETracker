@@ -20,6 +20,7 @@ public class Experience
     public int ExperienceAmountId { get; set; }
     public int UnitId { get; set; }
     public decimal Amount { get; set; }
+    public bool IsComplianceUnit { get; set; }
     public int LocationId { get; set; }
     public string LocationName { get; set; }
 }
