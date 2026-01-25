@@ -17,11 +17,9 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("http://localhost:4200")  // Replace with your frontend URL
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
-                          //policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                       });
-
-
 });
 
 builder.Logging.ClearProviders();
@@ -106,8 +104,6 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
-
-//app.UseRouting();
 
 app.UseHttpsRedirection();
 
