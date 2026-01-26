@@ -54,8 +54,7 @@ public class CeDataProvider : ICeDataProvider
 
     public Task<IEnumerable<DALModels.CategoryList>> GetCategoryLists(int nationalStandardId, int year, CancellationToken token) =>
         LoadData<DALModels.CategoryList, dynamic>(
-            "ce.CategoryLists_S"
-            ,
+            "ce.CategoryLists_S",
             new
             {
                 nationalStandardId,
@@ -89,6 +88,28 @@ public class CeDataProvider : ICeDataProvider
             },
             token
         );
+
+    public Task<IEnumerable<DALModels.CategoryTotal>> GetCategoryTotals(int year, int userId, int nationalStandardId, CancellationToken token) =>
+        LoadData<DALModels.CategoryTotal, dynamic>(
+            "ce.Category_Total_S",
+            new
+            {
+                userId,
+                nationalStandardId,
+                year
+            },
+            token
+        );
+
+    public Task<IEnumerable<DALModels.RuleData>> GetRuleData(int nationalStandardId, CancellationToken token) =>
+    LoadData<DALModels.RuleData, dynamic>(
+        "ce.Rule_Data_S",
+        new
+        {
+            nationalStandardId,
+        },
+        token
+    );
 
     public async Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {

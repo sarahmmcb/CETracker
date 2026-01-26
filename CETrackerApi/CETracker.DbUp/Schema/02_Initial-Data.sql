@@ -324,7 +324,7 @@ insert into ce.RuleCondition values
 )
 ,(
 	-- organized
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	(select RuleId from ce.[Rule] where [Name]='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,6
 	,0
 	,1
@@ -336,7 +336,7 @@ insert into ce.RuleCondition values
 )
 ,(
 	-- specific
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	(select RuleId from ce.[Rule] where [Name]='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,15
 	,0
 	,1
@@ -348,7 +348,7 @@ insert into ce.RuleCondition values
 )
 ,(
 	-- organized specific
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	(select RuleId from ce.[Rule] where [Name]='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,6
 	,0
 	,1

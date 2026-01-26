@@ -1,11 +1,11 @@
 ﻿USE CasCETracker;
 GO
 
-IF OBJECT_ID('ce.Category_Totals_S', 'P') IS NOT NULL  
-   DROP PROCEDURE ce.Category_Totals_S;  
+IF OBJECT_ID('ce.Category_Total_S', 'P') IS NOT NULL  
+   DROP PROCEDURE ce.Category_Total_S;  
 GO 
 
-create procedure ce.Category_Totals_S
+create procedure ce.Category_Total_S
 	@UserId int
 	,@NationalStandardId int
 	,@Year int
@@ -15,7 +15,7 @@ WITH preLim AS (
 Select
 cat.CategoryId
 ,MAX(cat.DisplayName) AS DisplayName
-,SUM(exAm.Amount) AS CategoryTotal
+,SUM(exAm.Amount) AS Total
 from 
 ce.Experience ex
 inner join ce.ExperienceCategory exCat on ex.ExperienceId = exCat.ExperienceId
@@ -38,7 +38,7 @@ UNION ALL
 Select
 cat.CategoryId
 ,MAX(cat.DisplayName) AS DisplayName
-,SUM(exAm.Amount) AS CategoryTotal
+,SUM(exAm.Amount) AS Total
 from 
 ce.Experience ex
 inner join ce.ExperienceCategory exCat on ex.ExperienceId = exCat.ExperienceId
@@ -58,19 +58,19 @@ and ex.CarryForward = 1
 GROUP BY
 	cat.CategoryId
 )
+
 Select * INTO #tempAmounts
 from preLim;
 
 Select
 CategoryId
 ,MAX(DisplayName) AS DisplayName
-,SUM(CategoryTotal) AS CategoryTotal
+,SUM(Total) AS Total
 From
 #tempAmounts
 Group by CategoryId
 
 DROP TABLE #tempAmounts
 
-GRANT EXECUTE ON ce.Category_Totals_S TO [CETRACKER_EXECROLE];
+GRANT EXECUTE ON ce.Category_Total_S TO [CETRACKER_EXECROLE];
 GO
-

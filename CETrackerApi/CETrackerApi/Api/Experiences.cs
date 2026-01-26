@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using CETrackerApi.Logic;
+﻿using CETrackerApi.Logic;
 
 namespace CETrackerApi.Api;
 
