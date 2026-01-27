@@ -72,5 +72,4 @@ Group by CategoryId
 
 DROP TABLE #tempAmounts
 
-GRANT EXECUTE ON ce.Category_Total_S TO [CETRACKER_EXECROLE];
 GO

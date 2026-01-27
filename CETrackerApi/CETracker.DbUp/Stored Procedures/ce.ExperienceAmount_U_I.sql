@@ -53,5 +53,3 @@ END
 
 GO
 
-GRANT EXECUTE ON ce.ExperienceAmount_U_I TO [CETRACKER_EXECROLE];
-GO

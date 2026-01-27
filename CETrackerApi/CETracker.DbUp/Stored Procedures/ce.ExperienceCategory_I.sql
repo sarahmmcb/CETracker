@@ -28,6 +28,3 @@ VALUES
 	)
 
 GO
-
-GRANT EXECUTE ON ce.ExperienceCategory_I TO [CETRACKER_EXECROLE];
-GO

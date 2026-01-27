@@ -3,7 +3,7 @@ public class RuleData
 {
     public int RuleId { get; set; }
 	public string RuleName { get; set; }
-	public int RuleGoal { get; set; }
+	public int MainGoal { get; set; }
 	public int RuleConditionId { get; set; }
 	public int Goal { get; set; }
 	public int MaxAmount { get; set; }

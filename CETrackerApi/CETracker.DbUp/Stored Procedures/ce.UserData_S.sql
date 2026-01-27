@@ -12,19 +12,12 @@ as
 begin
 Select
 	ud.UserId
+	,ns.NationalStandardId
 	,Title
 	,CanSignSAO
-	,ns.NationalStandardId
-	,ns.OwningOrganizationId
-	,ns.LongName
-	,ns.ShortName
-	,ns.IsActive
 from ce.UserData ud
 left join ce.NationalStandard ns on ns.NationalStandardId = ud.NationalStandardId
 where
   ud.UserId = @UserId
 end
-GO
-
-GRANT EXECUTE ON ce.UserData_S TO [CETRACKER_EXECROLE];
 GO

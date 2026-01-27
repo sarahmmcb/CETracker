@@ -18,5 +18,3 @@ begin
 end
 GO
 
-GRANT EXECUTE ON ce.Locations_S TO [CETRACKER_EXECROLE];
-GO

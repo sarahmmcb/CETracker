@@ -12,7 +12,7 @@ as
 Select
 	r.RuleId
 	,r.[Name] as RuleName
-	,r.Goal as RuleGoal
+	,r.Goal as MainGoal
 	,rc.RuleConditionId
 	,rc.Goal
 	,rc.MaxAmount
@@ -28,5 +28,4 @@ where
 	and
 	rc.IsActive = 1
 
-GRANT EXECUTE ON ce.Rule_Data_S TO [CETRACKER_EXECROLE];
 GO

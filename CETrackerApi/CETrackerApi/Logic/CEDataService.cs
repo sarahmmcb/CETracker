@@ -17,6 +17,20 @@ public class CeDataService : ICeDataService
     {
         var categoryTotals = await _ceDataProvider.GetCategoryTotals(year, userId, nationalStandardId, token);
         var ruleData = await _ceDataProvider.GetRuleData(nationalStandardId, token);
+        
+        if (ruleData is null
+            || ruleData.Count() == 0
+            || categoryTotals is null
+            || categoryTotals.Count() == 0)
+        {
+            throw new ApplicationException("CE Data or Rule Data missing");
+        }
+
+
+        var mainGoal = ruleData.First().MainGoal;
+        var ceDataResponse = new CeDataResponse();
+
+
 
     }
 

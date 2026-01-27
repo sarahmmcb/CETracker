@@ -27,5 +27,3 @@ WHERE
 	CategoryId = @CategoryId
 GO
 
-GRANT EXECUTE ON ce.ExperienceCategory_D TO [CETRACKER_EXECROLE];
-GO
