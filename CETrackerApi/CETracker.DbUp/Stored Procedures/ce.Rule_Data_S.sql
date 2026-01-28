@@ -11,21 +11,19 @@ as
 
 Select
 	r.RuleId
-	,r.[Name] as RuleName
-	,r.Goal as MainGoal
-	,rc.RuleConditionId
-	,rc.Goal
-	,rc.MaxAmount
-	,rc.IsDoubleCounted
-	,rcc.CategoryId
+	,r.[Name]
+	,r.Goal
+	,r.MaxAmount
+	,r.IsMainGoal
+	,r.IsAdditionalCategory
+	,rc.CategoryId
 	,cat.[Name] as CategoryName
 from ce.[Rule] r
-inner join ce.RuleCondition rc on rc.RuleId = r.RuleId
-inner join ce.RuleConditionCategory rcc on rcc.RuleConditionId = rc.RuleConditionId
-left join ce.Category cat on cat.CategoryId = rcc.CategoryId
+left join ce.RuleCategory rc on r.RuleId = rc.RuleId
+left join ce.Category cat on cat.CategoryId = rc.CategoryId
 where 
 	r.NationalStandardId = @NationalStandardId
-	and
-	rc.IsActive = 1
+	and 
+	r.IsActive = 1
 
 GO
