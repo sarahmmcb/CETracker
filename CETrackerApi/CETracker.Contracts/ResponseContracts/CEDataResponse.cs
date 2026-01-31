@@ -3,6 +3,8 @@
 public class CeDataResponse
 {
     public string ComplianceStatus { get; set; }
+    public string UnitShortNamePlural { get; set; }
+    public string UnitShortNameSingular { get; set; }
     public IEnumerable<CategoryData> CategoryData { get; set; }
 
 }

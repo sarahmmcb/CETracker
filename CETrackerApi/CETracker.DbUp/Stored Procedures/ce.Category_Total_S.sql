@@ -69,7 +69,7 @@ from preLim;
 Select
 	CategoryId
 	,MAX(DisplayName) AS DisplayName
-	,SUM(CategoryTotal) AS CategoryTotal
+	,SUM(CategoryTotal) AS Total
 	,MAX(UnitLongNamePlural) AS UnitLongNamePlural
 From
 	#tempAmounts

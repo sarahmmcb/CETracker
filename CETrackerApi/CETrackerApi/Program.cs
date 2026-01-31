@@ -85,6 +85,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
 builder.Services.AddScoped<ICeDataProvider, CeDataProvider>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
+builder.Services.AddTransient<ICeDataService, CeDataService>();
 builder.Services.AddTransient<IUnitService, UnitService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
@@ -134,10 +135,10 @@ app.Use(async (context, next) =>
 });
 
 app.ConfigureExperiences();
+app.ConfigureCeData();
 app.ConfigureUserData();
 app.ConfigureUnits();
 app.ConfigureCategories();
 app.ConfigureLocations();
-
 
 app.Run();

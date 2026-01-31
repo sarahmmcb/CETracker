@@ -18,6 +18,7 @@ public interface ICeDataProvider
     Task<IEnumerable<Location>> GetLocations(CancellationToken token);
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
     Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token);
+    Task<IEnumerable<DALModels.CeData>> GetCeData(int year, int userId, int nationalStandardId, CancellationToken token);
     Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 
@@ -85,6 +86,18 @@ public class CeDataProvider : ICeDataProvider
             new
             {
                 userId
+            },
+            token
+        );
+
+    public Task<IEnumerable<DALModels.CeData>> GetCeData(int year, int userId, int nationalStandardId, CancellationToken token) =>
+        LoadData<DALModels.CeData, dynamic>(
+            "ce.CeData_S",
+            new
+            {
+                userId,
+                nationalStandardId,
+                year
             },
             token
         );
