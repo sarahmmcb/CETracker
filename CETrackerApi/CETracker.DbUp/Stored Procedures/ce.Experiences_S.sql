@@ -59,5 +59,3 @@ begin
 end
 GO
 
-GRANT EXECUTE ON ce.Experiences_S TO [CETRACKER_EXECROLE];
-GO

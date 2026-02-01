@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CETracker.Contracts.ResponseContracts;
 
-namespace CETracker.Contracts.ResponseContracts;
-public class CEDataResponse
+public class CeDataResponse
 {
+    public string ComplianceStatus { get; set; }
+    public string UnitShortNamePlural { get; set; }
+    public string UnitShortNameSingular { get; set; }
+    public IEnumerable<CategoryData> CategoryData { get; set; }
 
 }
+public class CategoryData
+{
+    public int CategoryId { get; set; }
+    public string DisplayName { get; set; }
+    public decimal Minimum { get; set; }
+    public decimal Maximum { get; set; }
+    public decimal AmountCompleted { get; set; }
+}
+

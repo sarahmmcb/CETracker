@@ -48,8 +48,8 @@ if not exists (select 1 from ce.Location where Name=N'Other') insert into ce.Loc
 GO
 
 -- National Standard
-if not exists (select 1 from ce.NationalStandard where LongName=N'United States General Qualification Standard') insert into ce.NationalStandard values ((select CountryId from ce.Country where ShortName=N'USA'), (select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States General Qualification Standard', N'USQS General' ,1)
-if not exists (select 1 from ce.NationalStandard where LongName=N'United States Specific Qualification Standard') insert into ce.NationalStandard values ((select CountryId from ce.Country where ShortName=N'USA'), (select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States Specific Qualification Standard', N'USQS Specific' ,1)
+if not exists (select 1 from ce.NationalStandard where LongName=N'United States General Qualification Standard') insert into ce.NationalStandard values ((select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States General Qualification Standard', N'USQS General' ,1)
+if not exists (select 1 from ce.NationalStandard where LongName=N'United States Specific Qualification Standard') insert into ce.NationalStandard values ((select OrganizationId from ce.Organization where ShortName=N'AAA'), N'United States Specific Qualification Standard', N'USQS Specific' ,1)
 GO
 
 -- Category List
@@ -203,43 +203,60 @@ insert into ce.NatlStandardUnit values
 	,1
 )
 
--- General Rule and conditions
-insert into ce.[Rule] values
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
-	,(select UnitId from ce.Unit where LongNamePlural='Hours')
-	,'Total CE'
-	,'Total CE hours for the USQS General Requirement'
-	,30
-	,1900
-	,9999
-	,1
-	,1
-)
-go
+---- General Rule and conditions
+--insert into ce.[Rule] values
+--(
+--	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
+--	,(select UnitId from ce.Unit where LongNamePlural='Hours')
+--	,'Total CE'
+--	,'Total CE hours for the USQS General Requirement'
+--	,30
+--	,1900
+--	,9999
+--	,1
+--	,1
+--)
+--go
 
--- Rule for USQS Specific Requirement
-insert into ce.[Rule] values
-(
-	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
-	,(select UnitId from ce.Unit where LongNamePlural='Hours')
-	,'Total CE'
-	,'Total CE hours for the USQS Specific Requirement'
-	,30
-	,1900
-	,9999
-	,1
-	,1
-)
-go
+---- Rule for USQS Specific Requirement
+--insert into ce.[Rule] values
+--(
+--	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+--	,(select UnitId from ce.Unit where LongNamePlural='Hours')
+--	,'Total CE'
+--	,'Total CE hours for the USQS Specific Requirement'
+--	,30
+--	,1900
+--	,9999
+--	,1
+--	,1
+--)
+--go
 
--- Rule conditions
+-- Rule
 -- general
-insert into ce.RuleCondition values
+insert into ce.[Rule] values
 (
-	-- professionalism
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+	-- Total CE 1
+	(select NationalStandardId from ce.[NationalStandard] where ShortName='USQS General')
+	,'Total CE'
+	,30
+	,0
+	,0
+	,0
+	,1
+	,1
+	,1900
+	,9999
+	,1
+)
+insert into ce.[Rule] values
+(
+	-- professionalism 2
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
+	,'Professionalism'
 	,3
+	,0
 	,0
 	,0
 	,0
@@ -249,11 +266,13 @@ insert into ce.RuleCondition values
 	,1
 )
 ,(
-	-- bias
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+	-- bias 3
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
+	,'Bias'
 	,1
 	,0
 	,1
+	,0
 	,0
 	,1
 	,2022
@@ -261,10 +280,12 @@ insert into ce.RuleCondition values
 	,1
 )
 ,(
-	-- general business
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+	-- general business 4
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
+	,'General Business'
 	,0
 	,3
+	,0
 	,0
 	,0
 	,1
@@ -272,24 +293,41 @@ insert into ce.RuleCondition values
 	,9999
 	,1
 )
-,(	-- organized
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
+,(	-- organized 5
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS General')
+	,'Organized'
 	,6
 	,0
 	,1
 	,0
+	,0
 	,1
 	,1900
 	,9999
 	,1
 )
-
--- specific
-insert into ce.RuleCondition values
+-- Specific
+insert into ce.[Rule] values
 (
-	-- prof
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	-- Total CE 6
+	(select NationalStandardId from ce.[NationalStandard] where ShortName='USQS Specific')
+	,'Total CE'
+	,30
+	,0
+	,0
+	,0
+	,1
+	,1
+	,1900
+	,9999
+	,1
+)
+,(
+	-- professionalism 7
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'Professionalism'
 	,3
+	,0
 	,0
 	,0
 	,0
@@ -299,11 +337,13 @@ insert into ce.RuleCondition values
 	,1
 )
 ,(
-	-- bias
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	-- bias 8
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'Bias'
 	,1
 	,0
 	,1
+	,0
 	,0
 	,1
 	,2022
@@ -311,47 +351,54 @@ insert into ce.RuleCondition values
 	,1
 )
 ,(
-	-- general business
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	-- general business 9
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'General Business'
 	,0
 	,3
 	,0
 	,0
+	,0
 	,1
 	,1900
 	,9999
 	,1
 )
-,(
-	-- organized
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+,(	-- organized 10
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'Organized'
 	,6
 	,0
 	,1
 	,0
+	,0
 	,1
 	,1900
 	,9999
 	,1
 )
 ,(
-	-- specific
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	-- specific 11
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'Specific'
 	,15
 	,0
 	,1
 	,0
+	,0
 	,1
 	,1900
 	,9999
 	,1
 )
 ,(
-	-- organized specific
-	(select RuleId from ce.[Rule] where Name='Total CE' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
+	-- organized specific 12
+	(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific')
+	,'Specific Organized'
 	,6
 	,0
 	,1
+	,0
 	,0
 	,1
 	,1900
@@ -359,60 +406,60 @@ insert into ce.RuleCondition values
 	,1
 )
 
--- Rule Condition category linker
-insert into ce.RuleConditionCategory values
+-- Rule category linker
+insert into ce.RuleCategory values
 (
-	1 -- need to make this equal the ruleConditionId which isn't always 1
+	2 -- need to make this equal the ruleId 
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
 	,1
 )
 ,(
-	2
+	3
 	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
 	,1
 )
 ,(
-	3
+	4
 	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
 	,1
 )
 ,(
-	4
+	5
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS General'))
 	,1
 )
 ,(
-	5
+	7
 	,(select CategoryId from ce.Category where Name='Professionalism' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	6
+	8
 	,(select CategoryId from ce.Category where Name='Bias' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	7
+	9
 	,(select CategoryId from ce.Category where Name='General Business' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	8
+	10
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	9
+	11
 	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	10
+	12
 	,(select CategoryId from ce.Category where Name='Specific' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )
 ,(
-	10
+	12
 	,(select CategoryId from ce.Category where Name='Organized' and NationalStandardId=(select NationalStandardId from ce.NationalStandard where ShortName='USQS Specific'))
 	,1
 )

@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace CETrackerDAL.DataAccess;
 

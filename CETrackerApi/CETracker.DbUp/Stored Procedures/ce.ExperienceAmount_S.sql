@@ -22,6 +22,3 @@ WHERE
 	ExperienceId = @ExperienceId
 
 GO
-
-GRANT EXECUTE ON ce.ExperienceAmount_S TO [CETRACKER_EXECROLE];
-GO

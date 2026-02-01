@@ -28,6 +28,3 @@ begin
 	 and ca.StartYear <= @Year
 end
 GO
-
-GRANT EXECUTE ON ce.CategoryLists_S TO [CETRACKER_EXECROLE];
-GO

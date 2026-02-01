@@ -19,5 +19,3 @@ begin
 end
 GO
 
-GRANT EXECUTE ON ce.ExperienceCategory_S TO [CETRACKER_EXECROLE];
-GO

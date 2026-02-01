@@ -41,7 +41,3 @@ begin
 		ex.ExperienceId = @ExperienceId;
 end
 GO
-
-GRANT EXECUTE ON ce.Experiences_S_By_Id TO [CETRACKER_EXECROLE];
-GO
-

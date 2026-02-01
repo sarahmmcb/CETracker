@@ -576,6 +576,34 @@ GO
 /*******
 * Rule
 *******/
+--if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Rule') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+--create table ce.[Rule]
+--(
+--  -- primary key
+--  RuleId int not null identity(1,1)
+
+--  -- foreign keys
+--  ,NationalStandardId int not null default(0)
+--  ,UnitId int not null default(0)
+
+--  -- data
+--  ,Name varchar(50) not null default('')
+--  ,Description varchar(200) not null default('')
+--  ,Goal int not null default(0)
+--  ,StartYear int not null default(0)
+--  ,EndYear int not null default(0)
+--  ,YearSpan int not null default(0)
+--  ,IsActive bit not null default(0)
+
+--  ,Constraint PK_Rule Primary Key Clustered (RuleId)
+--  ,Constraint FK_Rule_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
+--  ,Constraint FK_Rule_UnitId Foreign Key (UnitId) References ce.[Unit](UnitId)
+--)
+--GO
+
+/*********
+* Rule
+*********/
 if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.Rule') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 create table ce.[Rule]
 (
@@ -584,66 +612,40 @@ create table ce.[Rule]
 
   -- foreign keys
   ,NationalStandardId int not null default(0)
-  ,UnitId int not null default(0)
 
   -- data
-  ,Name varchar(50) not null default('')
-  ,Description varchar(200) not null default('')
+  ,[Name] varchar(50) not null default('')
   ,Goal int not null default(0)
+  ,MaxAmount int not null default(0)
+  ,IsAdditionalCategory bit not null default(0)
+  ,IsTask bit not null default(0)
+  ,IsMainGoal bit not null default(0)
+  ,YearSpan int not null default(0)
   ,StartYear int not null default(0)
   ,EndYear int not null default(0)
-  ,YearSpan int not null default(0)
   ,IsActive bit not null default(0)
 
   ,Constraint PK_Rule Primary Key Clustered (RuleId)
-  ,Constraint FK_Rule_NationalStandardId Foreign Key (NationalStandardId) References ce.NationalStandard(NationalStandardId)
-  ,Constraint FK_Rule_UnitId Foreign Key (UnitId) References ce.[Unit](UnitId)
-)
-GO
-
-/*********
-* Rule Condition
-*********/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.RuleCondition') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.RuleCondition
-(
-  -- primary key
-  RuleConditionId int not null identity(1,1)
-
-  -- foreign keys
-  ,RuleId int not null default(0)
-
-  -- data
-  ,Goal int not null default(0)
-  ,MaxAmount int not null default(0)
-  ,IsDoubleCounted bit not null default(0)
-  ,IsTask bit not null default(0)
-  ,YearSpan int not null default(0)
-  ,StartYear int not null default(0)
-  ,EndYear int not null default(0)
-  ,IsActive bit not null default(0)
-
-  ,Constraint PK_RuleCondition Primary Key Clustered (RuleConditionId)
-  ,Constraint FK_Rule_RuleId Foreign Key (RuleId) References ce.[Rule](RuleId)
+  ,Constraint FK_Rule_NationalStandardId Foreign Key (NationalStandardId) References ce.[NationalStandard](NationalStandardId)
 )
 GO
 
 /*******
-* Rule Condition Category
+* Rule Category
 ********/
-if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.RuleConditionCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-create table ce.RuleConditionCategory
+if not exists (select * from dbo.sysobjects where ID=object_id(N'ce.RuleCategory') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+create table ce.RuleCategory
 (
   -- Composite PK
-  RuleConditionId int not null default(0)
+  RuleId int not null default(0)
   ,CategoryId int not null default(0)
 
   -- data
   ,IsActive bit not null default(0)
 
-  ,Constraint PK_RuleConditionCategory Primary Key Clustered (RuleConditionId, CategoryId)
-  ,Constraint FK_RuleConditionCategory_RuleConditionId Foreign Key (RuleConditionId) References ce.[RuleCondition](RuleConditionId)
-  ,Constraint FK_RuleConditionCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
+  ,Constraint PK_RuleCategory Primary Key Clustered (RuleId, CategoryId)
+  ,Constraint FK_RuleCategory_RuleId Foreign Key (RuleId) References ce.[Rule](RuleId)
+  ,Constraint FK_RuleCategory_CategoryId Foreign Key (CategoryId) References ce.Category(CategoryId)
 )
 GO
 
