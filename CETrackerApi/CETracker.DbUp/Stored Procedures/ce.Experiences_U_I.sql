@@ -1,4 +1,4 @@
-USE CasCETracker;
+USE CASCETracker;
 GO
 
 IF OBJECT_ID('ce.Experiences_U_I', 'P') IS NOT NULL  

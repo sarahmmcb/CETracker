@@ -1,4 +1,8 @@
-﻿using CETrackerApi.Logic;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using CETrackerApi.Helpers;
+using CETrackerApi.Logic;
+using CETrackerApi.Security;
 
 namespace CETrackerApi.Api;
 
@@ -9,6 +13,8 @@ public static class Experiences
         app.MapGet("/api/experiences/year/{year}/userId/{userId}/nationalStandardId/{nationalStandardId}", GetExperiencesByYear)
             .RequireAuthorization();
         app.MapPut("/api/experiences", UpdateExperience)
+            .RequireAuthorization();
+        app.MapDelete("/api/experiences/{experienceId}", DeleteExperience)
             .RequireAuthorization();
     }
 
@@ -26,7 +32,6 @@ public static class Experiences
     }
 
     private static async Task<IResult> UpdateExperience(
-        HttpContext context,
         UpdateExperienceRequest request,
         IExperienceService experienceService,
         CancellationToken cancellationToken = default)
@@ -41,4 +46,18 @@ public static class Experiences
             return Results.Problem(ex.Message);
         }
     }
+
+    private static async Task<IResult> DeleteExperience(
+        HttpContext context,
+        int experienceId,
+        IExperienceService experienceService,
+        CancellationToken token)
+    {
+        // TODO: Error message if Experience not found?
+        await experienceService.DeleteExperience(experienceId, token);
+        return Results.Ok();
+    }
+
+
+
 }

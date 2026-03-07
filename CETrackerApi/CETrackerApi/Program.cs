@@ -1,9 +1,12 @@
 using System.Text;
-using Microsoft.OpenApi.Models;
+using CETrackerApi.Api;
+using CETrackerApi.Helpers;
+using CETrackerApi.Logic;
+using CETrackerApi.Middleware;
+using CETrackerApi.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using CETrackerApi.Logic;
-using CETrackerApi.Api;
+using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -84,6 +87,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
 builder.Services.AddScoped<ICeDataProvider, CeDataProvider>();
+builder.Services.AddScoped<TokenAccessor>();
+builder.Services.AddScoped<TokenAccessorMiddleware>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<ICeDataService, CeDataService>();
 builder.Services.AddTransient<IUnitService, UnitService>();
@@ -94,6 +99,8 @@ builder.Services.AddTransient<IUserDataService, UserDataService>();
 var app = builder.Build();
 
 app.UseStaticFiles();
+
+ConfigurationHelper.Initialize(app.Services.GetRequiredService<IConfiguration>());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -133,6 +140,8 @@ app.Use(async (context, next) =>
         });
     }
 });
+
+app.UseMiddleware<TokenAccessorMiddleware>();
 
 app.ConfigureExperiences();
 app.ConfigureCeData();
