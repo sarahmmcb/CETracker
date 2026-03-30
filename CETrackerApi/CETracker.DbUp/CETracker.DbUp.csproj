@@ -10,11 +10,7 @@
   <ItemGroup>
     <None Remove="Schema\01_Initial-Schema.sql" />
     <None Remove="Schema\02_Initial-Data.sql" />
-    <None Remove="Stored Procedures\ce.CategoryLists_S.sql" />
-    <None Remove="Stored Procedures\ce.ExperienceCategory_S.sql" />
-    <None Remove="Stored Procedures\ce.Experiences_S.sql" />
-    <None Remove="Stored Procedures\ce.Locations_S.sql" />
-    <None Remove="Stored Procedures\ce.Units_S.sql" />
+    <None Remove="Stored Procedures\*" />
   </ItemGroup>
 
   <ItemGroup>
