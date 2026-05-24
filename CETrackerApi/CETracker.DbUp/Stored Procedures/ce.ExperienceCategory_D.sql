@@ -7,7 +7,7 @@ GO
 
 CREATE PROCEDURE ce.ExperienceCategory_D
 	@ExperienceId INT
-	,@CategoryID INT
+	,@CategoryId INT
 	,@UpdateUserId INT
 AS
 

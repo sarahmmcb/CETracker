@@ -19,6 +19,7 @@ public interface ICeDataProvider
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
     Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token);
     Task<IEnumerable<DALModels.CeData>> GetCeData(int year, int userId, int nationalStandardId, CancellationToken token);
+    Task DeleteExperience(int updateUserId, int experienceId, CancellationToken token);
     Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 
@@ -115,14 +116,30 @@ public class CeDataProvider : ICeDataProvider
         );
 
     public Task<IEnumerable<DALModels.RuleData>> GetRuleData(int nationalStandardId, CancellationToken token) =>
-    LoadData<DALModels.RuleData, dynamic>(
-        "ce.Rule_Data_S",
-        new
-        {
-            nationalStandardId,
-        },
-        token
+        LoadData<DALModels.RuleData, dynamic>(
+            "ce.Rule_Data_S",
+            new
+            {
+                nationalStandardId,
+            },
+            token
     );
+
+    public virtual async Task DeleteExperience(int updateUserId, int experienceId, CancellationToken token)
+    {
+        using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
+
+        var command = new CommandDefinition("ce.Experiences_D",
+            new
+            {
+               updateUserId,
+               experienceId,
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: token);
+
+        await connection.ExecuteAsync(command);
+    }
 
     public async Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
@@ -132,7 +149,7 @@ public class CeDataProvider : ICeDataProvider
 
         using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
         await connection.OpenAsync();
-
+       
         try
         {
             var experienceId = await UpdateExperience(request, request.UserId, connection, cancellationToken);

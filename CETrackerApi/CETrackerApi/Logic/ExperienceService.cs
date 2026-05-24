@@ -1,4 +1,5 @@
 ﻿using CETracker.Contracts.DataContracts;
+using CETrackerApi.Security;
 using DALModels = CETrackerDAL.Models;
 
 namespace CETrackerApi.Logic;
@@ -6,21 +7,39 @@ namespace CETrackerApi.Logic;
 public interface IExperienceService
 {
     Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId, CancellationToken token);
+    Task DeleteExperience(int experienceId, CancellationToken token);
     Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService : IExperienceService
 {
     private readonly ICeDataProvider _ceDataProvider;
+    private readonly TokenAccessor _tokenAccessor;
 
-    public ExperienceService(ICeDataProvider ceDataprovider)
+    public ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tokenAccessor)
     {
         _ceDataProvider = ceDataprovider;
+        _tokenAccessor = tokenAccessor;
     }
 
     public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
        var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
        return ConstructExperiences(experienceData);
+    }
+
+    public async Task DeleteExperience(int experienceId, CancellationToken token)
+    {
+        var userId = _tokenAccessor.GetProperty("UserId");  // TODO: Find a better way to define the TokenAccessor, this has a magic string and have to manually parse
+        var parsedUserId = int.TryParse(userId, out var updateUserId);
+        if (parsedUserId)
+        {
+            await _ceDataProvider.DeleteExperience(updateUserId, experienceId, token).ConfigureAwait(false);
+        }
+        else
+        {
+            // TODO: logging
+            throw new ApplicationException("Unable to determine user");
+        }
     }
 
     public async Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
