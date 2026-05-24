@@ -737,26 +737,26 @@ GO
 /******************
 * Login for IISAppPool
 ******************/
-IF NOT EXISTS 
-    (SELECT 1  
-     FROM master.sys.server_principals
-     WHERE name = 'IIS APPPOOL\CETracker')
-BEGIN
-    CREATE LOGIN [IIS APPPOOL\CETracker] FROM WINDOWS;
-END
-GO
+--IF NOT EXISTS 
+--    (SELECT 1  
+--     FROM master.sys.server_principals
+--     WHERE name = 'IIS APPPOOL\CETracker')
+--BEGIN
+--    CREATE LOGIN [IIS APPPOOL\CETracker] FROM WINDOWS;
+--END
+--GO
 
-Use CASCETracker
-GO
+--Use CASCETracker
+--GO
 
-IF NOT EXISTS
-    (SELECT 1
-     FROM sys.database_principals
-     WHERE name='CETRACKER_SVCACCT')
-BEGIN
-    CREATE USER [CETRACKER_SVCACCT] FOR LOGIN [IIS APPPOOL\CETracker];
-END
-GO
+--IF NOT EXISTS
+--    (SELECT 1
+--     FROM sys.database_principals
+--     WHERE name='CETRACKER_SVCACCT_WIN')
+--BEGIN
+--    CREATE USER [CETRACKER_SVCACCT_WIN] FOR LOGIN [IIS APPPOOL\CETracker];
+--END
+--GO
 
-ALTER ROLE [db_owner] ADD MEMBER [CETRACKER_SVCACCT]
+--ALTER ROLE [db_owner] ADD MEMBER [CETRACKER_SVCACCT_WIN]
 

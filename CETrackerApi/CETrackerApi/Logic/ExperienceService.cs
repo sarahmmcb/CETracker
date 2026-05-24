@@ -29,7 +29,7 @@ public class ExperienceService : IExperienceService
 
     public async Task DeleteExperience(int experienceId, CancellationToken token)
     {
-        var userId = _tokenAccessor.GetProperty("userId");  // TODO: Find a better way to define the TokenAccessor, this has a magic string and have to manually parse
+        var userId = _tokenAccessor.GetProperty("UserId");  // TODO: Find a better way to define the TokenAccessor, this has a magic string and have to manually parse
         var parsedUserId = int.TryParse(userId, out var updateUserId);
         if (parsedUserId)
         {
@@ -37,8 +37,8 @@ public class ExperienceService : IExperienceService
         }
         else
         {
-            // TODO: log and throw exception
-            return;
+            // TODO: logging
+            throw new ApplicationException("Unable to determine user");
         }
     }
 

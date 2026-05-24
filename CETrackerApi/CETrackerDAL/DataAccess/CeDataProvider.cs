@@ -116,13 +116,13 @@ public class CeDataProvider : ICeDataProvider
         );
 
     public Task<IEnumerable<DALModels.RuleData>> GetRuleData(int nationalStandardId, CancellationToken token) =>
-    LoadData<DALModels.RuleData, dynamic>(
-        "ce.Rule_Data_S",
-        new
-        {
-            nationalStandardId,
-        },
-        token
+        LoadData<DALModels.RuleData, dynamic>(
+            "ce.Rule_Data_S",
+            new
+            {
+                nationalStandardId,
+            },
+            token
     );
 
     public virtual async Task DeleteExperience(int updateUserId, int experienceId, CancellationToken token)
@@ -149,7 +149,7 @@ public class CeDataProvider : ICeDataProvider
 
         using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
         await connection.OpenAsync();
-
+       
         try
         {
             var experienceId = await UpdateExperience(request, request.UserId, connection, cancellationToken);

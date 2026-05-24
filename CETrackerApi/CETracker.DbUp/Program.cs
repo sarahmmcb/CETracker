@@ -3,13 +3,14 @@ using System.Reflection;
 
 var connectionString =
     args.FirstOrDefault()
-    ?? "Data Source=localhost\\SQLEXPRESS;Initial Catalog=CASCETracker;Integrated Security=True;Connect Timeout=30;Encrypt=False";
+    ?? "Server=localhost, 1433;User Id=sa;Password=7Qt*_~kMMHB6;Database=CASCETracker;Encrypt=False;";
+    //?? "Data Source=localhost\\SQLEXPRESS;Initial Catalog=CASCETracker;Integrated Security=True;Connect Timeout=30;Encrypt=False";
 
 EnsureDatabase.For.SqlDatabase(connectionString);
 
 var upgrader =
     DeployChanges.To
-        .SqlDatabase(connectionString)
+        .SqlDatabase(connectionString, "ce")
         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
         .LogToConsole()
         .Build();

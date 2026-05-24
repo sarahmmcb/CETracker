@@ -75,9 +75,9 @@ public class TokenAccessor
 
     public class Token(ClaimsPrincipal principal) // TODO: extract this to a shareable package between Auth and this API
     {
-        public string? UserId { get; private set; } = principal.FindFirst("userId")?.Value;
-        public string? Username { get; private set; } = principal.FindFirst("userName")?.Value;
-        public List<string>? Roles { get; private set; } = [.. principal.Claims.Where(c => string.Equals(c.Type.ToLower(), "roles")).Select(c => c.Value)];
+        public string? UserId { get; private set; } = principal.FindFirst("user_id")?.Value;
+        public string? Username { get; private set; } = principal.FindFirst(ClaimTypes.Name)?.Value;
+        public List<string>? Roles { get; private set; } = [.. principal.Claims.Where(c => string.Equals(c, ClaimTypes.Role)).Select(c => c.Value)];
         public string? Nbf { get; private set; } = principal.FindFirst("nbf")?.Value;
         public string? Exp { get; private set; } = principal.FindFirst("exp")?.Value;
         public string? Iat { get; private set; } = principal.FindFirst("iat")?.Value;
