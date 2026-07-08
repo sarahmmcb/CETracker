@@ -11,12 +11,16 @@ public static class Locations
     }
 
     private static async Task<IResult> GetLocations(
-        ILocationService locationService,
+        ICeDataProvider ceDataProvider,
         CancellationToken token = default)
     {
-        var result = await locationService.GetLocations(token);
-        if (result == null)
-            return Results.NotFound();
+        var locations = (await ceDataProvider.GetLocations(token)).ToList() ?? [];
+
+        var result = new LocationResponse
+        {
+            Locations = locations
+        };
+
         return Results.Ok(result);
     }
 }

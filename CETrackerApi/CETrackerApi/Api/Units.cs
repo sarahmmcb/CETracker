@@ -1,4 +1,5 @@
-﻿using CETrackerApi.Logic;
+﻿using CETracker.Contracts.DataContracts;
+using CETrackerApi.Logic;
 
 namespace CETrackerApi.Api;
 
@@ -10,10 +11,18 @@ public static class Units
             .RequireAuthorization();
     }
 
-    private static async Task<IResult> GetUnits(int nationalStandardId, IUnitService unitService, CancellationToken token = default)
+    private static async Task<IResult> GetUnits(
+        int nationalStandardId,
+        ICeDataProvider ceDataProvider,
+        CancellationToken token = default)
     {
-        var result = await unitService.GetUnits(nationalStandardId, token).ConfigureAwait(false);
-        if (result == null) return Results.NotFound();
+        var units = (await ceDataProvider.GetUnits(nationalStandardId, token)).ToList() ?? [];
+
+        var result = new UnitResponse
+        {
+            Units = units
+        };
+
         return Results.Ok(result);
     }
 }
