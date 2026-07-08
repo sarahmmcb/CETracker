@@ -28,9 +28,17 @@ public class TokenAccessor
             return;  // TODO: Log and/or throw error or something
         }
 
-        var principal = ValidateToken(bearerToken);
-        _token = new Token(principal);
-        _tokenDecoded = true;
+        try
+        {
+            var principal = ValidateToken(bearerToken);
+            _token = new Token(principal);
+            _tokenDecoded = true;
+        }
+        catch (Exception ex)
+        {
+            // TODO: log an error
+            // We can keep going bc the user has already authenticated, but we won't be able to get any token properties
+        }
     }
 
     public string GetProperty(string name)
@@ -47,7 +55,7 @@ public class TokenAccessor
             return string.Empty;
         }
 
-        return propValue.ToString();
+        return propValue.ToString() ?? "";
     }
 
     private ClaimsPrincipal ValidateToken(string jwtToken)

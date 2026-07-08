@@ -17,7 +17,6 @@ public static class Categories
         CancellationToken token = default)
     {
         var result = await categoryService.GetCategoryLists(nationalStandardId, year, token).ConfigureAwait(false);
-        if (result == null) return Results.NotFound();
         return Results.Ok(result);
     }
 }

@@ -1,4 +1,6 @@
-﻿using CETrackerApi.Logic;
+﻿using CETracker.Contracts.DataContracts;
+using CETrackerApi.Logic;
+using static CETrackerApi.Security.TokenAccessor;
 
 namespace CETrackerApi.Api;
 
@@ -12,18 +14,33 @@ public static class UserData
 
     public static async Task<IResult> GetUserData(
         int userId,
-        IUserDataService _userDataService,
-        CancellationToken cancellationToken)
+        ICeDataProvider ceDataProvider,
+        CancellationToken token)
     {
-        try
-        {
-            var response = await _userDataService.GetUserData(userId, cancellationToken);
+        var result = await ceDataProvider.GetUserData(userId, token);
 
-            return Results.Ok(response);
-        }
-        catch (ApplicationException ex)
+        if (result == null || !result.Any())
         {
-            return Results.NotFound(ex);
+            return Results.NotFound("User not found");
         }
+
+        var userData = result.FirstOrDefault();
+
+        var responseData = new UserDataResponse
+        {
+            UserId = userData!.UserId,
+            Title = userData.Title,
+            CanSignSAO = userData.CanSignSAO,
+            NationalStandard = new NationalStandard
+            {
+                NationalStandardId = userData.NationalStandardId,
+                OrganizationId = userData.OrganizationId,
+                LongName = userData.LongName,
+                ShortName = userData.ShortName,
+                IsActive = userData.IsActive
+            }
+        };
+
+        return Results.Ok(responseData);
     }
 }

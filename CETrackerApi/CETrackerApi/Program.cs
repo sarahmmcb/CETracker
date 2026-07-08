@@ -5,6 +5,7 @@ using CETrackerApi.Logic;
 using CETrackerApi.Middleware;
 using CETrackerApi.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -91,10 +92,12 @@ builder.Services.AddScoped<TokenAccessor>();
 builder.Services.AddScoped<TokenAccessorMiddleware>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<ICeDataService, CeDataService>();
-builder.Services.AddTransient<IUnitService, UnitService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-builder.Services.AddTransient<ILocationService, LocationService>();
-builder.Services.AddTransient<IUserDataService, UserDataService>();
+
+#if DEBUG
+builder.Services.AddSingleton<
+    IAuthorizationMiddlewareResultHandler, LocalAuthMiddleware>();
+#endif
 
 var app = builder.Build();
 

@@ -19,6 +19,15 @@ public class CategoryService: ICategoryService
     public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token)
     {
         var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year, token);
+
+        if (listData is null || listData.Count() == 0)
+        {
+            return new CategoryListResponse
+            {
+                CategoryLists = new List<CategoryList>()
+            };
+        }
+
         var structuredCategoryLists = GetStructuredCategoryLists(listData);
 
         return new CategoryListResponse
