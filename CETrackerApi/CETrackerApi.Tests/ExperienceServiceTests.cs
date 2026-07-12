@@ -59,9 +59,9 @@ public class ExperienceServiceTests
     [Fact]
     public async Task One_Experience_One_Category()
     {
-        var inputData = TestData.OneExperienceOneCategory_Input();
+        var inputData = TestData.OneExperienceOneCategory_Input;
 
-        var expectedOutput = TestData.OneExperienceOneCategory_Expected();
+        var expectedOutput = TestData.OneExperienceOneCategory_Expected;
 
         _mockDataProvider
             .Setup(m => m.GetExperiencesByYear(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -84,9 +84,9 @@ public class ExperienceServiceTests
     [Fact]
     public async Task One_Experience_Multiple_Categories()
     {
-        var inputData = TestData.OneExperienceMultipleCategories_Input();
+        var inputData = TestData.OneExperienceMultipleCategories_Input;
 
-        var expectedOutput = TestData.OneExperienceMultipleCategories_Expected();
+        var expectedOutput = TestData.OneExperienceMultipleCategories_Expected;
 
         _mockDataProvider
             .Setup(m => m.GetExperiencesByYear(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -109,11 +109,11 @@ public class ExperienceServiceTests
     [Fact]
     public async Task Multiple_Experiences()
     {
-        var inputData = TestData.OneExperienceOneCategory_Input();
-        inputData.AddRange(TestData.OneExperienceMultipleCategories_Input());
+        var inputData = TestData.OneExperienceOneCategory_Input;
+        inputData.AddRange(TestData.OneExperienceMultipleCategories_Input);
 
-        var expectedOutput = TestData.OneExperienceOneCategory_Expected();
-        expectedOutput.AddRange(TestData.OneExperienceMultipleCategories_Expected());
+        var expectedOutput = TestData.OneExperienceOneCategory_Expected;
+        expectedOutput.AddRange(TestData.OneExperienceMultipleCategories_Expected);
 
         _mockDataProvider
             .Setup(m => m.GetExperiencesByYear(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))

@@ -51,8 +51,8 @@ public class CategoryServiceTests
     [Fact]
     public async Task One_List_Single_Category()
     {
-        var inputData = TestData.One_List_Single_Category_Input();
-        var expectedOutput = TestData.One_List_Single_Category_Expected();
+        var inputData = TestData.One_List_Single_Category_Input;
+        var expectedOutput = TestData.One_List_Single_Category_Expected;
 
         _mockDataProvider
             .Setup(m => m.GetCategoryLists(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -68,8 +68,8 @@ public class CategoryServiceTests
     [Fact]
     public async Task One_List_Multiple_Categories()
     {
-        var inputData = TestData.One_List_Multiple_Categories_Input();
-        var expectedOutput = TestData.One_List_Multiple_Categories_Expected();
+        var inputData = TestData.One_List_Multiple_Categories_Input;
+        var expectedOutput = TestData.One_List_Multiple_Categories_Expected;
 
         _mockDataProvider
             .Setup(m => m.GetCategoryLists(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -85,11 +85,11 @@ public class CategoryServiceTests
     [Fact]
     public async Task Multiple_Lists_Multiple_Categories()
     {
-        var inputData = TestData.One_List_Single_Category_Input();
-        inputData.AddRange(TestData.One_List_Multiple_Categories_Input());
+        var inputData = TestData.One_List_Single_Category_Input;
+        inputData.AddRange(TestData.One_List_Multiple_Categories_Input);
 
-        var expectedOutput = TestData.One_List_Single_Category_Expected();
-        expectedOutput.CategoryLists = expectedOutput.CategoryLists.Concat(TestData.One_List_Multiple_Categories_Expected().CategoryLists);
+        var expectedOutput = TestData.One_List_Single_Category_Expected;
+        expectedOutput.CategoryLists = expectedOutput.CategoryLists.Concat(TestData.One_List_Multiple_Categories_Expected.CategoryLists);
 
         _mockDataProvider
             .Setup(m => m.GetCategoryLists(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))

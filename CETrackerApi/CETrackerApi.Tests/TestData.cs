@@ -7,9 +7,7 @@ namespace CETrackerApi.Tests;
 internal static class TestData
 {
     #region Experiences
-    public static List<DALModels.Experience> OneExperienceOneCategory_Input()
-    {
-        return
+    public static List<DALModels.Experience> OneExperienceOneCategory_Input = 
         [
             new()
             {
@@ -58,12 +56,8 @@ internal static class TestData
                 IsComplianceUnit = false,
             }
         ];
-    }
 
-    public static List<ExperienceResponse> OneExperienceOneCategory_Expected()
-    {
-        return new List<ExperienceResponse>
-        {
+    public static List<ExperienceResponse> OneExperienceOneCategory_Expected = [
             new ExperienceResponse
             {
                 ExperienceId = 1,
@@ -106,12 +100,9 @@ internal static class TestData
                     }
                 ]
             }
-        };
-    }
+        ];
 
-    public static List<DALModels.Experience> OneExperienceMultipleCategories_Input()
-    {
-        return
+    public static List<DALModels.Experience> OneExperienceMultipleCategories_Input =
         [
             new()
             {
@@ -206,12 +197,8 @@ internal static class TestData
                 IsComplianceUnit = false,
             }
         ];
-    }
 
-    public static List<ExperienceResponse> OneExperienceMultipleCategories_Expected()
-    {
-        return new List<ExperienceResponse>
-        {
+    public static List<ExperienceResponse> OneExperienceMultipleCategories_Expected = [
             new ExperienceResponse
             {
                 ExperienceId = 100,
@@ -260,16 +247,13 @@ internal static class TestData
                     }
                 ]
             }
-        };
-    }
+        ];
 
     #endregion
 
     #region Category Lists
 
-    public static List<DALModels.CategoryList> One_List_Single_Category_Input()
-    {
-        return
+    public static List<DALModels.CategoryList> One_List_Single_Category_Input = 
         [
             new()
             {
@@ -283,11 +267,9 @@ internal static class TestData
                 NationalStandardId = 200
             }
         ];
-    }
 
-    public static CategoryListResponse One_List_Single_Category_Expected()
-    {
-        return new CategoryListResponse
+    public static CategoryListResponse One_List_Single_Category_Expected = 
+        new()
         {
             CategoryLists =
             [
@@ -312,11 +294,8 @@ internal static class TestData
                 }
             ]
         };
-    }
 
-    public static List<DALModels.CategoryList> One_List_Multiple_Categories_Input()
-    {
-        return
+    public static List<DALModels.CategoryList> One_List_Multiple_Categories_Input = 
         [
             new()
             {
@@ -341,11 +320,9 @@ internal static class TestData
                 NationalStandardId = 200
             }
         ];
-    }
 
-    public static CategoryListResponse One_List_Multiple_Categories_Expected()
-    {
-        return new CategoryListResponse
+    public static CategoryListResponse One_List_Multiple_Categories_Expected = 
+        new()
         {
             CategoryLists =
             [
@@ -378,7 +355,6 @@ internal static class TestData
                 }
             ]
         };
-    }
 
     #endregion
 
