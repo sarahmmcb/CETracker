@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using CETrackerApi.Logic;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using CETrackerApi.Logic;
 
 namespace CETrackerApi.Api;
 

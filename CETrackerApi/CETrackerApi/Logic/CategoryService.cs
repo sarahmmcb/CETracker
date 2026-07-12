@@ -7,24 +7,17 @@ public interface ICategoryService
 {
     Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token);
 }
-public class CategoryService: ICategoryService
+public class CategoryService(ICeDataProvider ceDataprovider) : ICategoryService
 {
-    private readonly ICeDataProvider _ceDataProvider;
-
-    public CategoryService(ICeDataProvider ceDataprovider)
-    {
-        _ceDataProvider = ceDataprovider;
-    }
-
     public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token)
     {
-        var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year, token);
+        var listData = await ceDataprovider.GetCategoryLists(nationalStandardId, year, token);
 
-        if (listData is null || listData.Count() == 0)
+        if (listData is null || !listData.Any())
         {
             return new CategoryListResponse
             {
-                CategoryLists = new List<CategoryList>()
+                CategoryLists = []
             };
         }
 
@@ -38,7 +31,7 @@ public class CategoryService: ICategoryService
 
     private IEnumerable<CategoryList> GetStructuredCategoryLists(IEnumerable<DALCategoryList.CategoryList> lists)
     {
-        List<CategoryList> categoryLists = new List<CategoryList>();
+        List<CategoryList> categoryLists = [];
         foreach(var item in lists)
         {
             var structuredList = categoryLists.FirstOrDefault(m => m.CategoryListId == item.CategoryListId);

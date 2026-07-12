@@ -26,8 +26,6 @@ public static class Experiences
         CancellationToken token = default)
     {
             var result = await experienceService.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
-            if (result == null) return Results.NotFound();
-            var response = Results.Ok(result);
             return Results.Ok(result);
     }
 

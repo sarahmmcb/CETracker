@@ -10,30 +10,27 @@ public interface IExperienceService
     Task DeleteExperience(int experienceId, CancellationToken token);
     Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
-public class ExperienceService : IExperienceService
+public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tokenAccessor) : IExperienceService
 {
-    private readonly ICeDataProvider _ceDataProvider;
-    private readonly TokenAccessor _tokenAccessor;
-
-    public ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tokenAccessor)
-    {
-        _ceDataProvider = ceDataprovider;
-        _tokenAccessor = tokenAccessor;
-    }
-
     public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
-       var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
+       var experienceData = await ceDataprovider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
+       
+       if (experienceData == null || !experienceData.Any())
+        {
+            return [];
+        }
+
        return ConstructExperiences(experienceData);
     }
 
     public async Task DeleteExperience(int experienceId, CancellationToken token)
     {
-        var userId = _tokenAccessor.GetProperty("UserId");  // TODO: Find a better way to define the TokenAccessor, this has a magic string and have to manually parse
+        var userId = tokenAccessor.GetProperty("UserId");  // TODO: Find a better way to define the TokenAccessor, this has a magic string and have to manually parse
         var parsedUserId = int.TryParse(userId, out var updateUserId);
         if (parsedUserId)
         {
-            await _ceDataProvider.DeleteExperience(updateUserId, experienceId, token).ConfigureAwait(false);
+            await ceDataprovider.DeleteExperience(updateUserId, experienceId, token).ConfigureAwait(false);
         }
         else
         {
@@ -44,14 +41,14 @@ public class ExperienceService : IExperienceService
 
     public async Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
-        var experienceId = await _ceDataProvider.UpdateExperience(request, cancellationToken);
-        var experienceData = await _ceDataProvider.GetExperienceById(experienceId, cancellationToken);
+        var experienceId = await ceDataprovider.UpdateExperience(request, cancellationToken);
+        var experienceData = await ceDataprovider.GetExperienceById(experienceId, cancellationToken);
         return ConstructExperiences(experienceData).ElementAt(0);
     }
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<DALModels.Experience> experienceData)
     {
-        List<ExperienceResponse> experiences = new();
+        List<ExperienceResponse> experiences = [];
         ExperienceResponse experienceResponse = new();
         var prevId = -1;
 
@@ -118,7 +115,8 @@ public class ExperienceService : IExperienceService
                     {
                         UnitId = experienceRow.UnitId,
                         ExperienceId = experienceRow.ExperienceId,
-                        Amount = experienceRow.Amount
+                        Amount = experienceRow.Amount,
+                        IsComplianceUnit = experienceRow.IsComplianceUnit
                     });
                 }
             }
