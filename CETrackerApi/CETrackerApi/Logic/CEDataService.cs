@@ -7,34 +7,40 @@ public interface ICeDataService
 {
     public Task<CeDataResponse> GetUserCeDataByYear(int year, int userId, int nationalStandardId, CancellationToken token);
 }
-public class CeDataService : ICeDataService
+public class CeDataService(ICeDataProvider ceDataProvider) : ICeDataService
 {
-    private readonly ICeDataProvider _ceDataProvider;
-
-    public CeDataService(ICeDataProvider ceDataProvider)
-    {
-        _ceDataProvider = ceDataProvider;
-    }
-
     public async Task<CeDataResponse> GetUserCeDataByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
-        var ceData = await _ceDataProvider.GetCeData(year, userId, nationalStandardId, token);
+        var ceData = await ceDataProvider.GetCeData(year, userId, nationalStandardId, token);
         
         if (ceData is null || !ceData.Any())
         {
-            throw new ApplicationException("CE Data or Rule Data missing");
+            throw new ApplicationException("CE Data or Rule Data Missing");
         }
 
         var mainGoal = ceData.Where(c => c.IsMainGoal).FirstOrDefault();
         var categoryTotals = new List<CategoryData>();
         var isCompliant = true;
         var totalCredits = 0m;
+        var unitShortNameSingular = "";
+        var unitShortNamePlural = "";
 
-        foreach(CeData row in ceData)
+        foreach (CeData row in ceData)
         {
             if (row.IsMainGoal)
             {
                 continue;
+            }
+
+            // TODO: fix SP to not return NULL for these for Total CE row
+            if (string.IsNullOrEmpty(unitShortNameSingular) && !string.IsNullOrEmpty(row.UnitShortNameSingular))
+            {
+                unitShortNameSingular = row.UnitShortNameSingular;
+            }
+
+            if (string.IsNullOrEmpty(unitShortNamePlural) && !string.IsNullOrEmpty(row.UnitShortNamePlural))
+            {
+                unitShortNamePlural = row.UnitShortNamePlural;
             }
 
             var categoryData = new CategoryData
@@ -79,8 +85,8 @@ public class CeDataService : ICeDataService
         var ceDataResponse = new CeDataResponse
         {   
             ComplianceStatus = mainGoal is null ? "Unknown" : isCompliant.ToString(),
-            UnitShortNamePlural = mainGoal?.UnitShortNamePlural,
-            UnitShortNameSingular = mainGoal?.UnitShortNameSingular,
+            UnitShortNamePlural = unitShortNamePlural,
+            UnitShortNameSingular = unitShortNameSingular,
             CategoryData = categoryTotals,
         };
 

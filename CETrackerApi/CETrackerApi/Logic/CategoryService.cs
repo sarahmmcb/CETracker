@@ -7,18 +7,11 @@ public interface ICategoryService
 {
     Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token);
 }
-public class CategoryService: ICategoryService
+public class CategoryService(ICeDataProvider ceDataprovider) : ICategoryService
 {
-    private readonly ICeDataProvider _ceDataProvider;
-
-    public CategoryService(ICeDataProvider ceDataprovider)
-    {
-        _ceDataProvider = ceDataprovider;
-    }
-
     public async Task<CategoryListResponse> GetCategoryLists(int nationalStandardId, int year, CancellationToken token)
     {
-        var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year, token);
+        var listData = await ceDataprovider.GetCategoryLists(nationalStandardId, year, token);
 
         if (listData is null || !listData.Any())
         {

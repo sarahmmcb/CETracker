@@ -381,4 +381,266 @@ internal static class TestData
     }
 
     #endregion
+
+    #region CEData
+
+    public static List<DALModels.CeData> Has_Data_Not_Compliant_Input = [
+            new() {
+                RuleId = 1,
+                RuleName = "Total CE",
+                Goal = 30,
+                MaxAmount = 0,
+                IsMainGoal = true,
+                IsAdditionalCategory = false
+            },
+            new() {
+                RuleId = 2,
+                RuleName = "Professionalism",
+                Goal = 3,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 2,
+                DisplayName = "Professionalism",
+                CategoryTotal = 4.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 3,
+                RuleName = "Bias",
+                Goal = 1,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = true,
+                CategoryId = 3,
+                DisplayName = "Bias",
+                CategoryTotal = 0.6m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 4,
+                RuleName = "General Business",
+                Goal = 0,
+                MaxAmount = 3,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 4,
+                DisplayName = "General Business",
+                CategoryTotal = 1.2m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 6,
+                RuleName = "Organized",
+                Goal = 6,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = true,
+                CategoryId = 6,
+                DisplayName = "Organized",
+                CategoryTotal = 2.8m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 0,
+                RuleName = "Other Relevant",
+                Goal = 0,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 5,
+                DisplayName = "Other Relevant",
+                CategoryTotal = 0.6m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            }
+
+        ];
+
+    public static CeDataResponse Has_Data_Not_Compliant_Output = new()
+    {
+        ComplianceStatus = "False",
+        UnitShortNamePlural = "Hrs.",
+        UnitShortNameSingular = "Hr.",
+
+        CategoryData = [
+            new() {
+                CategoryId = 2,
+                DisplayName = "Professionalism",
+                Minimum = 3m,
+                Maximum = 0m,
+                AmountCompleted = 4.0m
+            },
+            new() {
+                CategoryId = 3,
+                DisplayName = "Bias",
+                Minimum = 1m,
+                Maximum = 0m,
+                AmountCompleted = 0.6m
+            },
+            new() {
+                CategoryId = 4,
+                DisplayName = "General Business",
+                Minimum = 0m,
+                Maximum = 3m,
+                AmountCompleted = 1.2m
+            },
+            new() {
+                CategoryId = 6,
+                DisplayName = "Organized",
+                Minimum = 6m,
+                Maximum = 0m,
+                AmountCompleted = 2.8m
+            },
+            new() {
+                CategoryId = 5,
+                DisplayName = "Other Relevant",
+                Minimum = 0m,
+                Maximum = 0m,
+                AmountCompleted = 0.6m
+            },
+            new() {
+                CategoryId = 0,
+                DisplayName = "Total CE",
+                Minimum = 30m,
+                Maximum = 0m,
+                AmountCompleted = 5.8m
+            }
+        ]
+    };
+
+    public static List<DALModels.CeData> Has_Data_Compliant_Input = [
+        new() {
+                RuleId = 1,
+                RuleName = "Total CE",
+                Goal = 30,
+                MaxAmount = 0,
+                IsMainGoal = true,
+                IsAdditionalCategory = false
+            },
+            new() {
+                RuleId = 2,
+                RuleName = "Professionalism",
+                Goal = 3,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 2,
+                DisplayName = "Professionalism",
+                CategoryTotal = 6.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 3,
+                RuleName = "Bias",
+                Goal = 1,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = true,
+                CategoryId = 3,
+                DisplayName = "Bias",
+                CategoryTotal = 1.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 4,
+                RuleName = "General Business",
+                Goal = 0,
+                MaxAmount = 3,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 4,
+                DisplayName = "General Business",
+                CategoryTotal = 4.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 6,
+                RuleName = "Organized",
+                Goal = 6,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = true,
+                CategoryId = 6,
+                DisplayName = "Organized",
+                CategoryTotal = 10.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            },
+            new() {
+                RuleId = 0,
+                RuleName = "Other Relevant",
+                Goal = 0,
+                MaxAmount = 0,
+                IsMainGoal = false,
+                IsAdditionalCategory = false,
+                CategoryId = 5,
+                DisplayName = "Other Relevant",
+                CategoryTotal = 50.0m,
+                UnitShortNamePlural = "Hrs.",
+                UnitShortNameSingular = "Hr."
+            }
+
+    ];
+
+    public static CeDataResponse Has_Data_Compliant_Output = new()
+    {
+        ComplianceStatus = "True",
+        UnitShortNamePlural = "Hrs.",
+        UnitShortNameSingular = "Hr.",
+
+        CategoryData = [
+            new() {
+                CategoryId = 2,
+                DisplayName = "Professionalism",
+                Minimum = 3m,
+                Maximum = 0m,
+                AmountCompleted = 6.0m
+            },
+            new() {
+                CategoryId = 3,
+                DisplayName = "Bias",
+                Minimum = 1m,
+                Maximum = 0m,
+                AmountCompleted = 1.0m
+            },
+            new() {
+                CategoryId = 4,
+                DisplayName = "General Business",
+                Minimum = 0m,
+                Maximum = 3m,
+                AmountCompleted = 4.0m
+            },
+            new() {
+                CategoryId = 6,
+                DisplayName = "Organized",
+                Minimum = 6m,
+                Maximum = 0m,
+                AmountCompleted = 10.0m
+            },
+            new() {
+                CategoryId = 5,
+                DisplayName = "Other Relevant",
+                Minimum = 0m,
+                Maximum = 0m,
+                AmountCompleted = 50.0m
+            },
+            new() {
+                CategoryId = 0,
+                DisplayName = "Total CE",
+                Minimum = 30m,
+                Maximum = 0m,
+                AmountCompleted = 59.0m
+            }
+        ]
+    };
+
+    #endregion
 }
