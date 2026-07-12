@@ -24,6 +24,12 @@ public class ExperienceService : IExperienceService
     public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
        var experienceData = await _ceDataProvider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
+       
+       if (experienceData == null || !experienceData.Any())
+        {
+            return [];
+        }
+
        return ConstructExperiences(experienceData);
     }
 
@@ -51,7 +57,7 @@ public class ExperienceService : IExperienceService
 
     internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<DALModels.Experience> experienceData)
     {
-        List<ExperienceResponse> experiences = new();
+        List<ExperienceResponse> experiences = [];
         ExperienceResponse experienceResponse = new();
         var prevId = -1;
 

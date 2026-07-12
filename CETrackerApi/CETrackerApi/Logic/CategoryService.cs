@@ -20,11 +20,11 @@ public class CategoryService: ICategoryService
     {
         var listData = await _ceDataProvider.GetCategoryLists(nationalStandardId, year, token);
 
-        if (listData is null || listData.Count() == 0)
+        if (listData is null || !listData.Any())
         {
             return new CategoryListResponse
             {
-                CategoryLists = new List<CategoryList>()
+                CategoryLists = []
             };
         }
 
@@ -38,7 +38,7 @@ public class CategoryService: ICategoryService
 
     private IEnumerable<CategoryList> GetStructuredCategoryLists(IEnumerable<DALCategoryList.CategoryList> lists)
     {
-        List<CategoryList> categoryLists = new List<CategoryList>();
+        List<CategoryList> categoryLists = [];
         foreach(var item in lists)
         {
             var structuredList = categoryLists.FirstOrDefault(m => m.CategoryListId == item.CategoryListId);

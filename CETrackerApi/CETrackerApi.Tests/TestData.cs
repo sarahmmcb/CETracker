@@ -6,6 +6,7 @@ namespace CETrackerApi.Tests;
 
 internal static class TestData
 {
+    #region Experiences
     public static List<DALModels.Experience> OneExperienceOneCategory_Input()
     {
         return
@@ -261,4 +262,123 @@ internal static class TestData
             }
         };
     }
+
+    #endregion
+
+    #region Category Lists
+
+    public static List<DALModels.CategoryList> One_List_Single_Category_Input()
+    {
+        return
+        [
+            new()
+            {
+                CategoryListId = 10,
+                Name = "List A",
+                DisplayQuestion = "Choose One",
+                DisplayOrder = 1,
+                CategoryId = 30,
+                CategoryName = "Category A",
+                DisplayName = "Category A Display Name",
+                NationalStandardId = 200
+            }
+        ];
+    }
+
+    public static CategoryListResponse One_List_Single_Category_Expected()
+    {
+        return new CategoryListResponse
+        {
+            CategoryLists =
+            [
+                new()
+                {
+                    CategoryListId = 10,
+                    Name = "List A",
+                    DisplayQuestion = "Choose One",
+                    DisplayOrder = 1,
+                    Categories =
+                    [
+                        new()
+                        {
+                            CategoryId = 30,
+                            NationalStandardId = 200,
+                            CategoryListId = 10,
+                            Name = "Category A",
+                            DisplayName = "Category A Display Name"
+                        }
+                    ]
+
+                }
+            ]
+        };
+    }
+
+    public static List<DALModels.CategoryList> One_List_Multiple_Categories_Input()
+    {
+        return
+        [
+            new()
+            {
+                CategoryListId = 11,
+                Name = "List B",
+                DisplayQuestion = "Choose One Or Many",
+                DisplayOrder = 2,
+                CategoryId = 40,
+                CategoryName = "Category B",
+                DisplayName = "Category B Display Name",
+                NationalStandardId = 200
+            },
+            new()
+            {
+                CategoryListId = 11,
+                Name = "List B",
+                DisplayQuestion = "Choose One Or Many",
+                DisplayOrder = 2,
+                CategoryId = 50,
+                CategoryName = "Category C",
+                DisplayName = "Category C Display Name",
+                NationalStandardId = 200
+            }
+        ];
+    }
+
+    public static CategoryListResponse One_List_Multiple_Categories_Expected()
+    {
+        return new CategoryListResponse
+        {
+            CategoryLists =
+            [
+                new()
+                {
+                    CategoryListId = 11,
+                    Name = "List B",
+                    DisplayQuestion = "Choose One Or Many",
+                    DisplayOrder = 2,
+                    Categories =
+                    [
+                        new()
+                        {
+                            CategoryId = 40,
+                            NationalStandardId = 200,
+                            CategoryListId = 11,
+                            Name = "Category B",
+                            DisplayName = "Category B Display Name"
+                        },
+                        new()
+                        {
+                            CategoryId = 50,
+                            NationalStandardId = 200,
+                            CategoryListId = 11,
+                            Name = "Category C",
+                            DisplayName = "Category C Display Name"
+                        }
+                    ]
+
+                }
+            ]
+        };
+    }
+
+    #endregion
 }

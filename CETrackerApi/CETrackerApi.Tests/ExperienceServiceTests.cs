@@ -1,8 +1,10 @@
-﻿using CETrackerApi.Logic;
+﻿using System.Text.Json;
+using CETracker.Contracts.ResponseContracts;
+using CETrackerApi.Logic;
 using CETrackerApi.Security;
 using CETrackerDAL.DataAccess;
+using DALModels = CETrackerDAL.Models;
 using Moq;
-using System.Text.Json;
 
 namespace CETrackerApi.Tests;
 
@@ -19,8 +21,41 @@ public class ExperienceServiceTests
 
         _experienceService = new ExperienceService(_mockDataProvider.Object, _mockTokenAccessor.Object);
     }
-    
 
+    [Fact]
+    public async Task Null_Experiences_Returns_Empty()
+    {
+        List<DALModels.Experience> inputData = null;
+        var expectedOutput = new List<ExperienceResponse>();
+
+        _mockDataProvider
+            .Setup(m => m.GetExperiencesByYear(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(inputData);
+
+        var result = await _experienceService.GetExperiencesByYear(1, 2026, 1, TestContext.Current.CancellationToken);
+
+        var actualList = result.ToList();
+
+        Assert.NotNull(actualList);
+        Assert.Equal(expectedOutput.Count, actualList.Count);
+    }
+
+    [Fact]
+    public async Task No_Experiences_Returns_Empty()
+    {
+        var expectedOutput = new List<ExperienceResponse>();
+
+        _mockDataProvider
+            .Setup(m => m.GetExperiencesByYear(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        var result = await _experienceService.GetExperiencesByYear(1, 2026, 1, TestContext.Current.CancellationToken);
+
+        var actualList = result.ToList();
+
+        Assert.Equal(expectedOutput.Count, actualList.Count);
+    }
+    
     [Fact]
     public async Task One_Experience_One_Category()
     {
