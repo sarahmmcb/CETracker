@@ -118,7 +118,8 @@ public class ExperienceService : IExperienceService
                     {
                         UnitId = experienceRow.UnitId,
                         ExperienceId = experienceRow.ExperienceId,
-                        Amount = experienceRow.Amount
+                        Amount = experienceRow.Amount,
+                        IsComplianceUnit = experienceRow.IsComplianceUnit
                     });
                 }
             }
