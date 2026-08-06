@@ -6,19 +6,19 @@ namespace CETrackerApi.Logic;
 
 public interface IExperienceService
 {
-    Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int userId, int year, int nationalStandardId, CancellationToken token);
+    Task<ExperienceResponse> GetExperiencesByYear(int userId, int year, int nationalStandardId, CancellationToken token);
     Task DeleteExperience(int experienceId, CancellationToken token);
-    Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
+    Task<Experience> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
 public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tokenAccessor) : IExperienceService
 {
-    public async Task<IEnumerable<ExperienceResponse>> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
+    public async Task<ExperienceResponse> GetExperiencesByYear(int year, int userId, int nationalStandardId, CancellationToken token)
     {
        var experienceData = await ceDataprovider.GetExperiencesByYear(year, userId, nationalStandardId, token).ConfigureAwait(false);
        
        if (experienceData == null || !experienceData.Any())
         {
-            return [];
+            return new ExperienceResponse();
         }
 
        return ConstructExperiences(experienceData);
@@ -39,16 +39,17 @@ public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tok
         }
     }
 
-    public async Task<ExperienceResponse> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
+    public async Task<Experience> UpdateExperience(UpdateExperienceRequest request, CancellationToken cancellationToken)
     {
         var experienceId = await ceDataprovider.UpdateExperience(request, cancellationToken);
         var experienceData = await ceDataprovider.GetExperienceById(experienceId, cancellationToken);
-        return ConstructExperiences(experienceData).ElementAt(0);
+        return ConstructExperiences(experienceData).Experiences.ElementAt(0);
     }
 
-    internal virtual IEnumerable<ExperienceResponse> ConstructExperiences(IEnumerable<DALModels.Experience> experienceData)
+    internal virtual ExperienceResponse ConstructExperiences(IEnumerable<DALModels.Experience> experienceData)
     {
-        List<ExperienceResponse> experiences = [];
+        List<Experience> experiences = [];
+        Experience experience = new();
         ExperienceResponse experienceResponse = new();
         var prevId = -1;
 
@@ -58,7 +59,7 @@ public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tok
             {
                 prevId = experienceRow.ExperienceId;
 
-                experienceResponse = new ExperienceResponse
+                experience = new Experience
                 {
                     ExperienceId = experienceRow.ExperienceId,
                     UserId = experienceRow.UserId,
@@ -73,34 +74,35 @@ public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tok
                     StartDate = experienceRow.StartDate,
                     Description = experienceRow.Description,
                     Notes = experienceRow.Notes,
-                    Categories = new List<ExperienceCategory>
-                    {
+                    Categories =
+                    [
                         new() {
                             ExperienceId = experienceRow.ExperienceId,
                             CategoryId = experienceRow.CategoryId,
                             CategoryListId = experienceRow.CategoryListId,
                             DisplayName = experienceRow.CategoryDisplayName
                         }
-                    },
-                    Amounts = new List<ExperienceAmount>()
-                    {
+                    ],
+                    Amounts =
+                    [
                         new()
                         {
                             UnitId = experienceRow.UnitId,
                             ExperienceId = experienceRow.ExperienceId,
                             Amount = experienceRow.Amount,
+                            UnitLabel = experienceRow.UnitLabel,
                             IsComplianceUnit = experienceRow.IsComplianceUnit,
                         }
-                    }
+                    ]
                 };
 
-                experiences.Add(experienceResponse);
+                experiences.Add(experience);
             }
             else
             {
-                if (!experienceResponse.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
+                if (!experience.Categories.Any(c => c.CategoryId == experienceRow.CategoryId))
                 {
-                    experienceResponse.Categories = experienceResponse.Categories.Append(new()
+                    experience.Categories = experience.Categories.Append(new()
                     {
                         ExperienceId = experienceRow.ExperienceId,
                         CategoryId = experienceRow.CategoryId,
@@ -109,19 +111,22 @@ public class ExperienceService(ICeDataProvider ceDataprovider, TokenAccessor tok
                     });
                 }
 
-                if (!experienceResponse.Amounts.Any(am => am.UnitId == experienceRow.UnitId))
+                if (!experience.Amounts.Any(am => am.UnitId == experienceRow.UnitId))
                 {
-                    experienceResponse.Amounts = experienceResponse.Amounts.Append(new()
+                    experience.Amounts = experience.Amounts.Append(new()
                     {
                         UnitId = experienceRow.UnitId,
                         ExperienceId = experienceRow.ExperienceId,
                         Amount = experienceRow.Amount,
+                        UnitLabel = experienceRow.UnitLabel,
                         IsComplianceUnit = experienceRow.IsComplianceUnit
                     });
                 }
             }
         }
 
-        return experiences;
+        experienceResponse.Experiences = experiences;
+
+        return experienceResponse;
     }
 }

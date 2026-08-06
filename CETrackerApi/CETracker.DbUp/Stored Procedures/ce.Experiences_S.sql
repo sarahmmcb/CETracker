@@ -27,6 +27,7 @@ begin
 		,ca.DisplayName as CategoryDisplayName
 		,am.UnitId
 		,am.Amount
+		,CASE WHEN (am.Amount != 1.0) THEN u.ShortNamePlural ELSE u.ShortNameSingular END AS UnitLabel
 		,nsu.IsComplianceUnit
 		,ex.UserId
 		,loc.LocationId
@@ -39,6 +40,7 @@ begin
 	left join ce.UserData ud on ud.UserId = ex.UserId
 	left join ce.NatlStandardUnit nsu on nsu.NationalStandardId = ud.NationalStandardId
 		and nsu.UnitId = am.UnitId
+	left join ce.Unit u on u.UnitId = am.UnitId
 	where 
 		(
 			(
