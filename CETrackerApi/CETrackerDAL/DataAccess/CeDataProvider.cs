@@ -206,7 +206,7 @@ public class CeDataProvider : ICeDataProvider
                 updateExperienceRequest.CarryForward,
                 updateExperienceRequest.ProgramTitle,
                 updateExperienceRequest.EventName,
-                StartDate = updateExperienceRequest.StartDate.ToUniversalTime().ToString(),
+                StartDate = updateExperienceRequest.StartDate.ToString(),
                 updateExperienceRequest.Description,
                 updateExperienceRequest.Notes,
                 updateUserId
