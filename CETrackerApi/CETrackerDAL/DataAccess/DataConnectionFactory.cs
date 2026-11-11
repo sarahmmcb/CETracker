@@ -17,5 +17,5 @@ public class DataConnectionFactory : IDataConnectionFactory
         _config = config;
     }
 
-    public DbConnection CeTrackerSqlConnection() => new SqlConnection(_config.GetSection("CeTrackerSqlConnection").Value);
+    public DbConnection CeTrackerSqlConnection() => new SqlConnection(_config.GetSection("ConnectionStrings")["Default"]);
 }

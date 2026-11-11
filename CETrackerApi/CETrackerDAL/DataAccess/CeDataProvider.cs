@@ -18,7 +18,9 @@ public interface ICeDataProvider
     Task<IEnumerable<Location>> GetLocations(CancellationToken token);
     Task<IEnumerable<Unit>> GetUnits(int nationalStandardId, CancellationToken token);
     Task<IEnumerable<DALModels.UserData>> GetUserData(int userId, CancellationToken token);
+    Task UpdateUserData(UpdateUserDataRequest request, int updateUserId, CancellationToken token);
     Task<IEnumerable<DALModels.CeData>> GetCeData(int year, int userId, int nationalStandardId, CancellationToken token);
+    Task<IEnumerable<NationalStandard>> GetNationalStandards(CancellationToken token);
     Task DeleteExperience(int updateUserId, int experienceId, CancellationToken token);
     Task<int> UpdateExperience(UpdateExperienceRequest request, CancellationToken token);
 }
@@ -125,6 +127,12 @@ public class CeDataProvider : ICeDataProvider
             token
     );
 
+    public Task<IEnumerable<NationalStandard>> GetNationalStandards(CancellationToken token) =>
+        LoadData<NationalStandard, dynamic>(
+            "ce.National_Standard_S",
+            new { },
+            token);
+
     public virtual async Task DeleteExperience(int updateUserId, int experienceId, CancellationToken token)
     {
         using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
@@ -148,7 +156,7 @@ public class CeDataProvider : ICeDataProvider
             TransactionScopeAsyncFlowOption.Enabled);
 
         using DbConnection connection = _dataConnectionFactory.CeTrackerSqlConnection();
-        await connection.OpenAsync();
+        await connection.OpenAsync(cancellationToken);
        
         try
         {
@@ -175,6 +183,26 @@ public class CeDataProvider : ICeDataProvider
         {
             txScope.Dispose();
         }
+    }
+
+    public async Task UpdateUserData(UpdateUserDataRequest request, int updateUserId, CancellationToken cancellationToken = default)
+    {
+        using DbConnection conn = _dataConnectionFactory.CeTrackerSqlConnection();
+
+        var command = new CommandDefinition("ce.UserData_U_I",
+            new
+            {
+                request.UserId,
+                request.NationalStandardId,
+                request.Title,
+                request.CanSignSAO,
+                updateUserId,
+                isDeleted = false, // TODO: implement Delete endpoint
+            },
+            commandType: CommandType.StoredProcedure,
+            cancellationToken: cancellationToken);
+
+        await conn.ExecuteAsync(command);
     }
 
     internal virtual async Task<int> GetUserId(string username, CancellationToken token)

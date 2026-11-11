@@ -86,6 +86,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddValidation();
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<IDataConnectionFactory, DataConnectionFactory>();
 builder.Services.AddScoped<ICeDataProvider, CeDataProvider>();
 builder.Services.AddScoped<TokenAccessor>();
@@ -93,6 +96,7 @@ builder.Services.AddScoped<TokenAccessorMiddleware>();
 builder.Services.AddTransient<IExperienceService, ExperienceService>();
 builder.Services.AddTransient<ICeDataService, CeDataService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 #if DEBUG
 builder.Services.AddSingleton<

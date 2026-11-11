@@ -142,15 +142,16 @@ if not exists (select * from dbo.sysobjects where ID = object_id(N'[ce].[UserDat
 create table [ce].[UserData]
 (
   -- primary key
-  [UserId] int not null default 0
+  [UserDataId] int not null identity(1,1)
 
+  ,[UserId] int not null default 0
   ,[NationalStandardId] int not null default(0)
   
   -- data
   ,[Title] varchar(20) not null default('')
   ,[CanSignSAO] bit not null default(0)
 
-  ,Constraint PK_UserData Primary Key Clustered (UserId)
+  ,Constraint PK_UserData Primary Key Clustered (UserDataId)
   ,Constraint FK_UserData_UserId Foreign Key (UserId) References core.[User](Id)
 )
 go
@@ -167,20 +168,20 @@ create table [ce].[UserDataHistory]
 (
   -- primary key
   [UniqueifierId] int not null identity(1,1)
+  ,[UserId] int not null default(0)
 
   -- foreign keys
-  ,[UserId] int not null default(0)
   ,[NationalStandardId] int not null default(0)
   
   -- data
   ,[Title] varchar(20) not null default('')
   ,[CanSignSAO] bit not null default(0)
   ,[UpdateUserId] int not null default(0)
-  ,[UpdateUserName] int not null default(0)
-  ,[UpdateDateUTC] datetime not null
+  ,[UpdateDate] datetime not null
   ,IsDeleted bit not null
 
   ,Constraint PK_UserDataHistory Primary Key Clustered (UniqueifierId, UserId)
+  -- No Foreign Key on NationalStandardId bc OUTPUT INTO doesn't work with foreign keys
 )
 go
 
@@ -266,7 +267,7 @@ create table ce.Experience
   ,ProgramTitle varchar(200) not null default('')
   ,EventName varchar(200) not null default('')
   ,StartDate datetime not null
-  ,Description varchar(500) null
+  ,[Description] varchar(500) null
   ,Notes varchar(max) null
 
   ,Constraint PK_Experience Primary Key Clustered (ExperienceId)
