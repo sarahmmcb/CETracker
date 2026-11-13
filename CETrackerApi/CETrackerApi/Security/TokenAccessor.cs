@@ -36,7 +36,7 @@ public class TokenAccessor
         }
         catch (Exception ex)
         {
-            // TODO: log an error
+            Console.WriteLine($"Error occured when decoding token: {ex.Message}");
             // We can keep going bc the user has already authenticated, but we won't be able to get any token properties
         }
     }
