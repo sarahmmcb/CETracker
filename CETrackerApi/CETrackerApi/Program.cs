@@ -1,5 +1,6 @@
 using System.Text;
 using CETrackerApi.Api;
+using CETrackerApi.Configuration;
 using CETrackerApi.Helpers;
 using CETrackerApi.Logic;
 using CETrackerApi.Middleware;
@@ -11,6 +12,17 @@ using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.Sources.Clear();
+
+IHostEnvironment env = builder.Environment;
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true);
+
+JwtConfig jwtConfigOptions = new();
+builder.Configuration.GetSection(nameof(JwtConfig)).Bind(jwtConfigOptions);
 
 // Add services to the container.
 
@@ -34,9 +46,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var jwtConfig = builder.Configuration.GetSection("JwtConfig");
-        var secret = jwtConfig.GetSection("Secret").Value;
-        var issuer = jwtConfig.GetSection("ValidIssuer").Value;
-        var audience = jwtConfig.GetSection("ValidAudiences").Get<List<string>>();
+        var secret = jwtConfigOptions.Secret;
+        var issuer = jwtConfigOptions.ValidIssuer;
+        var audience = jwtConfigOptions.ValidAudiences;
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
