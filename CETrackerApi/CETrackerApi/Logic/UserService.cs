@@ -1,4 +1,6 @@
-﻿using Auth.Contracts;
+﻿using System.Net;
+using Auth.Contracts;
+using Auth.Contracts.RequestContracts;
 
 namespace CETrackerApi.Logic;
 
@@ -29,7 +31,7 @@ public class UserService(IHttpClientFactory _httpClientFactory, ICeDataProvider 
         var httpClient = _httpClientFactory.CreateClient();
         httpClient.BaseAddress = new Uri("https://localhost:7143/api"); // TODO: Pull from config, need to bind config to object
 
-        var createUserRequest = new AuthCreateUserRequest
+        var createUserRequest = new CreateUserRequest
         {
             FirstName = registerUserRequest.FirstName,
             LastName = registerUserRequest.LastName,
@@ -43,6 +45,12 @@ public class UserService(IHttpClientFactory _httpClientFactory, ICeDataProvider 
         var responseContent = await response.Content.ReadAsStringAsync(token);
         Console.WriteLine(responseContent);
 
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            Console.WriteLine($"Non-Success status code returned from AuthApi: {responseContent}");
+            throw new ApplicationException(responseContent);
+        }
+
         var parsedContent = int.TryParse(responseContent, out int result);
 
         if (parsedContent)
@@ -52,7 +60,7 @@ public class UserService(IHttpClientFactory _httpClientFactory, ICeDataProvider 
         else
         {
             Console.WriteLine($"Error parsing new user id, returned result: {result}");
-            throw new ApplicationException("Error creating new user");
+            throw new ApplicationException("An error occurred, please try again later.");
         }
     }
 
@@ -77,15 +85,4 @@ public class UserService(IHttpClientFactory _httpClientFactory, ICeDataProvider 
         }
     }
 
-}
-
-public class AuthCreateUserRequest
-{
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
-    public AccountStatus? AccountStatus { get; set; }
-    public List<int>? Roles { get; set; }
 }

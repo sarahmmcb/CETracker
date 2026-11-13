@@ -100,13 +100,13 @@ public static class User
     /*
      * 
 {
-  "firstName": "Moe",
-  "lastName": "Syslak",
-  "email": "moe.syslak@simpsons.org",
-  "password": "MoesPassword",
+  "firstName": "Maggie",
+  "lastName": "Simpson",
+  "email": "maggie.simpson@simpsons.org",
+  "password": "MaggiesPassword",
   "nationalStandardId": 1,
-  "title": "Mr.",
-  "canSignSAO": false
+  "title": "Ms.",
+  "canSignSAO": true
 }
      * */
     public static async Task<IResult> RegisterUser(
@@ -122,7 +122,7 @@ public static class User
         }
         catch (ApplicationException ex)
         {
-            return Results.Problem(ex.Message);
+            return Results.BadRequest(ex.Message);
         }
 
     }
